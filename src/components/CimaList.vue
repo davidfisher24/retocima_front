@@ -89,10 +89,10 @@ export default {
       cimas: null,
       map:false,
       provinciaSectionHeaders: [
-        { text: 'Cdg',sortable: false },
-        { text: 'Nombre',sortable: false },
-        { text: 'Logros',sortable: false },
-        { text: 'Altitud',sortable: false },
+        { value: 'codigo', text: 'Cdg',sortable: true },
+        { value: 'nombre', text: 'Nombre',sortable: true },
+        { value: 'logros_count', text: 'Logros',sortable: true },
+        { value: 'altitud', text: 'Altitud',sortable: true },
         { text: 'Vertientes',sortable: false }
       ],
     }

@@ -9,7 +9,6 @@ import PataNegra from '@/components/PataNegra'
 import Ranking from '@/components/Ranking'
 
 // Components
-import CCAAList from '@/components/CCAAList'
 import CimaList from '@/components/CimaList'
 import Cima from '@/components/Cima'
 import CimaMap from '@/components/CimaMap'
@@ -105,6 +104,11 @@ const router = new Router({
       path: '/cuenta/graficos',
       name: 'user-charts',
       component: Charts
+    },
+    {
+      path: '/cuenta/add',
+      name: 'add-logros',
+      component: Cimero
     }
   ]
 })

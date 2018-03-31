@@ -56,7 +56,19 @@ const store = new Vuex.Store({
           localStorage.setItem('cimero-user', response.data.cimero.username)
           resolve(response.data)
         }).catch(err => {
-          reject(err)
+          reject(err.response.data)
+        })
+      })
+    },
+
+    register ({ commit }, creds) {
+      return new Promise((resolve, reject) => {
+        axios.post('http://retocima/api/auth/register', creds).then(function (response) {
+          localStorage.setItem('cimero-token', response.data.token)
+          localStorage.setItem('cimero-user', response.data.cimero.username)
+          resolve(response.data)
+        }).catch(err => {
+          reject(err.response.data)
         })
       })
     },
@@ -190,7 +202,7 @@ const store = new Vuex.Store({
           }).then(function (response) {
             self.commit('authCimero', response.data)
             resolve(response.data)
-          })
+          }).catch(() => reject()); 
         }
       })
     },

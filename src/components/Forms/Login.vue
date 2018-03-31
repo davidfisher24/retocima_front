@@ -21,6 +21,7 @@
                 :rules="rules.password"
                 @change="alert = false"
                 required
+                type="password"
               ></v-text-field>
             </v-form>
             <v-alert outline color="error" icon="warning" :value="alert">

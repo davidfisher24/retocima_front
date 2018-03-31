@@ -3,6 +3,8 @@
   <router-view></router-view>
     <div id="wrapper" v-show="this.$route.name === 'cima-map'">
       
+        
+
         <gmap-map
           v-if="mounted"
           :center="getMapCenter()"
@@ -10,31 +12,44 @@
           map-type-id="terrain"
           :style="style"
         >
-             <gmap-cluster :max-zoom="10" :grid-size="25">
 
+             <gmap-cluster :max-zoom="10" :grid-size="25">
                 <gmap-marker
                   :key="index"
-                  v-for="(cima, index) in cimas"
+                  v-for="(cima, index) in validcimas"
                   :position="{lng:parseFloat(cima.latitude), lat:parseFloat(cima.longitude)}"
                   :clickable="true"
                   :draggable="false"
                   :icon="icon"
+                  @mouseover="openInfoWindowTemplate(cima)"
+                  @mouseout="infoWindow.open = false"
                   @click="route(cima.id)"
                 >
                 </gmap-marker>
+                <gmap-info-window
+                      :options="infoWindow.options"
+                      :position="infoWindow.position"
+                      :opened="infoWindow.open"
+                      @closeclick="infoWindow.open=false">
+                      <v-chip color="secondary" text-color="white" style="margin:0;padding:0;">
+                        <v-avatar class="accent">{{infoWindow.cima.codigo}}</v-avatar>
+                        {{infoWindow.cima.nombre}}
+                      </v-chip>
+                  </gmap-info-window>
             </gmap-cluster>
         </gmap-map>
     </div>
   </div>
 </template>
 
-<script>
+<style>
 
-    //import Vue from 'Vue'
+</style>
+
+<script>
     import icon from '../assets/icons/marker.png';
 
     export default {
-        //props: ["cimas","center","zoom"],
         data: function() {
             return {
                 icon:icon,
@@ -42,12 +57,20 @@
                 style: "",
                 infoWindow: {
                     open:false,
-                    template: '',
                     position: {lat:0,lng:0},
-                    options:{maxWidth: 300},
+                    cima:{
+                      codigo: null,
+                      nombre: null,
+                    },
                 },
                 offSet: new google.maps.Size(0,-30),
             };
+        },
+
+        computed: {
+          validcimas () {
+            return this.cimas.filter(c => c.latitude != 0 && c.longitude != 0);
+          }
         },
 
         watch: {
@@ -58,7 +81,6 @@
 
 
         mounted:function() {
-            console.log(icon);
             this.cimas = this.$route.params.cimas;
             if (this.$route.params.center) this.center = this.$route.params.center;
             if (this.$route.params.zoom) this.zoom = this.$route.params.zoom;
@@ -100,10 +122,10 @@
 
             openInfoWindowTemplate(item) {
                 this.infoWindow.position = {lat:parseFloat(item.longitude), lng:parseFloat(item.latitude)};
-                this.infoWindow.template = "<p style='margin-bottom:0;'><strong>" + item.codigo +"</strong>   " + item.nombre +"</p>";
+                this.infoWindow.cima.codigo = item.codigo;
+                this.infoWindow.cima.nombre = item.nombre;
                 this.infoWindow.options = { pixelOffset: this.offSet};
                 this.infoWindow.open = true;
-
             },
 
             closeInfoWindow(evt){
@@ -116,18 +138,6 @@
         },
     }
 
-/*
-@mouseover="openInfoWindowTemplate(cima)"
-                  @mouseout="infoWindow.open = false"
-          <gmap-info-window
-                      :options="infoWindow.options"
-                      :position="infoWindow.position"
-                      :opened="infoWindow.open"
-                      @closeclick="infoWindow.open=false">
-                      <div v-html="infoWindow.template"></div>
-
-                  </gmap-info-window>
-
-*/
-
 </script>
+
+          

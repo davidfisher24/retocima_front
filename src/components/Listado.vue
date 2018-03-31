@@ -17,7 +17,6 @@ import Search from './Search'
 export default {
   data () {
     return {
-      mounted: false,
       comms:null,
       parent: null,
       displayList: true,
