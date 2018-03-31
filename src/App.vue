@@ -13,7 +13,8 @@
       <v-toolbar flat class="transparent">
       <v-list class="pa-0">
         <v-list-tile avatar>
-          <v-list-tile-avatar>
+          <v-list-tile-avatar color="primary">
+          D
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title>{{isLoggedIn}}</v-list-tile-title>
@@ -23,32 +24,38 @@
     </v-toolbar>
     <v-list class="pt-0" dense>
       <v-divider></v-divider>
+      <v-list-tile @click="route('user-logros')">
+        <v-list-tile-action>Mis Logros</v-list-tile-action>
+      </v-list-tile>
+      <v-list-tile @click="route('user-charts')">
+        <v-list-tile-action>Graficos</v-list-tile-action>
+      </v-list-tile>
       <v-list-tile @click="logout">
-        <v-list-tile-action>
-          <v-icon></v-icon>
-          Cerrar Session
-        </v-list-tile-action>
+        <v-list-tile-action>Cerrar Session</v-list-tile-action>
       </v-list-tile>
     </v-list>
     </v-navigation-drawer>
 
 
     <v-toolbar class="primary">
-      <v-toolbar-title><router-link :to="{ name: 'home'}">Reto Cima</router-link></v-toolbar-title>
+      <v-toolbar-title>
+        <router-link :to="{ name: 'home'}" class="white--text"  style="text-decoration:none;">
+          Reto Cima
+        </router-link>
+      </v-toolbar-title>
       <v-toolbar-items>
-        <v-btn flat dark :to="{ name: 'listado'}">Listado</v-btn>
-        <v-btn flat dark :to="{ name: 'ranking'}">Ranking</v-btn>
-        <v-btn flat dark>Estadistica</v-btn>
-        <v-btn flat dark :to="{ name: 'patanegra', params: {format: 'list'}}">Pata Negra</v-btn>
-        <v-btn flat dark :to="{ name: 'cima-map'}">Mapa</v-btn>
+        <Button text="listado" route="listado"></Button>
+        <Button text="ranking" route="ranking"></Button>
+        <Button text="Estadistica"></Button>
+        <Button text="Pata Negra" route="patanegra" params='{"format": "list"}'></Button>
+        <Button text="Mapa" route="cima-map"></Button>
       </v-toolbar-items>
       <v-spacer></v-spacer>
-      <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="isLoggedIn"></v-toolbar-side-icon>
+      <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="isLoggedIn" class="white--text"></v-toolbar-side-icon>
       <v-toolbar-items v-if="!isLoggedIn">
         <v-btn flat dark @click.native.stop="showLogin = !showLogin">Entrar</v-btn>
-        <v-btn flat dark @click.native.stop="showRegister = !showRegister">Darse Alta</v-btn>
+        <Button text="darse alta" route="register"></Button>
         <login v-if="showLogin" @close="showLogin = false" @login="login"></login>
-        <register v-if="showRegister" @close="showLogin = false"></register>
       </v-toolbar-items>
     </v-toolbar>
     <v-content>
@@ -59,39 +66,37 @@
 
 <script>
 
-import login from './components/Forms/Login';
-import register from './components/Forms/Register';
-
+import login from './components/Forms/Login'
+import Button from './components/Button'
 
 export default {
   components: {
-    'login' : login,
-    'register' : register,
+    'login': login,
+    'Button': Button
   },
-
   data () {
     return {
       drawer: false,
       showLogin: false,
-      showRegister: false,
-      isLoggedIn: false,
+      isLoggedIn: false
     }
   },
-
-  beforeMount(){
-    if (this.$store.state.isLoggedIn) this.isLoggedIn = this.$store.state.loggedInUser;
-    else this.isLoggedIn = false;
+  beforeMount () {
+    if (this.$store.state.isLoggedIn) this.isLoggedIn = this.$store.state.loggedInUser
+    else this.isLoggedIn = false
   },
-
   methods: {
     logout () {
-      this.$store.dispatch("logout");
-      this.isLoggedIn = false;
+      this.$store.dispatch('logout')
+      this.isLoggedIn = false
     },
-    login(data){
-      this.isLoggedIn = data.cimero.username;
-      this.showLogin = false;
+    login (data) {
+      this.isLoggedIn = data.cimero.username
+      this.showLogin = false
     },
-  },
+    route (page) {
+      this.$router.push({name: page});
+    }
+  }
 }
 </script>

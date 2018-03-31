@@ -2,6 +2,7 @@
   <v-container fluid>
     <v-slide-y-transition mode="out-in">
       <v-layout row wrap v-if="cima">
+        <v-flex xs12>
         <v-toolbar color="primary">
         <v-toolbar-title class="white--text">{{cima.codigo}} {{cima.nombre}}</v-toolbar-title>
         <v-divider></v-divider>
@@ -10,19 +11,27 @@
           <v-btn flat @click="next" v-if="cimas && cimas.length > 1">Siguiente</v-btn>
         </v-toolbar-items>
         <v-spacer></v-spacer>
-
-      </v-toolbar color="secondary">
-      <v-system-bar status color="primary" dark>
-        {{cima.provincia.nombre}} / {{cima.communidad.nombre}}
-      </v-system-bar>
-      <v-system-bar status color="primary" dark>
-        GPS:  Latitude: {{cima.latitude}}  Longitude: {{cima.longitude}}
-      </v-system-bar>
+        <v-chip color="secondary" text-color="white">
+          <v-avatar class="accent">{{cima.logros_count}}</v-avatar>
+          Logros
+        </v-chip>
+      </v-toolbar>
+      <v-card width="100%">
+        <v-system-bar status color="primary" dark>
+          {{cima.provincia.nombre}} / {{cima.communidad.nombre}}
+        </v-system-bar>
+        <v-system-bar status color="primary" dark>
+          GPS:  Latitude: {{cima.latitude}}  Longitude: {{cima.longitude}}
+        </v-system-bar>
+      </v-card>
+      </v-flex>
+      <v-flex xs12>
     <v-tabs
       v-model="active"
-      color="cyan"
+      color="secondary"
       dark
-      slider-color="yellow"
+      slider-color="accent"
+      width="100%"
     >
       <v-tab
         v-for="n,i in cima.vertientes"
@@ -70,7 +79,7 @@
                         </v-layout>
                         <v-layout>
                             <v-flex md12 v-for="(enlace,index) in cima.vertientes[i].enlaces" :key="index">
-                                <a :href="enlace.url" target="_blank">Enlace {{index + 1}}</a>
+                                <v-btn><a :href="enlace.url" target="_blank">Enlace {{index + 1}}</a></v-btn>
                             </v-flex>
                         </v-layout>
                     </v-card>
@@ -95,6 +104,7 @@
             </v-card>
       </v-tab-item>
     </v-tabs>
+    </v-flex>
       </v-layout>
     </v-slide-y-transition>
   </v-container>
@@ -123,6 +133,7 @@ export default {
   watch: {
     '$route.params.id': function (id) {
       this.$store.dispatch('cima',id).then(cima => this.cima = cima);
+      this.active = 0;
     }
   },
 

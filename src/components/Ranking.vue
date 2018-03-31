@@ -2,7 +2,7 @@
 <template>
 <v-app>
     <v-container>
-        <v-layout>
+        <v-layout v-show="this.$route.name === 'ranking'">
             <v-flex>
                 <BaseTable 
                     :data="data"
@@ -14,6 +14,7 @@
                 ></BaseTable>
             </v-flex>
         </v-layout>
+        <router-view></router-view>
     </v-container>
 </v-app>
 </div>
@@ -50,7 +51,7 @@
 
         methods: {
             action(id){
-                // Route to modal
+                this.$router.push({name: 'cimero', params: {uid: id}});
             },
         }
     }

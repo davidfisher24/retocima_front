@@ -13,14 +13,19 @@
                 v-model="model.email"
                 :rules="rules.email"
                 required
+                @change="alert = false"
               ></v-text-field>
               <v-text-field
                 label="Contrasena"
                 v-model="model.password"
                 :rules="rules.password"
+                @change="alert = false"
                 required
               ></v-text-field>
             </v-form>
+            <v-alert outline color="error" icon="warning" :value="alert">
+              Estos credenciales no son correctos
+            </v-alert>
             <v-card-actions>
               <v-btn flat @click="submit" :disabled="!valid">Entrar</v-btn>
               <v-btn flat @click="empty">Vaciar</v-btn>
@@ -52,7 +57,8 @@ export default {
         ],
       },
       valid: true,
-      show: true
+      show: true,
+      alert: false,
     }
   },
   methods: {
@@ -62,7 +68,7 @@ export default {
           this.$emit('login',data);
           this.show = false;
         }).catch(err => {
-          console.log(err);
+          this.alert = true;
         });
       }
     },

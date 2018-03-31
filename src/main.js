@@ -1,7 +1,6 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import Vuex from 'vuex'
 import App from './App'
 import store from './store.js'
 import router from './router'
@@ -28,6 +27,8 @@ import {
   VForm,
   VTextField,
   VAlert,
+  VChip,
+  VAvatar,
   transitions
 } from 'vuetify'
 import '../node_modules/vuetify/src/stylus/app.styl'
@@ -54,6 +55,8 @@ Vue.use(Vuetify, {
     VForm,
     VTextField,
     VAlert,
+    VChip,
+    VAvatar,
     transitions,
     axios
   },
@@ -71,10 +74,9 @@ Vue.use(Vuetify, {
 
 Vue.use(require('vue2-google-maps'), {
   load: {
-    key: 'AIzaSyAtqWsq5Ai3GYv6dSa6311tZiYKlbYT4mw',
+    key: 'AIzaSyAtqWsq5Ai3GYv6dSa6311tZiYKlbYT4mw'
   }
 })
-
 
 Vue.config.productionTip = false
 
@@ -84,5 +86,5 @@ new Vue({
   router,
   components: { App },
   template: '<App/>',
-  store,
+  store
 })

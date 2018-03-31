@@ -5,7 +5,7 @@
           <v-flex xs12 class="mx-3">
                 <v-toolbar>
                 <v-toolbar-title>
-                    <span v-if="$route.name=='provincia'">{{cimas[0].communidad}} - {{cimas[0].provincia}}</span>
+                    <span v-if="$route.name=='provincia'">{{cimas[0].communidad.nombre}} - {{cimas[0].provincia.nombre}}</span>
                     <span v-if="$route.name=='patanegra'">Pata Negra</span>
                 </v-toolbar-title>
                 <v-spacer></v-spacer>

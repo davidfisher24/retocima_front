@@ -2,7 +2,8 @@
   <v-container fluid>
     <v-slide-y-transition mode="out-in">
       <v-layout row wrap>
-            <CCAAList :comms="comms" @chooseProvincia="chooseProvincia"></CCAAList>
+            <Search @select="chooseCima" @results="showList"></Search>
+            <CCAAList :comms="comms" @chooseProvincia="chooseProvincia" v-if="displayList"></CCAAList>
       </v-layout>
     </v-slide-y-transition>
   </v-container>
@@ -12,26 +13,33 @@
 <script>
 
 import CCAAList from './CCAAList'
+import Search from './Search'
 export default {
   data () {
     return {
       mounted: false,
       comms:null,
       parent: null,
+      displayList: true,
     }
   },
   mounted() {
     this.comms = this.$route.params.listado;
-    console.log(this.comms);
   },
   components: {
-    'CCAAList' : CCAAList
+    'CCAAList' : CCAAList,
+    'Search' : Search
   }, 
   methods: {
     chooseProvincia(id) {
-      console.log("Pusing province");
       this.$router.push({name: 'provincia', params: {pid: id, format: 'list'}})
-    }
+    },
+    chooseCima(id) {
+      this.$router.push({name: 'cima', params: {id: id}})
+    },
+    showList(state) {
+      this.displayList = !state;
+    },
   }
 }
 </script>

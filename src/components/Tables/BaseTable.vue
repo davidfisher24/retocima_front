@@ -110,5 +110,4 @@
     thead {border: 0.5px solid #333}
     th {border-right: 0.5px solid #333; border-bottom:1px solid #333; text-align:center; text-transform:uppercase;}
     td:hover {cursor:pointer}
-    
 </style>
