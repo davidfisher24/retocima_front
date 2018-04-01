@@ -1,10 +1,8 @@
 <template> 
 <div>
   <router-view></router-view>
-    <div id="wrapper" v-show="this.$route.name === 'cima-map'">
+    <div id="wrapper" v-show="this.$route.name === 'cima-map' || this.$route.name === 'provincia-map' || this.$route.name === 'patanegra-map'">
       
-        
-
         <gmap-map
           v-if="mounted"
           :center="getMapCenter()"
@@ -22,7 +20,7 @@
                   :draggable="false"
                   :icon="icon"
                   @mouseover="openInfoWindowTemplate(cima)"
-                  @mouseout="infoWindow.open = false"
+                  @mouseout="infoWindow.open=false"
                   @click="route(cima.id)"
                 >
                 </gmap-marker>
@@ -30,6 +28,7 @@
                       :options="infoWindow.options"
                       :position="infoWindow.position"
                       :opened="infoWindow.open"
+                      @domready="applyInfoWindowStyles()"
                       @closeclick="infoWindow.open=false">
                       <v-chip color="secondary" text-color="white" style="margin:0;padding:0;">
                         <v-avatar class="accent">{{infoWindow.cima.codigo}}</v-avatar>
@@ -42,11 +41,8 @@
   </div>
 </template>
 
-<style>
-
-</style>
-
 <script>
+
     import icon from '../assets/icons/marker.png';
 
     export default {
@@ -61,7 +57,7 @@
                     cima:{
                       codigo: null,
                       nombre: null,
-                    },
+                    }
                 },
                 offSet: new google.maps.Size(0,-30),
             };
@@ -72,13 +68,6 @@
             return this.cimas.filter(c => c.latitude != 0 && c.longitude != 0);
           }
         },
-
-        watch: {
-          '$route.name': function (name) {
-            console.log(name);
-          }
-        },
-
 
         mounted:function() {
             this.cimas = this.$route.params.cimas;
@@ -109,7 +98,6 @@
                 var lngDiff = Math.abs(Math.max.apply(null,lngs) - Math.min.apply(null,lngs));
                 var maxDiff = Math.max(latDiff,lngDiff);
                 return parseInt(11 - maxDiff);
-                 
             },
 
             getLats(){
@@ -135,6 +123,13 @@
             route (id) {
               this.$router.push({name: 'map-cima', params: {cid: id}})
             },
+
+            applyInfoWindowStyles() {
+                document.getElementsByClassName('gm-style-iw')[0].parentNode.childNodes[0].style.display = 'none'
+                document.getElementsByClassName('gm-style-iw')[0].parentNode.childNodes[0].style.display = 'none'
+                document.getElementsByClassName('gm-style-iw')[0].parentNode.childNodes[1].style.top = '41px'
+                document.getElementsByClassName('gm-style-iw')[0].parentNode.childNodes[1].style.left = '30px'
+            }
         },
     }
 

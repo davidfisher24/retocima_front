@@ -10,12 +10,11 @@
                 </v-toolbar-title>
                 <v-spacer></v-spacer>
                 <v-toolbar-items>
-                  <v-btn flat @click="map = true">MAPA</v-btn>
+                  <v-btn flat @click="changeMap()">MAPA</v-btn>
                 </v-toolbar-items>
               </v-toolbar>
 
                 <v-data-table
-                    v-if="!map"
                     :headers="provinciaSectionHeaders"
                     :items="cimas"
                     hide-actions
@@ -38,9 +37,9 @@
                       </tr>
                     </template>
                   </v-data-table>
-                  <v-subheader v-if="!map && needCimasElimitedRow()"><p class="subheading">Cimas que fueron eliminadas o sustituidas</p></v-subheader>
+                  <v-subheader v-if="needCimasElimitedRow()"><p class="subheading">Cimas que fueron eliminadas o sustituidas</p></v-subheader>
                   <v-data-table
-                    v-if="!map && needCimasElimitedRow()"
+                    v-if="needCimasElimitedRow()"
                     :headers="provinciaSectionHeaders"
                     :items="cimas"
                     hide-actions
@@ -66,7 +65,6 @@
                     </template>
                   </v-data-table>
             </v-flex>
-            <CimaMap v-if="map" :cimas="cimas"></CimaMap>
       </v-layout> 
     </v-slide-y-transition>
   </v-container>
@@ -75,13 +73,7 @@
 
 <script>
 
-import CimaMap from './CimaMap'
-import axios from 'axios'
-
 export default {
-  components: {
-    'CimaMap' : CimaMap
-  },
 
   data () {
     return {
@@ -102,16 +94,20 @@ export default {
     '$route': function (route) {
       if (route.name === 'provincia') this.$store.dispatch('provincia',route.params.pid).then(cimas => this.cimas = cimas);
       if (route.name === 'patanegra') this.$store.dispatch('patanegra').then(cimas => this.cimas = cimas);
-      this.map = this.$route.params.format === 'map' ? true : false;
     }
   },
 
   mounted (){
     this.cimas = this.$route.params.cimas;
-    this.map = this.$route.params.format === 'map' ? true : false;
   },
 
+
+
   methods: {
+    changeMap() {
+      if (this.$route.name === "provincia") this.$router.push({name:'provincia-map', params: {pid: this.$route.params.pid}});
+      if (this.$route.name === "patanegra") this.$router.push({name:'patanegra-map'});
+    },
     needCimasElimitedRow (){
         return this.cimas.filter(function(c){ return c.estado != 1 }).length ? true : false;
     },

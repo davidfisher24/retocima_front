@@ -22,10 +22,12 @@ Vue.use(Router)
 
 const router = new Router({
   routes: [
+    // Home page with discover child
     {
       path: '/',
       name: 'home',
       component: HomePage,
+      protected: true,
       children: [
         {
           path: '/discover/:id',
@@ -34,36 +36,41 @@ const router = new Router({
         }
       ]
     },
+    // Listado page
     {
       path: '/listado',
       name: 'listado',
       component: Listado
     },
+    // Single cima page (functions as child)
     {
       path: '/cima/:id',
       name: 'cima',
       component: Cima
     },
+    // Provincia or pata negra list page 
     {
-      path: '/provincia/:pid/:format',
+      path: '/provincia/:pid',
       name: 'provincia',
       component: CimaList
     },
     {
-      path: '/provincia/:pid/:cid',
-      name: 'provincia-cima',
-      component: Cima
-    },
-    {
-      path: '/patanegrea/:format',
+      path: '/patanegra',
       name: 'patanegra',
       component: CimaList
     },
+    // Provincia or pata negra with cima group page
+    {
+      path: '/provincia/:pid/:cid',
+      name: 'provincia-cima',
+      component: Cima
+    },  
     {
       path: '/patanegra/cima/:cid',
       name: 'patanegra-cima',
       component: Cima
     },
+    // Map with cima child
     {
       path: '/mapa',
       name: 'cima-map',
@@ -77,6 +84,17 @@ const router = new Router({
       ]
     },
     {
+      path: '/provincia-mapa/:pid',
+      name: 'provincia-map',
+      component: CimaMap,
+    },
+    {
+      path: '/patanegra-mapa',
+      name: 'patanegra-map',
+      component: CimaMap,
+    },
+    // Ranking table with cimero child
+    {
       path: '/ranking',
       name: 'ranking',
       component: Ranking,
@@ -88,43 +106,44 @@ const router = new Router({
         }
       ]
     },
+    // Register form
     {
       path: '/register',
       name: 'register',
       component: Register
     },
-
-
+    // Cuenta logros
     {
       path: '/cuenta/logros',
       name: 'user-logros',
       component: Cimero
     },
+    // Cuenta graphics
     {
       path: '/cuenta/graficos',
       name: 'user-charts',
       component: Charts
-    },
-    {
-      path: '/cuenta/add',
-      name: 'add-logros',
-      component: Cimero
     }
   ]
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(to);
   if (to.name === 'cima' || to.name === 'discover') {
     store.dispatch('cima', to.params.id).then(cima => {
       to.params.cima = cima
       next()
     })
-  } else if (to.name === 'patanegra-cima' || to.name === 'patanegra') {
+  } else if (to.name === 'patanegra-cima' || to.name === 'patanegra' || to.name === 'patanegra-map') {
+    if (to.name === 'patanegra-map') {
+      to.params.center = {lat: 40.416775, lng: -3.703790}
+      to.params.zoom = 6
+    }
     store.dispatch('patanegra').then(cimas => {
       to.params.cimas = cimas
       next()
     })
-  } else if (to.name === 'provincia-cima' || to.name === 'provincia') {
+  } else if (to.name === 'provincia-cima' || to.name === 'provincia' || to.name === 'provincia-map') {
     store.dispatch('provincia', to.params.pid).then(cimas => {
       to.params.cimas = cimas
       next()
@@ -145,5 +164,13 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+
+router.protectedRoutes = [
+  'add-logros', 'user-logros', 'user-charts'
+]
+
+router.protected = function(route){
+  return this.protectedRoutes.indexOf(route.name) !== -1;
+};
 
 export default router

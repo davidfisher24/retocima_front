@@ -175,7 +175,7 @@ export default {
       disabled:false,
       alert: false,
       alertMessage: [],
-      show: true
+      show: true,
     }
   },
 
@@ -199,13 +199,10 @@ export default {
 
     submit(){
       var self = this;
-      
-      for (var key in this.model) console.log(key + " " + this.model[key]);
       if (this.$refs.form.validate()) {
         self.disabled = true;
         this.$store.dispatch("register", this.model).then(() => {
           self.$router.push({name:"home"});
-          self.disabled = false;
         }).catch(err => {
           self.alertMessage = [];
           for (var key in err) self.alertMessage.push(err[key]);

@@ -12,12 +12,15 @@ const store = new Vuex.Store({
     allCimas: null,
     patanegra: null,
     ranking: null,
+    isLoggedIn: null,
+    loggedInUser: null,
     isLoggedIn: localStorage.getItem('cimero-token'),
     loggedInUser: localStorage.getItem('cimero-user')
   },
   getters: {
     loggedIn: state => {
-      return state.isLoggedIn
+      if (state.isLoggedIn !== null) return state.loggedInUser;
+      return false;
     }
   },
   mutations: {
@@ -44,16 +47,26 @@ const store = new Vuex.Store({
     },
     authCimero (state, cimero) {
       state.ranking = cimero
-    }
+    },
+    loggedIn (state) {
+      state.isLoggedIn = localStorage.getItem('cimero-token');
+      state.loggedInUser = localStorage.getItem('cimero-user');
+    },
+    loggedOut (state) {
+      state.isLoggedIn = null;
+      state.loggedInUser = null;
+    },
   },
 
   actions: {
     login ({ commit }, creds) {
+      var self = this;
       return new Promise((resolve, reject) => {
         axios.post(process.env.API_URL + 'auth/login', creds).then(function (response) {
           localStorage.setItem('cimero-token', response.data.token)
           localStorage.setItem('cimero-user', response.data.cimero.username)
-          resolve(response.data)
+          self.commit('loggedIn');
+          resolve()
         }).catch(err => {
           reject(err.response.data)
         })
@@ -61,11 +74,13 @@ const store = new Vuex.Store({
     },
 
     register ({ commit }, creds) {
+      var self = this;
       return new Promise((resolve, reject) => {
         axios.post(process.env.API_URL + 'auth/register', creds).then(function (response) {
           localStorage.setItem('cimero-token', response.data.token)
           localStorage.setItem('cimero-user', response.data.cimero.username)
-          resolve(response.data)
+          self.commit('loggedIn');
+          resolve()
         }).catch(err => {
           reject(err.response.data)
         })
@@ -75,6 +90,7 @@ const store = new Vuex.Store({
     logout ({ commit }) {
       localStorage.removeItem('cimero-token')
       localStorage.removeItem('cimero-user')
+      this.commit('loggedOut');
       return true
     },
 
@@ -173,16 +189,17 @@ const store = new Vuex.Store({
           resolve(self.state.ranking)
         } else {
           axios.get(process.env.API_URL + 'ranking').then(function (response) {
-            response.data.map(function (d, i) {
+            var tableData = response.data.map(function (d, i) {
               d.rank = i + 1
               d.link = self.baseUrl + '/cimeropublicdetails/' + d.id
               if (d.logros_count >= 480) d.image = 'gold'
               else if (d.logros_count < 480 && d.logros_count >= 320) d.image = 'silver'
               else if (d.logros_count >= 160 && d.logros_count < 320) d.image = 'bronze'
               else d.image = null
+              return d;
             })
-            self.commit('ranking', response.data)
-            resolve(response.data)
+            self.commit('ranking', tableData)
+            resolve(tableData)
           })
         }
       })
