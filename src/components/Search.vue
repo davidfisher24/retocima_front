@@ -21,7 +21,7 @@
 
 <script>
 
-import axios from 'axios';
+import ajax from '../ajax';
 
 export default {
   data () {
@@ -68,19 +68,19 @@ export default {
     searchCimasAjax: _.debounce(
       function () {
         var self = this;
-        axios.get('http://retocima/api/cimas/search/' + this.searchInput).then(function(response){
-            self.searchCimas = [];
-            if (response.data.length === 0) {
+        ajax.search(this.searchInput).then(data => {
+          self.searchCimas = [];
+            if (data.length === 0) {
                 self.searchNotFound = ["Nada Encontrado"];
                 return;
             }
             self.searchNotFound = [];
             var i = 0;
-            while (self.searchCimas.length <= 10 && response.data.length > i) {
-                if(response.data[i]) self.searchCimas.push(response.data[i]);
+            while (self.searchCimas.length <= 10 && data.length > i) {
+                if(data[i]) self.searchCimas.push(data[i]);
                 i++;
             }
-        });
+        })
       },500),
   }
 }

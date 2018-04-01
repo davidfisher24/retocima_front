@@ -125,7 +125,7 @@
 
 
 <script>
-import axios from 'axios';
+import ajax from '../../ajax';
 export default {
   data () {
     return {
@@ -182,11 +182,11 @@ export default {
   mounted () {
     var self = this;
     Promise.all([
-      axios.get('http://retocima/api/provincias'),
-      axios.get('http://retocima/api/paises')
-    ]).then(function(response){
-      self.provinces = response[0].data;
-      self.countries = response[1].data;
+      ajax.provincias(),
+      ajax.paises(),
+    ]).then(function(data){
+      self.provinces = data[0];
+      self.countries = data[1];
       self.findSpain();
     })
   },

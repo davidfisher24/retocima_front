@@ -27,7 +27,7 @@
 
 
 <script>
-import axios from 'axios'
+import ajax from '../ajax';
 import Blurb from './Blurb'
 import LandingPics from './LandingPics'
 import DiscoverCimas from './DiscoverCimas'
@@ -48,10 +48,7 @@ export default {
   },
 
   mounted (){
-    var self = this;
-    axios.get('http://retocima/ajax/discover').then(function(response){
-      self.discoverCimas = response.data;
-    })
+    ajax.discover().then(data => this.discoverCimas = data);
   },
 
   methods: {

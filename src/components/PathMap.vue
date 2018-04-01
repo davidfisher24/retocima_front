@@ -30,7 +30,7 @@
 </template>
 
 <script>
-    import axios from 'axios';
+    import ajax from '../ajax';
     import pin from '../assets/icons/pin.png';
     import finish from '../assets/icons/finish.png';
 
@@ -56,10 +56,10 @@
 
         methods: {
             getMapLines(){
-                var self=this;
-                axios.get('http://retocima/maplines/'+self.id + '.txt').then(function(response){
+                var self = this;
+                ajax.maplines(this.id).then(data => {
                     var coords = [];
-                    response.data.data.forEach(function(d) {
+                    data.forEach(function(d) {
                         coords.push({lat: d[0][0], lng: d[0][1]})
                     });
                     self.coords = coords;
@@ -67,8 +67,8 @@
                     var h = document.getElementById('wrapper').parentElement.parentElement.offsetHeight;
                     if (h<1) h = w/1.6;
                     self.style = "width: "+w+"px; height: "+h+"px; margin:0;";
-                    self.putLine();
-                });
+                    self.putLine(); 
+                })
             },
 
             getPathMapCenter(){
