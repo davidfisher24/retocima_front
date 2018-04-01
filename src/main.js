@@ -30,6 +30,7 @@ import {
   VChip,
   VAvatar,
   VSelect,
+  VMenu,
   transitions
 } from 'vuetify'
 import '../node_modules/vuetify/src/stylus/app.styl'
@@ -59,6 +60,7 @@ Vue.use(Vuetify, {
     VChip,
     VAvatar,
     VSelect,
+    VMenu,
     transitions,
     axios
   },

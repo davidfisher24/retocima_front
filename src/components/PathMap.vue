@@ -58,8 +58,12 @@
             getMapLines(){
                 var self = this;
                 ajax.maplines(this.id).then(data => {
+                    if (!data.data) {
+                        self.putCenter(data);
+                        return;
+                    }
                     var coords = [];
-                    data.forEach(function(d) {
+                    data.data.forEach(function(d) {
                         coords.push({lat: d[0][0], lng: d[0][1]})
                     });
                     self.coords = coords;
@@ -69,6 +73,14 @@
                     self.style = "width: "+w+"px; height: "+h+"px; margin:0;";
                     self.putLine(); 
                 })
+            },
+
+            putCenter (cima) {
+                this.coords = [{lat: parseFloat(cima.longitude), lng: parseFloat(cima.latitude)}];
+                var w = document.getElementById('wrapper').parentElement.offsetWidth;
+                var h = document.getElementById('wrapper').parentElement.parentElement.offsetHeight;
+                if (h<1) h = w/1.6;
+                this.style = "width: "+w+"px; height: "+h+"px; margin:0;";
             },
 
             getPathMapCenter(){

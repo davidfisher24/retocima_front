@@ -40,7 +40,7 @@ export default {
 	props:["text","route","params"],
 	methods: {
 		router () {
-			var parameters = this.params ? JSON.parse(this.params) : undefined;
+			var parameters = this.params ? this.params : undefined;
 			this.$router.push({name: this.route, params: parameters});
 		},
 	}

@@ -13,7 +13,7 @@ ajax.discover = function () {
 ajax.maplines = function (id) {
 	return new Promise((resolve, reject) => {
         axios.get(process.env.API_URL + 'maplines/'+id).then(function(response){
-            resolve(response.data.data);
+            resolve(response.data);
         }).catch(err => reject());
     });
 }

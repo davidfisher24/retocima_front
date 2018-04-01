@@ -172,7 +172,7 @@ const store = new Vuex.Store({
         if (self.state.ranking) {
           resolve(self.state.ranking)
         } else {
-          axios.get(process.env.API_URL + 'ranking/').then(function (response) {
+          axios.get(process.env.API_URL + 'ranking').then(function (response) {
             response.data.map(function (d, i) {
               d.rank = i + 1
               d.link = self.baseUrl + '/cimeropublicdetails/' + d.id

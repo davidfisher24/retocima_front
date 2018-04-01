@@ -12,7 +12,7 @@
       <v-list class="pa-0">
         <v-list-tile avatar>
           <v-list-tile-avatar color="primary">
-          D
+            {{isLoggedIn.substring(0, 1)}}
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title>{{isLoggedIn}}</v-list-tile-title>
@@ -35,19 +35,31 @@
     </v-navigation-drawer>
 
 
-    <v-toolbar class="primary">
+    <v-toolbar class="primary" app>
       <v-toolbar-title>
         <router-link :to="{ name: 'home'}" class="white--text"  style="text-decoration:none;">
           Reto Cima
         </router-link>
       </v-toolbar-title>
       <v-toolbar-items>
-        <Button text="listado" route="listado"></Button>
-        <Button text="ranking" route="ranking"></Button>
-        <Button text="Estadistica"></Button>
-        <Button text="Pata Negra" route="patanegra" params='{"format": "list"}'></Button>
-        <Button text="Mapa" route="cima-map"></Button>
+        <Button v-for="route in routes" :key="route.text" :text="route.text" :route="route.route" :params="route.params"></Button>
       </v-toolbar-items>
+      <!--<v-menu offset-x :nudge-width="200" v-model="menu">
+        <v-btn icon slot="activator" dark>
+          <v-icon>more_vert</v-icon>
+        </v-btn>
+        <v-card>
+          <v-list>
+            <v-list-tile avatar  v-for="route in routes" :key="route.text" @click="">
+              <v-list-tile-content>
+                  <v-list-tile-title >
+                    {{route.text.toUpperCase()}}
+                  </v-list-tile-title>
+                </v-list-tile-content>
+              </v-list-tile>
+            </v-list>
+        </v-card>
+      </v-menu>-->
       <v-spacer></v-spacer>
       <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="isLoggedIn" class="white--text"></v-toolbar-side-icon>
       <v-toolbar-items v-if="!isLoggedIn">
@@ -76,7 +88,15 @@ export default {
     return {
       drawer: false,
       showLogin: false,
-      isLoggedIn: false
+      isLoggedIn: false,
+      menu: false,
+      routes: [
+        {text:"listado", route:"listado"},
+        {text:"ranking", route:"ranking"},
+        {text:"Estadistica"},
+        {text:"Pata Negra", route:"patanegra", params:{"format": "list"}},
+        {text:"Mapa", route:"cima-map"},
+      ]
     }
   },
   beforeMount () {
