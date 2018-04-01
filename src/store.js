@@ -12,15 +12,13 @@ const store = new Vuex.Store({
     allCimas: null,
     patanegra: null,
     ranking: null,
-    isLoggedIn: null,
-    loggedInUser: null,
     isLoggedIn: localStorage.getItem('cimero-token'),
     loggedInUser: localStorage.getItem('cimero-user')
   },
   getters: {
     loggedIn: state => {
-      if (state.isLoggedIn !== null) return state.loggedInUser;
-      return false;
+      if (state.isLoggedIn !== null) return state.loggedInUser
+      return false
     }
   },
   mutations: {
@@ -36,7 +34,7 @@ const store = new Vuex.Store({
     cima (state, cima) {
       if (!state.cimas.find(x => x.id === cima.id)) state.cimas.push(cima)
     },
-    cimeros (state,cimero) {
+    cimeros (state, cimero) {
       if (!state.cimeros.find(x => x.id === cimero.id)); state.cimeros.push(cimero)
     },
     patanegra (state, patanegra) {
