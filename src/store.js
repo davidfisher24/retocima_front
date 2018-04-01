@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -51,7 +50,7 @@ const store = new Vuex.Store({
   actions: {
     login ({ commit }, creds) {
       return new Promise((resolve, reject) => {
-        axios.post('http://retocima/api/auth/login', creds).then(function (response) {
+        axios.post(process.env.API_URL + 'auth/login', creds).then(function (response) {
           localStorage.setItem('cimero-token', response.data.token)
           localStorage.setItem('cimero-user', response.data.cimero.username)
           resolve(response.data)
@@ -63,7 +62,7 @@ const store = new Vuex.Store({
 
     register ({ commit }, creds) {
       return new Promise((resolve, reject) => {
-        axios.post('http://retocima/api/auth/register', creds).then(function (response) {
+        axios.post(process.env.API_URL + 'auth/register', creds).then(function (response) {
           localStorage.setItem('cimero-token', response.data.token)
           localStorage.setItem('cimero-user', response.data.cimero.username)
           resolve(response.data)
@@ -89,7 +88,7 @@ const store = new Vuex.Store({
         if (self.state.cimas.find(x => x.id === id)) {
           resolve(self.state.cimas.find(x => x.id === id).val)
         } else {
-          axios.get('http://retocima/api/cima/' + id).then(function (response) {
+          axios.get(process.env.API_URL + 'cima/' + id).then(function (response) {
             self.commit('cima', {val: response.data, id: id})
             resolve(response.data)
           })
@@ -103,7 +102,7 @@ const store = new Vuex.Store({
         if (self.state.cimeros.find(x => x.id === id)) {
           resolve(self.state.cimeros.find(x => x.id === id).val)
         } else {
-          axios.get('http://retocima/api/cimero/' + id).then(function (response) {
+          axios.get(process.env.API_URL + 'cimero/' + id).then(function (response) {
             self.commit('cimeros', {val: response.data, id: id})
             resolve(response.data)
           })
@@ -117,7 +116,7 @@ const store = new Vuex.Store({
         if (self.state.allCimas) {
           resolve(self.state.allCimas)
         } else {
-          axios.get('http://retocima/api/cimas').then(function (response) {
+          axios.get(process.env.API_URL + 'cimas').then(function (response) {
             self.commit('allCimas', response.data)
             resolve(response.data)
           })
@@ -131,7 +130,7 @@ const store = new Vuex.Store({
         if (self.state.provincias.find(x => x.id === id)) {
           resolve(self.state.provincias.find(x => x.id === id).val)
         } else {
-          axios.get('http://retocima/api/cimas/' + id).then(function (response) {
+          axios.get(process.env.API_URL + 'cimas/' + id).then(function (response) {
             self.commit('provincia', {val: response.data, id: id})
             resolve(response.data)
           })
@@ -145,7 +144,7 @@ const store = new Vuex.Store({
         if (self.state.patanegra) {
           resolve(self.state.patanegra)
         } else {
-          axios.get('http://retocima/api/patanegra').then(function (response) {
+          axios.get(process.env.API_URL + 'patanegra').then(function (response) {
             self.commit('patanegra', response.data)
             resolve(response.data)
           })
@@ -159,7 +158,7 @@ const store = new Vuex.Store({
         if (self.state.listado) {
           resolve(self.state.listado)
         } else {
-          axios.get('http://retocima/api/communidads').then(function (response) {
+          axios.get(process.env.API_URL + 'communidads').then(function (response) {
             self.commit('listado', response.data)
             resolve(response.data)
           })
@@ -173,7 +172,7 @@ const store = new Vuex.Store({
         if (self.state.ranking) {
           resolve(self.state.ranking)
         } else {
-          axios.get('http://retocima/api/ranking/').then(function (response) {
+          axios.get(process.env.API_URL + 'ranking/').then(function (response) {
             response.data.map(function (d, i) {
               d.rank = i + 1
               d.link = self.baseUrl + '/cimeropublicdetails/' + d.id
@@ -195,7 +194,7 @@ const store = new Vuex.Store({
         if (self.state.authCimero) {
           resolve(self.state.authCimero)
         } else {
-          axios.get('http://retocima/api/cimero',{
+          axios.get(process.env.API_URL + 'cimero',{
             headers: {
               'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
             }
