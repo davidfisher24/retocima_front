@@ -14,7 +14,7 @@
                             </v-badge>
                         </div>
                         <v-list two-line>
-                            <v-list-tile @click="" v-for="provincia in communidad" :key="provincia.id">
+                            <v-list-tile  v-for="provincia in communidad" :key="provincia.id">
                                 <v-list-tile-content>
                                     <v-list-tile-title>{{provincia[0].provincia.nombre}}</v-list-tile-title>
                                     <v-list-tile-sub-title>{{provincia.length}} Logros</v-list-tile-sub-title>
@@ -46,12 +46,8 @@
         },
 
         mounted: function() {
-            var dispatch = this.$route.name === 'user-logros' ? "authCimero" : "cimeros";
-
-            this.$store.dispatch(dispatch,this.$route.params.uid).then(cimero => {
-                this.organizeLogros(cimero.logros);
-                this.cimero = cimero;
-            });
+            this.cimero = this.$route.params.cimero;
+            this.organizeLogros(this.cimero.logros);
         },
 
         methods: {
@@ -67,7 +63,7 @@
                 var count = 0;
                 communidad.forEach(prov => prov.forEach(logro => count++));
                 return count;
-            }
+            },
         }
     }
 </script>

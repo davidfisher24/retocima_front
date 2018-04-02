@@ -1,29 +1,29 @@
-
 <template>
 <v-app>
     <v-container>
-        <v-layout v-show="this.$route.name === 'ranking'">
+        <v-layout>
             <v-flex>
                 <BaseTable 
-                    :data="data"
+                    store = "ranking"
+                    :storeData="storeData"
                     :columns="columns"
                     :filterOptions="{Provincia:'provinciaName'}"
                     :searchOptions="['fullName']"
+                    :defaultPagination='defaultPagination'
                     :title="title"
                     @action="action"
                 ></BaseTable>
             </v-flex>
         </v-layout>
-        <router-view></router-view>
     </v-container>
 </v-app>
 </div>
+
 </template>
 
 <script>
 
     import BaseTable from '../components/Tables/BaseTable.vue';
-    import axios from 'axios'
 
     export default {
 
@@ -31,13 +31,8 @@
             'BaseTable': BaseTable,
         },
 
-        mounted: function() {
-            this.$store.dispatch('ranking').then(data => this.data = data);
-        },
-
         data: function() {
             return {
-                data: [],
                 columns: [
                     { value: 'rank', text: 'Posicion', sortable:true },
                     { value: 'image', text: '', type: 'image', sortable: false },
@@ -45,8 +40,20 @@
                     { value: 'provinciaName', text: 'Provincia', sortable: true},
                     { value: 'logros_count', text: 'Logros', sortable: true }
                 ],
-                title: "Ranking de cimeros"
+                title: "Ranking de cimeros",
+                defaultPagination: {
+                    rowsPerPage: 25,
+                    sortBy: 'rank',
+                    descending: false,
+                    page: 1,
+                },
             };
+        },
+
+        computed: {
+            storeData () {
+                return this.$route.params.storeData;
+            },
         },
 
         methods: {

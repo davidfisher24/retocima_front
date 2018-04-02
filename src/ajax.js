@@ -2,14 +2,6 @@ import axios from 'axios'
 
 const ajax = {};
 
-ajax.discover = function () {
-	return new Promise((resolve, reject) => {
-        axios.get(process.env.API_URL + 'discover').then(function(response){
-	      resolve(response.data);
-	    })
-    });
-};
-
 ajax.maplines = function (id) {
 	return new Promise((resolve, reject) => {
         axios.get(process.env.API_URL + 'maplines/'+id).then(function(response){
@@ -42,4 +34,37 @@ ajax.paises = function () {
     });
 }
 
+ajax.addLogro = function (id) {
+    return new Promise((resolve, reject) => {
+        axios.post(process.env.API_URL  + 'update-logro',{
+            action: 'add',
+            cima: id,
+        },{ headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
+        }}).then(response => resolve(response.data)).catch(err => reject(err));
+    });
+}
+
+ajax.removeLogro = function (logro) {
+    return new Promise((resolve, reject) => {
+        axios.post(process.env.API_URL  + 'update-logro',{
+            action: 'remove',
+            logro: JSON.stringify(logro),
+        },{ headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
+        }}).then(response => resolve(response.data)).catch(err => reject(err));
+    });
+}
+
+ajax.userProvinceLogros = function (pid) {
+    return new Promise((resolve, reject) => {
+      axios.get(process.env.API_URL + 'cimero-logros/' + pid,{
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
+        }
+      }).then(function (response) {
+        resolve(response.data)
+      }).catch(() => reject()); 
+    })
+}
 export default ajax

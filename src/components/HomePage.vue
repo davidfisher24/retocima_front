@@ -1,9 +1,9 @@
 <template>
 <div>
-  <HomePageCarousel v-if="this.$route.name === 'home'"></HomePageCarousel>
+  <HomePageCarousel></HomePageCarousel>
   <v-container fluid>
     
-    <v-layout row wrap v-if="this.$route.name === 'home'">
+    <v-layout wrap grid>
       
       <v-flex xs12 md3 order-xs2 order-md1>
         <DiscoverCimas 
@@ -20,14 +20,12 @@
         <LandingPics></LandingPics>
       </v-flex>
     </v-layout>
-    <router-view></router-view>
   </v-container>
 </div>
 </template>
 
 
 <script>
-import ajax from '../ajax';
 import Blurb from './Blurb'
 import LandingPics from './LandingPics'
 import DiscoverCimas from './DiscoverCimas'
@@ -48,12 +46,12 @@ export default {
   },
 
   mounted (){
-    ajax.discover().then(data => this.discoverCimas = data);
+    this.$store.dispatch("discover").then(data => this.discoverCimas = data);
   },
 
   methods: {
     discover(id){
-      this.$router.push({name: 'discover', params: {id: id}})
+      this.$router.push({name: 'cima', params: {id: id}})
     },
   }
 

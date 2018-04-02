@@ -24,14 +24,8 @@
     </v-toolbar>
     <v-list class="pt-0" dense>
       <v-divider></v-divider>
-      <v-list-tile @click="route('user-logros')">
-        <v-list-tile-action>Mis Logros</v-list-tile-action>
-      </v-list-tile>
-      <v-list-tile @click="route('user-charts')">
-        <v-list-tile-action>Graficos</v-list-tile-action>
-      </v-list-tile>
-      <v-list-tile @click="logout">
-        <v-list-tile-action>Cerrar Session</v-list-tile-action>
+      <v-list-tile v-for="r in userRoutes" @click="route(r.route)">
+        <v-list-tile-action>{{r.text}}</v-list-tile-action>
       </v-list-tile>
     </v-list>
     </v-navigation-drawer>
@@ -52,14 +46,8 @@
       <v-list-tile @click="route('register')" v-if="!loggedIn">
         <v-list-tile-action>Darse Alta</v-list-tile-action>
       </v-list-tile>
-      <v-list-tile @click="route('user-logros')" v-if="loggedIn">
-        <v-list-tile-action>Mis Logros</v-list-tile-action>
-      </v-list-tile>
-      <v-list-tile @click="route('user-charts')" v-if="loggedIn">
-        <v-list-tile-action>Graficos</v-list-tile-action>
-      </v-list-tile>
-      <v-list-tile @click="logout" v-if="loggedIn">
-        <v-list-tile-action>Cerrar Session</v-list-tile-action>
+      <v-list-tile v-if="loggedIn" v-for="r in userRoutes" @click="route(r.route)">
+        <v-list-tile-action>{{r.text}}</v-list-tile-action>
       </v-list-tile>
       <v-divider></v-divider>
       <v-list-tile v-for="r in routes" :key="r.text" @click="route(r.route,r.params)">
@@ -99,7 +87,9 @@
         <v-toolbar-side-icon @click.stop="drawer = !drawer" class="white--text"></v-toolbar-side-icon>
       </span>
     </v-toolbar>
+
     <v-content>
+      <v-progress-circular v-if="loading" indeterminate color="primary" :size="70"  style="position:fixed;bottom:3%;right:3%;z-index:1000;"></v-progress-circular>
       <router-view/>
     </v-content>
   </v-app>
@@ -127,12 +117,19 @@ export default {
         {text:"Estadistica"},
         {text:"Pata Negra", route:"patanegra", params:{"format": "list"}},
         {text:"Mapa", route:"cima-map"},
+      ],
+      userRoutes: [
+        {text:"Mis Logros", route:"user-logros"},
+        {text:"Añadir Logros", route:"add-logros"},
+        {text:"Graficos", route:"user-charts"},
+        {text:"Cerrar Session", route:"logout"},
       ]
     }
   },
   computed: {
     ...mapGetters({
       loggedIn: 'loggedIn',
+      loading: 'loading',
     }),
   },
  
@@ -143,8 +140,7 @@ export default {
       this.showLogin = false;
     },
     route (page,params) {
-      console.log(page);
-      console.log(params);
+      if (page === 'logout') return this.logout();
       this.$router.push({name: page, params: params});
     }
   }

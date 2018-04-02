@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store'
+import ajax from '../ajax'
 
 // Pages
 import HomePage from '@/components/HomePage'
@@ -15,6 +16,8 @@ import CimaMap from '@/components/CimaMap'
 
 import Cimero from '@/components/Cimero'
 import Charts from '@/components/Charts/Container'
+import AddLogros from '@/components/AddLogros'
+import LogroList from '@/components/LogroList'
 
 import Register from '@/components/Forms/Register'
 
@@ -22,19 +25,12 @@ Vue.use(Router)
 
 const router = new Router({
   routes: [
-    // Home page with discover child
+    // Home page 
     {
       path: '/',
       name: 'home',
       component: HomePage,
       protected: true,
-      children: [
-        {
-          path: '/discover/:id',
-          name: 'discover',
-          component: Cima
-        }
-      ]
     },
     // Listado page
     {
@@ -42,13 +38,13 @@ const router = new Router({
       name: 'listado',
       component: Listado
     },
-    // Single cima page (functions as child)
+    // Single cima page
     {
       path: '/cima/:id',
       name: 'cima',
       component: Cima
     },
-    // Provincia or pata negra list page 
+    // Provincia page & pata negra page (cima list)
     {
       path: '/provincia/:pid',
       name: 'provincia',
@@ -87,24 +83,36 @@ const router = new Router({
       path: '/provincia-mapa/:pid',
       name: 'provincia-map',
       component: CimaMap,
+      children: [
+        {
+          path: '/provincia/:pid/:cid',
+          name: 'provincia-cima',
+          component: Cima
+        }
+      ]
     },
     {
       path: '/patanegra-mapa',
       name: 'patanegra-map',
       component: CimaMap,
+      children: [
+        {
+          path: '/patanegra/cima/:cid',
+          name: 'patanegra-cima',
+          component: Cima
+        }
+      ]
     },
     // Ranking table with cimero child
     {
       path: '/ranking',
       name: 'ranking',
       component: Ranking,
-      children: [
-        {
-          path: '/cimero/:uid',
-          name: 'cimero',
-          component: Cimero
-        }
-      ]
+    },
+    {
+      path: '/cimero/:uid',
+      name: 'cimero',
+      component: Cimero
     },
     // Register form
     {
@@ -112,11 +120,25 @@ const router = new Router({
       name: 'register',
       component: Register
     },
+
+
+    // CUENTA //
+    {
+      path: '/cuenta/add-logros',
+      name: 'add-logros',
+      component: AddLogros,
+    },
     // Cuenta logros
     {
       path: '/cuenta/logros',
       name: 'user-logros',
       component: Cimero
+    },
+    // Logros in a provincia add
+    {
+      path: '/cuenta/logros/provincia/:pid',
+      name: 'user-provincia',
+      component: LogroList
     },
     // Cuenta graphics
     {
@@ -128,12 +150,17 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(to);
+  store.commit('loading',true)
   if (to.name === 'cima' || to.name === 'discover') {
     store.dispatch('cima', to.params.id).then(cima => {
       to.params.cima = cima
       next()
     })
+  } else if (to.name === 'ranking') {
+    store.dispatch('ranking').then(data => {
+      to.params.storeData = data
+      next()
+    });
   } else if (to.name === 'patanegra-cima' || to.name === 'patanegra' || to.name === 'patanegra-map') {
     if (to.name === 'patanegra-map') {
       to.params.center = {lat: 40.416775, lng: -3.703790}
@@ -148,7 +175,7 @@ router.beforeEach((to, from, next) => {
       to.params.cimas = cimas
       next()
     })
-  } else if (to.name === 'listado') {
+  } else if (to.name === 'listado' || to.name === 'add-logros') {
     store.dispatch('listado').then(listado => {
       to.params.listado = listado
       next()
@@ -160,13 +187,28 @@ router.beforeEach((to, from, next) => {
       to.params.zoom = 6
       next()
     })
+  } else if (to.name === 'user-logros' || to.name === "cimero" || to.name === 'user-charts') {
+    var dispatch = to.name === 'user-logros' || to.name === 'user-charts'  ? "authCimero" : "cimeros";
+    store.dispatch(dispatch,to.params.uid).then(cimero => {
+        to.params.cimero = cimero;
+        next();
+    });
+  } else if (to.name === 'user-provincia') {
+    ajax.userProvinceLogros(to.params.pid).then(data => {
+        to.params.data = data;
+        next();
+    });
   } else {
     next()
   }
 })
 
+router.afterEach((to, from) => {
+  store.commit('loading',false)
+})
+
 router.protectedRoutes = [
-  'add-logros', 'user-logros', 'user-charts'
+  'user-logros', 'user-charts', 'user-provincia', 'add-logros'
 ]
 
 router.protected = function(route){

@@ -37,7 +37,6 @@ export default {
     return {
       active:0,
       id:"bar",
-      cimero: null,
     }
   },
   components: {
@@ -50,15 +49,11 @@ export default {
   },
 
   computed: {
-
+    cimero () {
+      return this.$route.params.cimero;
+    },
   },
   
-  mounted (){
-    this.$store.dispatch('authCimero').then(cimero => {
-        this.cimero = cimero;
-    });
-    
-  },
 
   methods: {
     organizeBar () {

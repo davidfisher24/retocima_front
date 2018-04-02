@@ -31,6 +31,8 @@ import {
   VAvatar,
   VSelect,
   VMenu,
+  VPagination,
+  VProgressCircular,
   transitions
 } from 'vuetify'
 import '../node_modules/vuetify/src/stylus/app.styl'
@@ -61,6 +63,8 @@ Vue.use(Vuetify, {
     VAvatar,
     VSelect,
     VMenu,
+    VPagination,
+    VProgressCircular,
     transitions,
     axios
   },

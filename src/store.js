@@ -5,10 +5,13 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    loading: false,
+    discover: null,
     listado: null,
     provincias: [],
     cimas: [],
     cimeros: [],
+    authCimero: null,
     allCimas: null,
     patanegra: null,
     ranking: null,
@@ -19,9 +22,21 @@ const store = new Vuex.Store({
     loggedIn: state => {
       if (state.isLoggedIn !== null) return state.loggedInUser
       return false
-    }
+    },
+    loading: state => {
+      return state.loading
+    },
   },
   mutations: {
+    loading (state, status) {
+      console.log("mutating loading");
+      state.loading = status;
+      console.log(state.loading);
+    },
+
+    discover (state, discover) {
+      state.discover = discover
+    },
     listado (state, listado) {
       state.listado = listado
     },
@@ -44,7 +59,7 @@ const store = new Vuex.Store({
       state.ranking = ranking
     },
     authCimero (state, cimero) {
-      state.ranking = cimero
+      state.authCimero = cimero
     },
     loggedIn (state) {
       state.isLoggedIn = localStorage.getItem('cimero-token');
@@ -110,14 +125,14 @@ const store = new Vuex.Store({
       })
     },
 
-    cimeros (context, id) {
+    discover(context) {
       var self = this
       return new Promise((resolve, reject) => {
-        if (self.state.cimeros.find(x => x.id === id)) {
-          resolve(self.state.cimeros.find(x => x.id === id).val)
+        if (self.state.discover) {
+          resolve(self.state.discover)
         } else {
-          axios.get(process.env.API_URL + 'cimero/' + id).then(function (response) {
-            self.commit('cimeros', {val: response.data, id: id})
+          axios.get(process.env.API_URL + 'discover').then(function (response) {
+            self.commit('discover', response.data)
             resolve(response.data)
           })
         }
@@ -196,8 +211,21 @@ const store = new Vuex.Store({
               else d.image = null
               return d;
             })
-            self.commit('ranking', tableData)
-            resolve(tableData)
+            resolve({source: "ajax", data: tableData})
+          })
+        }
+      })
+    },
+
+    cimeros (context, id) {
+      var self = this
+      return new Promise((resolve, reject) => {
+        if (self.state.cimeros.find(x => x.id === id)) {
+          resolve(self.state.cimeros.find(x => x.id === id).val)
+        } else {
+          axios.get(process.env.API_URL + 'cimero/' + id).then(function (response) {
+            self.commit('cimeros', {val: response.data, id: id})
+            resolve(response.data)
           })
         }
       })
@@ -220,7 +248,6 @@ const store = new Vuex.Store({
         }
       })
     },
-
   }
 })
 

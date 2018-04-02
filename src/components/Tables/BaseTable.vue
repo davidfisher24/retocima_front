@@ -46,19 +46,40 @@
     import bronze from '../../assets/icons/bronze.png';
 
     export default {
-        props: ['data','columns','filterOptions','searchOptions','title'],
+        props: ['storeData','columns','filterOptions','searchOptions','title','store','defaultPagination'],
         data: function() {
             return {
+                pagination: {},
                 images: {
                     gold:gold,
                     silver:silver,
                     bronze:bronze,
                 },
-                pagination: {
-                  rowsPerPage: 25,
-                },
-                search: null,
+                search: '',
+                data: [],
             };
+        },
+
+        mounted () {
+                if (this.storeData.source === 'ajax') {
+                    this.data = this.storeData.data;
+                    this.pagination = this.defaultPagination,
+                    this.$store.commit(this.store,this.getObject());
+                } else {
+                    this.data = this.storeData.data;
+                    this.search = this.storeData.search;
+                    this.pagination = this.storeData.pagination;
+                }
+        },
+
+
+        watch: {
+            pagination (options) {
+                this.$store.commit(this.store,this.getObject());
+            },
+            search (value) {
+                this.$store.commit(this.store,this.getObject());
+            }   
         },
 
         methods: {
@@ -71,14 +92,6 @@
                 var search = this.stripAccents(search.toString().toLowerCase());
                 var found = items.filter(row => filter(row[this.searchOptions[0]], search));
                 return found;
-            },
-
-            filterBySearch (option){
-
-            },
-
-            filterByOption(event){
-
             },
 
             stripAccents(string){
@@ -99,6 +112,17 @@
                 }
                 return returnString;
             },
+
+            getObject () {
+                return {
+                    data: this.data,
+                    columns: this.columns,
+                    title: this.title,
+                    pagination: this.pagination,
+                    search: this.search,
+                }
+            },
+
         }
     }
 </script>

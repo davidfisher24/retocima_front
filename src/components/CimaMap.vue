@@ -57,7 +57,7 @@
                     cima:{
                       codigo: null,
                       nombre: null,
-                    }
+                    },
                 },
                 offSet: new google.maps.Size(0,-30),
             };
@@ -121,12 +121,14 @@
             },
 
             route (id) {
-              this.$router.push({name: 'map-cima', params: {cid: id}})
+              if (this.$route.name === 'cima-map') this.$router.push({name: 'map-cima', params: {cid: id}});
+              else if (this.$route.name === 'provincia-map') this.$router.push({name: 'provincia-cima', params: {pid: this.$route.params.pid, cid: id}});
+              else if (this.$route.name === 'patanegra-map') this.$router.push({name: 'patanegra-cima', params: {cid: id}});
             },
 
             applyInfoWindowStyles() {
                 document.getElementsByClassName('gm-style-iw')[0].parentNode.childNodes[0].style.display = 'none'
-                document.getElementsByClassName('gm-style-iw')[0].parentNode.childNodes[0].style.display = 'none'
+                document.getElementsByClassName('gm-style-iw')[0].parentNode.childNodes[2].style.display = 'none'
                 document.getElementsByClassName('gm-style-iw')[0].parentNode.childNodes[1].style.top = '41px'
                 document.getElementsByClassName('gm-style-iw')[0].parentNode.childNodes[1].style.left = '30px'
             }
