@@ -24,8 +24,8 @@
                       <tr  @click="route(props.item.id)" v-if="props.item.estado === 1">
                           <td>{{ props.item.codigo }}</td>
                           <td>{{ props.item.nombre }}</td>
-                          <td class="text-xs-right">{{ props.item.logros_count }}</td>
-                          <td class="text-xs-right"><span v-if="props.item.vertientes[0]">{{ props.item.vertientes[0].altitud}}m</span></td>
+                          <td class="text-xs-center">{{ props.item.logros_count }}</td>
+                          <td class="text-xs-center"><span v-if="props.item.vertientes[0]">{{ props.item.vertientes[0].altitud}}m</span></td>
                           <td class="hidden-sm-and-down">
                             <p v-for="vert in props.item.vertientes">{{vert.vertiente}}</p>
                           </td>
