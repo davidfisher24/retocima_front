@@ -98,6 +98,20 @@ const store = new Vuex.Store({
       })
     },
 
+    updateAccount ({ commit }, model) {
+      var self = this;
+      return new Promise((resolve, reject) => {
+        axios.post(process.env.API_URL + 'edit-account',model,{
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
+          }
+        }).then(function (response) {
+          self.commit('authCimero', response.data)
+          resolve(response.data)
+        }).catch(err => reject(err.response.data)); 
+      })
+    },
+
     logout ({ commit }) {
       localStorage.removeItem('cimero-token')
       localStorage.removeItem('cimero-user')

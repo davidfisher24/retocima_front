@@ -7,6 +7,7 @@
         </v-flex>
         <v-flex>
           <v-card-text>
+            <v-progress-linear :indeterminate="true" color="primary" v-if="disabled"></v-progress-linear>
             <v-form v-model="valid" ref="form" lazy-validation>
               <v-text-field
                 label="Correo Electronico"

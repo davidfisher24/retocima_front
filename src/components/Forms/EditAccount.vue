@@ -10,6 +10,7 @@
             <v-flex>
               
               <v-card-text>
+                <v-progress-linear :indeterminate="true" color="primary" v-if="disabled"></v-progress-linear>
                 <v-form v-model="valid" ref="form" lazy-validation>
                   <v-layout>
                     <v-flex xs6 md12 class="px-1">
@@ -18,7 +19,7 @@
                         v-model="model.username"
                         :rules="rules.username"
                         required
-                        @change="alert = false"
+                        @change="alert = false, success = false"
                         :disabled="disabled"
                       ></v-text-field>
                       <v-text-field
@@ -26,7 +27,7 @@
                         v-model="model.email"
                         :rules="rules.email"
                         required
-                        @change="alert = false"
+                        @change="alert = false, success = false"
                         :disabled="disabled"
                       ></v-text-field>
                       <v-text-field
@@ -34,7 +35,7 @@
                         v-model="model.nombre"
                         :rules="rules.nombre"
                         required
-                        @change="alert = false"
+                        @change="alert = false, success = false"
                         :disabled="disabled"
                       ></v-text-field>
                       <v-text-field
@@ -42,7 +43,7 @@
                             v-model="model.apellido1"
                             :rules="rules.apellido1"
                             required
-                            @change="alert = false"
+                            @change="alert = false, success = false"
                             :disabled="disabled"
                           ></v-text-field>
                       </v-flex>
@@ -53,7 +54,7 @@
                             v-model="model.apellido2"
                             :rules="rules.apellido2"
                             required
-                            @change="alert = false"
+                            @change="alert = false, success = false"
                             :disabled="disabled"
                           ></v-text-field>
                           <v-select
@@ -64,7 +65,7 @@
                             label="Pais"
                             auto
                             autocomplete
-                            @change="alert = false"
+                            @change="alert = false, success = false"
                             :disabled="disabled"
                           ></v-select>
                           <v-select
@@ -77,7 +78,7 @@
                             :disabled="model.pais !== spainId || disabled"
                             auto
                             autocomplete
-                            @change="alert = false"
+                            @change="alert = false, success = false"
                           ></v-select>
                           <v-text-field 
                             type="date" 
@@ -85,13 +86,16 @@
                             name="fechanacimiento" 
                             v-model="model.fechanacimiento" 
                             :rules="rules.dob" 
-                            @change="alert = false"
+                            @change="alert = false, success = false"
                             :disabled="disabled"
                           ></v-text-field>
                       </v-flex>
                   </v-layout>
                 </v-form>
-                <v-alert outline color="error" icon="warning" :value="alert">
+                <v-alert outline color="success" icon="check_circle" :value="success">
+                  Cuenta actualizado con exito.
+                </v-alert>
+                <v-alert outline color="success" icon="warning" :value="alert">
                   <span v-for="message in alertMessage">{{message}}</span>
                 </v-alert>
                 <v-card-actions>
@@ -149,6 +153,7 @@ export default {
       valid: true,
       disabled:false,
       alert: false,
+      success:false,
       alertMessage: [],
     }
   },
@@ -175,8 +180,8 @@ export default {
       var self = this;
       if (this.$refs.form.validate()) {
         self.disabled = true;
-        ajax.updateAccount(this.model).then(() =>{
-          alert("Account updated successfully");
+        this.$store.dispatch("updateAccount",this.model).then(() =>{
+          self.success = true;
           self.disabled = false;
         }).catch(err => {
           self.alertMessage = [];
