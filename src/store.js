@@ -29,9 +29,7 @@ const store = new Vuex.Store({
   },
   mutations: {
     loading (state, status) {
-      console.log("mutating loading");
       state.loading = status;
-      console.log(state.loading);
     },
 
     discover (state, discover) {

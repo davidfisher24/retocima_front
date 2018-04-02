@@ -122,6 +122,7 @@ export default {
         {text:"Mis Logros", route:"user-logros"},
         {text:"Añadir Logros", route:"add-logros"},
         {text:"Graficos", route:"user-charts"},
+        {text:"Editar Cuenta", route:"user-edit"},
         {text:"Cerrar Session", route:"logout"},
       ]
     }

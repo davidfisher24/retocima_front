@@ -67,4 +67,16 @@ ajax.userProvinceLogros = function (pid) {
       }).catch(() => reject()); 
     })
 }
+
+ajax.updateAccount = function (model) {
+    return new Promise((resolve, reject) => {
+      axios.post(process.env.API_URL + 'edit-account',model,{
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
+        }
+      }).then(function (response) {
+        resolve(response.data)
+      }).catch(err => reject(response.data.errors)); 
+    })
+}
 export default ajax

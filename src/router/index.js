@@ -18,6 +18,7 @@ import Cimero from '@/components/Cimero'
 import Charts from '@/components/Charts/Container'
 import AddLogros from '@/components/AddLogros'
 import LogroList from '@/components/LogroList'
+import EditAccount from '@/components/Forms/EditAccount'
 
 import Register from '@/components/Forms/Register'
 
@@ -124,6 +125,11 @@ const router = new Router({
 
     // CUENTA //
     {
+      path: '/cuenta/edit',
+      name: 'user-edit',
+      component: EditAccount,
+    },
+    {
       path: '/cuenta/add-logros',
       name: 'add-logros',
       component: AddLogros,
@@ -187,8 +193,8 @@ router.beforeEach((to, from, next) => {
       to.params.zoom = 6
       next()
     })
-  } else if (to.name === 'user-logros' || to.name === "cimero" || to.name === 'user-charts') {
-    var dispatch = to.name === 'user-logros' || to.name === 'user-charts'  ? "authCimero" : "cimeros";
+  } else if (to.name === 'user-logros' || to.name === "cimero" || to.name === 'user-charts' || to.name === 'user-edit') {
+    var dispatch = to.name === 'user-logros' || to.name === 'user-charts' || to.name === 'user-edit' ? "authCimero" : "cimeros";
     store.dispatch(dispatch,to.params.uid).then(cimero => {
         to.params.cimero = cimero;
         next();
@@ -208,7 +214,7 @@ router.afterEach((to, from) => {
 })
 
 router.protectedRoutes = [
-  'user-logros', 'user-charts', 'user-provincia', 'add-logros'
+  'user-logros', 'user-charts', 'user-provincia', 'add-logros', 'user-edit'
 ]
 
 router.protected = function(route){
