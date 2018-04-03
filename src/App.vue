@@ -12,12 +12,12 @@
     >
       <v-toolbar flat class="transparent">
       <v-list class="pa-0">
-        <v-list-tile avatar>
+        <v-list-tile avatar v-if="loggedInUser">
           <v-list-tile-avatar color="primary">
-            {{loggedIn.substring(0, 1).toUpperCase()}}
+            {{loggedInUser.substring(0, 1).toUpperCase()}}
           </v-list-tile-avatar>
           <v-list-tile-content>
-            <v-list-tile-title>{{loggedIn}}</v-list-tile-title>
+            <v-list-tile-title>{{loggedInUser}}</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -39,6 +39,14 @@
       app
     >
     <v-list class="pt-0" dense>
+      <v-list-tile avatar v-if="loggedIn && loggedInUser">
+        <v-list-tile-avatar color="primary">
+          {{loggedInUser.substring(0, 1).toUpperCase()}}
+        </v-list-tile-avatar>
+        <v-list-tile-content>
+          <v-list-tile-title>{{loggedInUser}}</v-list-tile-title>
+        </v-list-tile-content>
+      </v-list-tile>
       <v-divider></v-divider>
       <v-list-tile @click.native.stop="showLogin = !showLogin" v-if="!loggedIn">
         <v-list-tile-action>Entrar</v-list-tile-action>
@@ -130,15 +138,27 @@ export default {
   computed: {
     ...mapGetters({
       loggedIn: 'loggedIn',
+      loggedInUser: 'loggedInUser',
       loading: 'loading',
     }),
+  },
+
+  mounted () {
+    if (this.loggedIn && !this.loggedInUser) this.$store.dispatch('verify')
+  },
+  
+  watch: {
+    loggedIn (state) {
+      if (state === false) {
+        if (this.$router.protected(this.$route)) this.$router.go({name: 'home'});
+      }
+    },
   },
  
   methods: {
     logout () {
       this.$store.dispatch('logout')
-      if (this.$router.protected(this.$route)) this.$router.push({name: 'home'});
-      this.showLogin = false;
+      this.showLogin = false
     },
     route (page,params) {
       if (page === 'logout') return this.logout();

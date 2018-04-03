@@ -56,7 +56,6 @@
 
 <script>
 
-import ajax from '../ajax'
 import _ from 'lodash'
 export default {
 
@@ -81,7 +80,7 @@ export default {
   methods: {
     add (id) {
       this.adding.push(id);
-      ajax.addLogro(id).then(logro => {
+      this.$store.dispatch("addLogro",id).then(logro => {
         this.completed.push(logro);
         this.incompleted.splice(this.incompleted.indexOf(this.incompleted.find(x => x.id === id)),1)
         this.adding.splice(this.adding.indexOf(id),1);
@@ -93,7 +92,7 @@ export default {
     remove (id) {
       this.adding.push(id);
       var logro = this.completed.find(x => x.id === id);
-      ajax.removeLogro(logro).then(cima => {
+      this.$store.dispatch("removeLogro",logro).then(cima => {
         this.incompleted.push(cima);
         this.completed.splice(this.completed.indexOf(this.completed.find(x => x.cima_id === cima.id)),1);
         this.adding.splice(this.adding.indexOf(id),1);

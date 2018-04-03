@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store'
-import ajax from '../ajax'
 
 // Pages
 import HomePage from '@/components/HomePage'
@@ -155,7 +154,6 @@ const router = new Router({
   ]
 })
 
-
 router.beforeEach((to, from, next) => {
   store.commit('loading',true)
   if (to.name === 'cima' || to.name === 'discover') {
@@ -201,7 +199,7 @@ router.beforeEach((to, from, next) => {
         next();
     });
   } else if (to.name === 'user-provincia') {
-    ajax.userProvinceLogros(to.params.pid).then(data => {
+    store.dispatch("userProvinceLogros",to.params.pid).then(data => {
         to.params.data = data;
         next();
     });

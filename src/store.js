@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
+import router from './router/index'
+
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -17,17 +19,22 @@ const store = new Vuex.Store({
     patanegra: null,
     ranking: null,
     isLoggedIn: localStorage.getItem('cimero-token'),
-    loggedInUser: localStorage.getItem('cimero-user')
+    loggedInUser: null,
   },
   getters: {
     expired: state => {
       var dateNow = new Date();
       var ts = dateNow.getTime() / 1000;
-      return jwt_decode(state.isLoggedIn).exp < ts;
+      return jwt_decode(state.isLoggedIn).exp - 30 < ts;
     },
     loggedIn: state => {
-      if (state.isLoggedIn !== null) return state.loggedInUser
+      if (state.isLoggedIn !== null) return true
       return false
+    },
+    loggedInUser: state => {
+      if (state.loggedInUser === null && state.isLoggedIn === null) return "What to do"
+      if (state.loggedInUser !== null) return state.loggedInUser
+      return null;
     },
     loading: state => {
       return state.loading
@@ -65,27 +72,31 @@ const store = new Vuex.Store({
     authCimero (state, cimero) {
       state.authCimero = cimero
     },
-    loggedIn (state) {
-      state.isLoggedIn = localStorage.getItem('cimero-token');
-      state.loggedInUser = localStorage.getItem('cimero-user');
+    loggedIn (state,data) {
+      localStorage.setItem('cimero-token',data.token)
+      state.isLoggedIn = data.token
+      state.loggedInUser = data.cimero.username
+    },
+    verify (state,data) {
+      state.loggedInUser = data.cimero.username
     },
     loggedOut (state) {
-      state.isLoggedIn = null;
-      state.loggedInUser = null;
+      localStorage.removeItem('cimero-token')
+      state.isLoggedIn = null
+      state.loggedInUser = null
     },
   },
 
   actions: {
+
     login ({ commit }, creds) {
       var self = this;
       return new Promise((resolve, reject) => {
         axios.post(process.env.API_URL + 'auth/login', creds).then(function (response) {
-          localStorage.setItem('cimero-token', response.data.token)
-          localStorage.setItem('cimero-user', response.data.cimero.username)
-          self.commit('loggedIn');
+          self.commit('loggedIn',response.data);
           resolve()
         }).catch(err => {
-          reject(err.response.data)
+          reject(err.response.data)  // returns to form with errors
         })
       })
     },
@@ -94,33 +105,15 @@ const store = new Vuex.Store({
       var self = this;
       return new Promise((resolve, reject) => {
         axios.post(process.env.API_URL + 'auth/register', creds).then(function (response) {
-          localStorage.setItem('cimero-token', response.data.token)
-          localStorage.setItem('cimero-user', response.data.cimero.username)
-          self.commit('loggedIn');
+          self.commit('loggedIn',response.data);
           resolve()
         }).catch(err => {
-          reject(err.response.data)
+          reject(err.response.data) // returns to form with errors
         })
       })
     },
 
-    updateAccount ({ commit }, model) {
-      var self = this;
-      return new Promise((resolve, reject) => {
-        axios.post(process.env.API_URL + 'edit-account',model,{
-          headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
-          }
-        }).then(function (response) {
-          self.commit('authCimero', response.data)
-          resolve(response.data)
-        }).catch(err => reject(err.response.data)); 
-      })
-    },
-
     logout ({ commit }) {
-      localStorage.removeItem('cimero-token')
-      localStorage.removeItem('cimero-user')
       this.commit('loggedOut');
       return true
     },
@@ -249,6 +242,38 @@ const store = new Vuex.Store({
       })
     },
 
+    
+    // Authenticated with token
+
+    verify ({ commit }) {
+      var self = this;
+      return new Promise((resolve, reject) => {
+        axios.get(process.env.API_URL + 'verify',{
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
+          }
+        }).then(function (response) {
+          console.log(response);
+          self.commit('verify', response.data)
+          resolve(response.data)
+        }).catch(err => self.commit('loggedOut'));
+      })
+    },
+
+    updateAccount ({ commit }, model) {
+      var self = this;
+      return new Promise((resolve, reject) => {
+        axios.post(process.env.API_URL + 'edit-account',model,{
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
+          }
+        }).then(function (response) {
+          self.commit('authCimero', response.data)
+          resolve(response.data)
+        }).catch(err => reject(err.response.data)); // Returns to form
+      })
+    },
+
     authCimero (context) {
       var self = this
       return new Promise((resolve, reject) => {
@@ -264,6 +289,40 @@ const store = new Vuex.Store({
             resolve(response.data)
           }).catch(() => reject()); 
         }
+      })
+    },
+
+    addLogro (context,id) {
+      return new Promise((resolve, reject) => {
+          axios.post(process.env.API_URL  + 'update-logro',{
+              action: 'add',
+              cima: id,
+          },{ headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
+          }}).then(response => resolve(response.data)).catch(err => reject(err));
+      });
+    },
+
+    removeLogro (context,logro) {
+      return new Promise((resolve, reject) => {
+          axios.post(process.env.API_URL  + 'update-logro',{
+              action: 'remove',
+              logro: JSON.stringify(logro),
+          },{ headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
+          }}).then(response => resolve(response.data)).catch(err => reject(err));
+      });
+    },
+
+    userProvinceLogros (context,pid) {
+      return new Promise((resolve, reject) => {
+        axios.get(process.env.API_URL + 'cimero-logros/' + pid,{
+          headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
+          }
+        }).then(function (response) {
+          resolve(response.data)
+        }).catch(() => reject()); 
       })
     },
   }
