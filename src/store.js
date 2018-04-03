@@ -23,6 +23,7 @@ const store = new Vuex.Store({
   },
   getters: {
     expired: state => {
+      if (!state.isLoggedIn) return null;
       var dateNow = new Date();
       var ts = dateNow.getTime() / 1000;
       return jwt_decode(state.isLoggedIn).exp - 30 < ts;
@@ -79,6 +80,10 @@ const store = new Vuex.Store({
     },
     verify (state,data) {
       state.loggedInUser = data.cimero.username
+    },
+    refresh (state,token) {
+      localStorage.setItem('cimero-token',token)
+      state.isLoggedIn = data.token
     },
     loggedOut (state) {
       localStorage.removeItem('cimero-token')
@@ -242,21 +247,38 @@ const store = new Vuex.Store({
       })
     },
 
-    
-    // Authenticated with token
-
-    verify ({ commit }) {
+    refresh ({dispatch, commit}) {
       var self = this;
       return new Promise((resolve, reject) => {
-        axios.get(process.env.API_URL + 'verify',{
+        if (!self.getters.expired) {
+          return resolve();
+        }
+        axios.get(process.env.API_URL + 'auth/refresh',{
           headers: {
             'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
           }
         }).then(function (response) {
-          console.log(response);
-          self.commit('verify', response.data)
-          resolve(response.data)
-        }).catch(err => self.commit('loggedOut'));
+          self.commit('refresh', response.data.token)
+          resolve()
+        }).catch(err => reject());
+      })
+    },
+    
+    // Authenticated with token
+
+    verify ({ dispatch, commit }) {
+      var self = this;
+      return new Promise((resolve, reject) => {
+        dispatch("refresh").then(() => {
+          axios.get(process.env.API_URL + 'verify',{
+            headers: {
+              'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
+            }
+          }).then(function (response) {
+            self.commit('verify', response.data)
+            resolve(response.data)
+          }).catch(err => self.commit('loggedOut'));
+         })
       })
     },
 
