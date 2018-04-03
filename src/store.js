@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
+import jwt_decode from 'jwt-decode'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
@@ -19,6 +20,11 @@ const store = new Vuex.Store({
     loggedInUser: localStorage.getItem('cimero-user')
   },
   getters: {
+    expired: state => {
+      var dateNow = new Date();
+      var ts = dateNow.getTime() / 1000;
+      return jwt_decode(state.isLoggedIn).exp < ts;
+    },
     loggedIn: state => {
       if (state.isLoggedIn !== null) return state.loggedInUser
       return false

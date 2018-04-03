@@ -155,6 +155,7 @@ const router = new Router({
   ]
 })
 
+
 router.beforeEach((to, from, next) => {
   store.commit('loading',true)
   if (to.name === 'cima' || to.name === 'discover') {

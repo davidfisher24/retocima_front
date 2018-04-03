@@ -15,6 +15,7 @@
                 :rules="rules.email"
                 required
                 @change="alert = false"
+                :disabled="disabled"
               ></v-text-field>
               <v-text-field
                 label="Contrasena"
@@ -23,6 +24,7 @@
                 @change="alert = false"
                 required
                 type="password"
+                :disabled="disabled"
               ></v-text-field>
             </v-form>
             <v-alert outline color="error" icon="warning" :value="alert">
@@ -60,16 +62,20 @@ export default {
       valid: true,
       show: true,
       alert: false,
+      disabled: false,
     }
   },
   methods: {
     submit(){
+      this.disabled = true;
       if (this.$refs.form.validate()) {
         this.$store.dispatch("login", this.model).then(data => {
           this.$emit('login',data);
           this.show = false;
+          this.disabled = false;
         }).catch(err => {
           this.alert = true;
+          this.disabled = false;
         });
       }
     },
