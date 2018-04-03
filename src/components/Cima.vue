@@ -85,7 +85,7 @@
                     </v-card>
                 </v-flex>
                 <v-flex md8 xs12>
-                  <PathMap :id="cima.id"></PathMap>
+                  <PathMap :id="cima.vertientes[i].id"></PathMap>
                 </v-flex>
             </v-layout>
             <v-card raised class="pa-2">
@@ -138,6 +138,10 @@ export default {
   },
 
   computed: {
+      vertienteId () {
+        return this.cima.vertientes[this.active].id
+      },
+
       properties (){
           return [
               {title: 'Altitud', value: this.cima.vertientes[this.active] ? this.cima.vertientes[this.active].altitud + "m" : " - "},

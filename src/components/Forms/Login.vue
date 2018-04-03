@@ -70,7 +70,6 @@ export default {
       this.disabled = true;
       if (this.$refs.form.validate()) {
         this.$store.dispatch("login", this.model).then(data => {
-          this.$emit('login',data);
           this.show = false;
           this.disabled = false;
         }).catch(err => {
