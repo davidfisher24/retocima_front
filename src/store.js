@@ -3,8 +3,55 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
 import router from './router/index'
+import _ from 'lodash'
 
 Vue.use(Vuex)
+
+const doRequest = (store, { url, mutation, params }) => {
+  return new Promise((resolve, reject) => {
+    axios.get(process.env.API_URL + url).then(function (response) {
+      store.commit(mutation, {data: response.data, params: params})
+      resolve(response.data)
+    }).catch(err => {
+      // Throw error and don't change page
+      reject(err.response.data)
+    })
+  })
+}
+
+const doLoginRequest = (store, { method, url, data, mutation, params }) => {
+  return new Promise((resolve, reject) => {
+    axios({
+      method: method,
+      url: process.env.API_URL + url,
+      data: data
+    }).then(response => {
+      store.commit(mutation, {data: response.data, params: params})
+      resolve(response.data)
+    }).catch(err => {
+      // Goes back to form
+      reject(err.response.data)
+    })
+  })
+}
+
+const doAuthRequest = (store, { method, url, data, mutation, params }) => {
+  if (store.getters.expired === true) return store.commit("loggedOut")
+  return new Promise((resolve, reject) => {
+    axios({
+      method: method,
+      url: process.env.API_URL + url,
+      data: data,
+      headers: {'Authorization': 'Bearer ' + localStorage.getItem('cimero-token') },
+    }).then(response => {
+      if(mutation) store.commit(mutation, {data: response.data, params: params})
+      resolve(response.data)
+    }).catch(err => {
+      store.commit("loggedOut")
+    })
+  })
+}
+
 
 const store = new Vuex.Store({
   state: {
@@ -41,82 +88,78 @@ const store = new Vuex.Store({
       return state.loading
     },
   },
+
   mutations: {
     loading (state, status) {
       state.loading = status;
     },
 
-    discover (state, discover) {
-      state.discover = discover
+    discover (state, {data, params}) {
+      state.discover = data
     },
-    listado (state, listado) {
-      state.listado = listado
+    listado (state, {data, params}) {
+      state.listado = data
     },
-    provincia (state, provincia) {
-      if (!state.provincias.find(x => x.id === provincia.id)); state.provincias.push(provincia)
+    provincia (state, {data, params}) {
+      if (!state.provincias.find(x => x.id === params.id)) state.provincias.push({val: data, id: params.id})
     },
-    allCimas (state, list) {
-      state.allCimas = list
+    allCimas (state, {data, params}) {
+      state.allCimas = data
     },
-    cima (state, cima) {
-      if (!state.cimas.find(x => x.id === cima.id)) state.cimas.push(cima)
+    cima (state, {data, params}) {
+      if (!state.cimas.find(x => x.id === data.id)) state.cimas.push(data)
     },
-    cimeros (state, cimero) {
-      if (!state.cimeros.find(x => x.id === cimero.id)); state.cimeros.push(cimero)
+    patanegra (state, {data, params}) {
+      state.patanegra = data
     },
-    patanegra (state, patanegra) {
-      state.patanegra = patanegra
+    cimeros (state, {data, params}) {
+      if (!state.cimeros.find(x => x.id === params.id)); state.cimeros.push({val: data, id: params.id})
     },
+    authCimero (state, {data}) {
+      state.authCimero = data
+    },
+
     ranking (state, ranking) {
-      console.log(ranking.pagination.page)
       state.ranking = ranking
     },
-    authCimero (state, cimero) {
-      state.authCimero = cimero
-    },
-    loggedIn (state,data) {
+
+    loggedIn (state,{data, params}) {
       localStorage.setItem('cimero-token',data.token)
       state.isLoggedIn = data.token
       state.loggedInUser = data.cimero.username
     },
-    verify (state,data) {
+    verify (state,{data}) {
       state.loggedInUser = data.cimero.username
     },
-    refresh (state,token) {
-      localStorage.setItem('cimero-token',token)
+    refresh (state,{data}) {
+      localStorage.setItem('cimero-token',data.token)
       state.isLoggedIn = data.token
     },
     loggedOut (state) {
       localStorage.removeItem('cimero-token')
+      localStorage.removeItem('cimero-user')
       state.isLoggedIn = null
       state.loggedInUser = null
     },
   },
 
   actions: {
-
     login ({ commit }, creds) {
-      var self = this;
-      return new Promise((resolve, reject) => {
-        axios.post(process.env.API_URL + 'auth/login', creds).then(function (response) {
-          self.commit('loggedIn',response.data);
-          resolve()
-        }).catch(err => {
-          reject(err.response.data)  // returns to form with errors
-        })
-      })
+      return doLoginRequest(store, {
+          method: 'post',
+          url: 'auth/login',
+          data: creds,
+          mutation: 'loggedIn',
+      });
     },
 
     register ({ commit }, creds) {
-      var self = this;
-      return new Promise((resolve, reject) => {
-        axios.post(process.env.API_URL + 'auth/register', creds).then(function (response) {
-          self.commit('loggedIn',response.data);
-          resolve()
-        }).catch(err => {
-          reject(err.response.data) // returns to form with errors
-        })
-      })
+      return doLoginRequest(store, {
+          method: 'post',
+          url: 'auth/register',
+          data: creds,
+          mutation: 'loggedIn',
+      });
     },
 
     logout ({ commit }) {
@@ -129,87 +172,62 @@ const store = new Vuex.Store({
     },
 
     cima (context, id) {
-      var self = this
-      return new Promise((resolve, reject) => {
-        if (self.state.cimas.find(x => x.id === id)) {
-          resolve(self.state.cimas.find(x => x.id === id).val)
-        } else {
-          axios.get(process.env.API_URL + 'cima/' + id).then(function (response) {
-            self.commit('cima', {val: response.data, id: id})
-            resolve(response.data)
-          })
-        }
-      })
+      if (this.state.cimas.find(x => x.id === id)) return this.state.cimas.find(x => x.id === id)
+      return doRequest(store, {
+          url: 'cima/' + id,
+          mutation: 'cima',
+      });
     },
 
     discover(context) {
-      var self = this
-      return new Promise((resolve, reject) => {
-        if (self.state.discover) {
-          resolve(self.state.discover)
-        } else {
-          axios.get(process.env.API_URL + 'discover').then(function (response) {
-            self.commit('discover', response.data)
-            resolve(response.data)
-          })
-        }
-      })
+      if (this.state.discover) return this.state.discover
+      return doRequest(store, {
+          url: 'discover',
+          mutation: 'discover',
+      });
     },
 
     allCimas (context) {
-      var self = this
-      return new Promise((resolve, reject) => {
-        if (self.state.allCimas) {
-          resolve(self.state.allCimas)
-        } else {
-          axios.get(process.env.API_URL + 'cimas').then(function (response) {
-            self.commit('allCimas', response.data)
-            resolve(response.data)
-          })
-        }
-      })
+      if (this.state.allCimas) return this.state.allCimas
+      return doRequest(store, {
+          url: 'cimas',
+          mutation: 'allCimas',
+      });
     },
 
     provincia (context, id) {
-      var self = this
-      return new Promise((resolve, reject) => {
-        if (self.state.provincias.find(x => x.id === id)) {
-          resolve(self.state.provincias.find(x => x.id === id).val)
-        } else {
-          axios.get(process.env.API_URL + 'cimas/' + id).then(function (response) {
-            self.commit('provincia', {val: response.data, id: id})
-            resolve(response.data)
-          })
-        }
-      })
+      if (this.state.provincias.find(x => x.id === id)) return this.state.provincias.find(x => x.id === id).val
+      return doRequest(store, {
+          url: 'cimas/' + id,
+          mutation: 'provincia',
+          params: {id: id}
+      });
     },
 
     patanegra (context) {
-      var self = this
-      return new Promise((resolve, reject) => {
-        if (self.state.patanegra) {
-          resolve(self.state.patanegra)
-        } else {
-          axios.get(process.env.API_URL + 'patanegra').then(function (response) {
-            self.commit('patanegra', response.data)
-            resolve(response.data)
-          })
-        }
-      })
+      console.log(this.state.patanegra)
+      if (this.state.patanegra) return this.state.patanegra
+      return doRequest(store, {
+          url: 'patanegra',
+          mutation: 'patanegra',
+      });
     },
 
-    listado (context, id) {
-      var self = this
-      return new Promise((resolve, reject) => {
-        if (self.state.listado) {
-          resolve(self.state.listado)
-        } else {
-          axios.get(process.env.API_URL + 'communidads').then(function (response) {
-            self.commit('listado', response.data)
-            resolve(response.data)
-          })
-        }
-      })
+    listado (context) {
+      if (this.state.listado) return this.state.listado
+      return doRequest(store, {
+          url: 'communidads',
+          mutation: 'listado',
+      });
+    },
+
+    cimeros (context, id) {
+      if (this.state.cimeros.find(x => x.id === id)) return this.state.cimeros.find(x => x.id === id).val
+      return doRequest(store, {
+          url: 'cimero/' + id,
+          mutation: 'cimeros',
+          params: {id: id}
+      });
     },
 
     ranking (context) {
@@ -235,54 +253,9 @@ const store = new Vuex.Store({
       })
     },
 
-    cimeros (context, id) {
-      var self = this
-      return new Promise((resolve, reject) => {
-        if (self.state.cimeros.find(x => x.id === id)) {
-          resolve(self.state.cimeros.find(x => x.id === id).val)
-        } else {
-          axios.get(process.env.API_URL + 'cimero/' + id).then(function (response) {
-            self.commit('cimeros', {val: response.data, id: id})
-            resolve(response.data)
-          })
-        }
-      })
-    },
-
-    refresh ({dispatch, commit}) {
-      var self = this;
-      return new Promise((resolve, reject) => {
-        if (!self.getters.expired) {
-          return resolve();
-        }
-        axios.get(process.env.API_URL + 'auth/refresh',{
-          headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
-          }
-        }).then(function (response) {
-          self.commit('refresh', response.data.token)
-          resolve()
-        }).catch(err => reject());
-      })
-    },
     
-    // Authenticated with token
 
-    verify ({ dispatch, commit }) {
-      var self = this;
-      return new Promise((resolve, reject) => {
-        dispatch("refresh").then(() => {
-          axios.get(process.env.API_URL + 'verify',{
-            headers: {
-              'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
-            }
-          }).then(function (response) {
-            self.commit('verify', response.data)
-            resolve(response.data)
-          }).catch(err => self.commit('loggedOut'));
-         })
-      })
-    },
+    
 
     updateAccount ({ commit }, model) {
       var self = this;
@@ -298,56 +271,52 @@ const store = new Vuex.Store({
       })
     },
 
+    refresh ({dispatch, commit}) {
+      return doAuthRequest(store, {
+          method: 'get',
+          url: 'refresh',
+          mutation: 'refresh',
+      });
+    },
+
+    verify ({ dispatch, commit }) {
+      return doAuthRequest(store, {
+          method: 'get',
+          url: 'verify',
+          mutation: 'verify',
+      });
+    },
+
     authCimero (context) {
-      var self = this
-      return new Promise((resolve, reject) => {
-        if (self.state.authCimero) {
-          resolve(self.state.authCimero)
-        } else {
-          axios.get(process.env.API_URL + 'cimero',{
-            headers: {
-              'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
-            }
-          }).then(function (response) {
-            self.commit('authCimero', response.data)
-            resolve(response.data)
-          }).catch(() => reject()); 
-        }
-      })
+      if (this.state.authCimero) return this.state.authCimero
+      return doAuthRequest(store, {
+          method: 'get',
+          url: 'cimero',
+          mutation: 'authCimero',
+      });
     },
 
     addLogro (context,id) {
-      return new Promise((resolve, reject) => {
-          axios.post(process.env.API_URL  + 'update-logro',{
-              action: 'add',
-              cima: id,
-          },{ headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
-          }}).then(response => resolve(response.data)).catch(err => reject(err));
+      return doAuthRequest(store, {
+          method: 'post',
+          url: 'update-logro',
+          data: {action: 'add', cima: id},
       });
     },
 
     removeLogro (context,logro) {
-      return new Promise((resolve, reject) => {
-          axios.post(process.env.API_URL  + 'update-logro',{
-              action: 'remove',
-              logro: JSON.stringify(logro),
-          },{ headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
-          }}).then(response => resolve(response.data)).catch(err => reject(err));
+      return doAuthRequest(store, {
+          method: 'post',
+          url: 'update-logro',
+          data: {action: 'remove', logro: JSON.stringify(logro)},
       });
     },
 
     userProvinceLogros (context,pid) {
-      return new Promise((resolve, reject) => {
-        axios.get(process.env.API_URL + 'cimero-logros/' + pid,{
-          headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
-          }
-        }).then(function (response) {
-          resolve(response.data)
-        }).catch(() => reject()); 
-      })
+      return doAuthRequest(store, {
+          method: 'get',
+          url: 'cimero-logros/' + pid,
+      });
     },
   }
 })
