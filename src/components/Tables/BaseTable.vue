@@ -41,6 +41,7 @@
 
 
 <script>
+    import crown from '../../assets/icons/crown.png';
     import gold from '../../assets/icons/gold.png';
     import silver from '../../assets/icons/silver.png';
     import bronze from '../../assets/icons/bronze.png';
@@ -51,6 +52,7 @@
             return {
                 pagination: {},
                 images: {
+                    crown:crown,
                     gold:gold,
                     silver:silver,
                     bronze:bronze,
@@ -60,16 +62,16 @@
             };
         },
 
-        mounted () {
-                if (this.storeData.source === 'ajax') {
-                    this.data = this.storeData.data;
-                    this.pagination = this.defaultPagination,
-                    this.$store.commit(this.store,this.getObject());
-                } else {
-                    this.data = this.storeData.data;
-                    this.search = this.storeData.search;
-                    this.pagination = this.storeData.pagination;
-                }
+        beforeMount () {
+            if (this.storeData.source === 'ajax') {
+                this.data = this.storeData.data;
+                this.pagination = this.defaultPagination,
+                this.$store.commit(this.store,this.getObject());
+            } else {
+                this.data = this.storeData.data;
+                this.search = this.storeData.search;
+                this.pagination = this.storeData.pagination;
+            }
         },
 
 

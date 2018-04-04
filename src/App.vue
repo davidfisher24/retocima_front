@@ -66,7 +66,7 @@
 
   
     <v-toolbar class="primary" app>
-      <img src="@/assets/icons/logocima.png" height="38px" width="38px">
+      <img src="@/assets/icons/logowhite.png" height="38px" width="38px">
       <v-toolbar-title>
         <router-link :to="{ name: 'home'}" class="white--text"  style="text-decoration:none;">
           Reto Cima

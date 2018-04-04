@@ -11,8 +11,8 @@
           <v-btn flat @click="next" v-if="cimas && cimas.length > 1">Siguiente</v-btn>
         </v-toolbar-items>
         <v-spacer></v-spacer>
-        <v-chip color="secondary" text-color="white">
-          <v-avatar class="accent">{{cima.logros_count}}</v-avatar>
+        <v-chip color="white" text-color="secondary" label style="border:none;">
+          <v-avatar class="accent white--text" tile>{{cima.logros_count}}</v-avatar>
           Logros
         </v-chip>
       </v-toolbar>
@@ -28,15 +28,16 @@
       <v-flex xs12>
     <v-tabs
       v-model="active"
-      color="secondary"
+      color="white"
       dark
-      slider-color="accent"
+      slider-color="secondary"
       width="100%"
     >
       <v-tab
         v-for="n,i in cima.vertientes"
         :key="i"
         ripple
+        class="secondary--text"
       >
         {{ cima.vertientes[i].vertiente }} 
       </v-tab>

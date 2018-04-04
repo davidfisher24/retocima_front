@@ -68,6 +68,7 @@ const store = new Vuex.Store({
       state.patanegra = patanegra
     },
     ranking (state, ranking) {
+      console.log(ranking.pagination.page)
       state.ranking = ranking
     },
     authCimero (state, cimero) {
@@ -221,7 +222,8 @@ const store = new Vuex.Store({
             var tableData = response.data.map(function (d, i) {
               d.rank = i + 1
               d.link = self.baseUrl + '/cimeropublicdetails/' + d.id
-              if (d.logros_count >= 480) d.image = 'gold'
+              if (d.logros_count > 640) d.image = 'crown'
+              else if (d.logros_count >= 480 && d.logros_count <= 640) d.image = 'gold'
               else if (d.logros_count < 480 && d.logros_count >= 320) d.image = 'silver'
               else if (d.logros_count >= 160 && d.logros_count < 320) d.image = 'bronze'
               else d.image = null
