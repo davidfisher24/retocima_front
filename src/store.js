@@ -13,7 +13,7 @@ const doRequest = (store, { url, mutation, params }) => {
       store.commit(mutation, {data: response.data, params: params})
       resolve(response.data)
     }).catch(err => {
-      // Throw error and don't change page
+      // Change page depending where we are
       reject(err.response.data)
     })
   })
@@ -29,14 +29,16 @@ const doLoginRequest = (store, { method, url, data, mutation, params }) => {
       store.commit(mutation, {data: response.data, params: params})
       resolve(response.data)
     }).catch(err => {
-      // Goes back to form
+      // Goes back to form - form requests routed here
       reject(err.response.data)
     })
   })
 }
 
+/* Checks jwt */
 const doAuthRequest = (store, { method, url, data, mutation, params }) => {
-  if (store.getters.expired === true) return store.commit("loggedOut")
+  var decodedToken = jwt_decode(localStorage.getItem('cimero-token'));
+  if (decodedToken.exp - 30 < (new Date().getTime() / 1000))  return doRefreshTokenRequest(store, { method, url, data, mutation, params });
   return new Promise((resolve, reject) => {
     axios({
       method: method,
@@ -47,6 +49,36 @@ const doAuthRequest = (store, { method, url, data, mutation, params }) => {
       if(mutation) store.commit(mutation, {data: response.data, params: params})
       resolve(response.data)
     }).catch(err => {
+      // also need to redirect here in case of a 401
+      store.commit("loggedOut")
+    })
+  })
+}
+
+/* Carries out token request */
+const doRefreshTokenRequest = (store, { method, url, data, mutation, params }) => {
+  console.log("Routed to refresh request")
+  return new Promise((resolve, reject) => {
+    console.log("refresh")
+    axios({
+      method: 'get',
+      url: process.env.API_URL + 'auth/refresh',
+      headers: {'Authorization': 'Bearer ' + localStorage.getItem('cimero-token') },
+    }).then(response => {
+      localStorage.setItem('cimero-token',response.data.token)
+      return axios({
+        method: method,
+        url: process.env.API_URL + url,
+        data: data,
+        headers: {'Authorization': 'Bearer ' + response.data.token },
+        //headers: {'Authorization': 'Bearer ' + localStorage.getItem('cimero-token') },
+      })
+    }).then(response => {
+      console.log("resolve")
+      if(mutation) store.commit(mutation, {data: response.data, params: params})
+      resolve(response.data)
+    }).catch(err => {
+      // also need to redirect here in case of a 401
       store.commit("loggedOut")
     })
   })
@@ -65,16 +97,11 @@ const store = new Vuex.Store({
     allCimas: null,
     patanegra: null,
     ranking: null,
-    isLoggedIn: localStorage.getItem('cimero-token'),
     loggedInUser: null,
+    isLoggedIn: localStorage.getItem('cimero-token'),
+    
   },
   getters: {
-    expired: state => {
-      if (!state.isLoggedIn) return null;
-      var dateNow = new Date();
-      var ts = dateNow.getTime() / 1000;
-      return jwt_decode(state.isLoggedIn).exp - 30 < ts;
-    },
     loggedIn: state => {
       if (state.isLoggedIn !== null) return true
       return false
@@ -93,7 +120,6 @@ const store = new Vuex.Store({
     loading (state, status) {
       state.loading = status;
     },
-
     discover (state, {data, params}) {
       state.discover = data
     },
@@ -131,11 +157,8 @@ const store = new Vuex.Store({
     verify (state,{data}) {
       state.loggedInUser = data.cimero.username
     },
-    refresh (state,{data}) {
-      localStorage.setItem('cimero-token',data.token)
-      state.isLoggedIn = data.token
-    },
     loggedOut (state) {
+      // remove all personal data
       localStorage.removeItem('cimero-token')
       localStorage.removeItem('cimero-user')
       state.isLoggedIn = null
@@ -253,10 +276,6 @@ const store = new Vuex.Store({
       })
     },
 
-    
-
-    
-
     updateAccount ({ commit }, model) {
       var self = this;
       return new Promise((resolve, reject) => {
@@ -269,14 +288,6 @@ const store = new Vuex.Store({
           resolve(response.data)
         }).catch(err => reject(err.response.data)); // Returns to form
       })
-    },
-
-    refresh ({dispatch, commit}) {
-      return doAuthRequest(store, {
-          method: 'get',
-          url: 'refresh',
-          mutation: 'refresh',
-      });
     },
 
     verify ({ dispatch, commit }) {
