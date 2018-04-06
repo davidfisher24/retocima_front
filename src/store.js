@@ -11,7 +11,6 @@ const doRequest = (store, { url, mutation, params, resolveMutation }) => {
   return new Promise((resolve, reject) => {
     axios.get(process.env.API_URL + url).then(function (response) {
       store.commit(mutation, {data: response.data, params: params})
-      //resolveMutation ? resolve(this.state[mutation]) : resolve(response.data)
       resolve(response.data)
     }).catch(err => {
       // Change page depending where we are
@@ -59,9 +58,7 @@ const doAuthRequest = (store, { method, url, data, mutation, params }) => {
 
 /* Carries out token request */
 const doRefreshTokenRequest = (store, { method, url, data, mutation, params }) => {
-  console.log("Routed to refresh request")
   return new Promise((resolve, reject) => {
-    console.log("refresh")
     axios({
       method: 'get',
       url: process.env.API_URL + 'auth/refresh',
@@ -73,10 +70,8 @@ const doRefreshTokenRequest = (store, { method, url, data, mutation, params }) =
         url: process.env.API_URL + url,
         data: data,
         headers: {'Authorization': 'Bearer ' + response.data.token },
-        //headers: {'Authorization': 'Bearer ' + localStorage.getItem('cimero-token') },
       })
     }).then(response => {
-      console.log("resolve")
       if(mutation) store.commit(mutation, {data: response.data, params: params})
       resolve(response.data)
     }).catch(err => {

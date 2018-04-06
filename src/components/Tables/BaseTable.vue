@@ -66,15 +66,6 @@
             this.data = this.storeData.data
             this.pagination = this.storeData.pagination ? this.storeData.pagination : this.defaultPagination,
             this.search = this.storeData.search ? this.storeData.search : '';
-            /*if (this.storeData.source === 'ajax') {
-                this.data = this.storeData.data;
-                this.pagination = this.defaultPagination,
-                this.$store.commit(this.store,this.getObject());
-            } else {
-                this.data = this.storeData.data;
-                this.search = this.storeData.search;
-                this.pagination = this.storeData.pagination;
-            }*/
         },
 
 
@@ -132,8 +123,8 @@
     }
 </script>
 
-<style scoped>
-    table {border: 1px solid #000}
+<style  scoped>
+    table {border: 1px solid #333}
     thead {border: 0.5px solid #333}
     th {border-right: 0.5px solid #333; border-bottom:1px solid #333; text-align:center; text-transform:uppercase;}
     td:hover {cursor:pointer}
