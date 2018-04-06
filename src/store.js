@@ -151,7 +151,7 @@ const store = new Vuex.Store({
 
     loggedIn (state,{data, params}) {
       localStorage.setItem('cimero-token',data.token)
-      state.isLoggedIn = data.token
+      //state.isLoggedIn = data.token
       state.loggedInUser = data.cimero.username
     },
     verify (state,{data}) {
@@ -161,7 +161,7 @@ const store = new Vuex.Store({
       // remove all personal data
       localStorage.removeItem('cimero-token')
       localStorage.removeItem('cimero-user')
-      state.isLoggedIn = null
+      //state.isLoggedIn = null
       state.loggedInUser = null
     },
   },

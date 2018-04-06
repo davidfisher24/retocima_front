@@ -145,17 +145,8 @@ export default {
 
   mounted () {
     if (this.loggedIn && !this.loggedInUser) this.$store.dispatch('verify')
-    //if (!this.loggedIn && this.$router.protected(this.$route)) this.$router.go({path:"/"});
   },
   
-  /*watch: {
-    loggedIn (state) {
-      if (state === false) {
-        if (this.$router.protected(this.$route)) this.$router.go({name: 'home'});
-      }
-    },
-  },*/
- 
   methods: {
     logout () {
       this.$store.dispatch('logout')

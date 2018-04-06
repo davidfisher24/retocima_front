@@ -21,6 +21,10 @@ import EditAccount from '@/components/Forms/EditAccount'
 
 import Register from '@/components/Forms/Register'
 
+const protectedRoutes = [
+  'user-logros', 'user-charts', 'user-provincia', 'add-logros', 'user-edit'
+]
+
 Vue.use(Router)
 
 const router = new Router({
@@ -154,6 +158,11 @@ const router = new Router({
   ]
 })
 
+router.beforeEach((to,from,next) => {
+  if (protectedRoutes.indexOf(to.name) !== -1 && !store.getters.loggedIn) next("/")
+  else next()
+})
+
 router.beforeEach((to, from, next) => {
   store.commit('loading',true)
   if (to.name === 'cima' || to.name === 'discover') {
@@ -205,6 +214,7 @@ router.beforeEach((to, from, next) => {
     });
   } else {
     next()
+
   }
 })
 
@@ -212,12 +222,10 @@ router.afterEach((to, from) => {
   store.commit('loading',false)
 })
 
-router.protectedRoutes = [
-  'user-logros', 'user-charts', 'user-provincia', 'add-logros', 'user-edit'
-]
+
 
 router.protected = function(route){
-  return this.protectedRoutes.indexOf(route.name) !== -1;
+  return protectedRoutes.indexOf(route.name) !== -1;
 };
 
 export default router
