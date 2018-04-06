@@ -146,6 +146,12 @@ export default {
   mounted () {
     if (this.loggedIn && !this.loggedInUser) this.$store.dispatch('verify')
   },
+
+  watch: {
+    loggedIn (state) {
+      alert("Change +" + state)
+    }
+  },
   
   methods: {
     logout () {

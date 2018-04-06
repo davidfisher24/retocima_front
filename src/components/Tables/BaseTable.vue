@@ -63,7 +63,10 @@
         },
 
         beforeMount () {
-            if (this.storeData.source === 'ajax') {
+            this.data = this.storeData.data
+            this.pagination = this.storeData.pagination ? this.storeData.pagination : this.defaultPagination,
+            this.search = this.storeData.search ? this.storeData.search : '';
+            /*if (this.storeData.source === 'ajax') {
                 this.data = this.storeData.data;
                 this.pagination = this.defaultPagination,
                 this.$store.commit(this.store,this.getObject());
@@ -71,7 +74,7 @@
                 this.data = this.storeData.data;
                 this.search = this.storeData.search;
                 this.pagination = this.storeData.pagination;
-            }
+            }*/
         },
 
 

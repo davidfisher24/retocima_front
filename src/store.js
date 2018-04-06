@@ -7,10 +7,11 @@ import _ from 'lodash'
 
 Vue.use(Vuex)
 
-const doRequest = (store, { url, mutation, params }) => {
+const doRequest = (store, { url, mutation, params, resolveMutation }) => {
   return new Promise((resolve, reject) => {
     axios.get(process.env.API_URL + url).then(function (response) {
       store.commit(mutation, {data: response.data, params: params})
+      //resolveMutation ? resolve(this.state[mutation]) : resolve(response.data)
       resolve(response.data)
     }).catch(err => {
       // Change page depending where we are
@@ -38,7 +39,7 @@ const doLoginRequest = (store, { method, url, data, mutation, params }) => {
 /* Checks jwt */
 const doAuthRequest = (store, { method, url, data, mutation, params }) => {
   var decodedToken = jwt_decode(localStorage.getItem('cimero-token'));
-  if (decodedToken.exp - 30 < (new Date().getTime() / 1000))  return doRefreshTokenRequest(store, { method, url, data, mutation, params });
+  if (decodedToken.exp - 60 < (new Date().getTime() / 1000))  return doRefreshTokenRequest(store, { method, url, data, mutation, params });
   return new Promise((resolve, reject) => {
     axios({
       method: method,
@@ -50,6 +51,7 @@ const doAuthRequest = (store, { method, url, data, mutation, params }) => {
       resolve(response.data)
     }).catch(err => {
       // also need to redirect here in case of a 401
+      // Although there are some form functions
       store.commit("loggedOut")
     })
   })
@@ -144,24 +146,21 @@ const store = new Vuex.Store({
     authCimero (state, {data}) {
       state.authCimero = data
     },
-
     ranking (state, ranking) {
       state.ranking = ranking
     },
-
     loggedIn (state,{data, params}) {
       localStorage.setItem('cimero-token',data.token)
-      //state.isLoggedIn = data.token
+      state.isLoggedIn = data.token
       state.loggedInUser = data.cimero.username
     },
     verify (state,{data}) {
       state.loggedInUser = data.cimero.username
     },
     loggedOut (state) {
-      // remove all personal data
       localStorage.removeItem('cimero-token')
       localStorage.removeItem('cimero-user')
-      //state.isLoggedIn = null
+      state.isLoggedIn = null
       state.loggedInUser = null
     },
   },
@@ -254,40 +253,20 @@ const store = new Vuex.Store({
     },
 
     ranking (context) {
-      var self = this
-      return new Promise((resolve, reject) => {
-        if (self.state.ranking) {
-          resolve(self.state.ranking)
-        } else {
-          axios.get(process.env.API_URL + 'ranking').then(function (response) {
-            var tableData = response.data.map(function (d, i) {
-              d.rank = i + 1
-              d.link = self.baseUrl + '/cimeropublicdetails/' + d.id
-              if (d.logros_count > 640) d.image = 'crown'
-              else if (d.logros_count >= 480 && d.logros_count <= 640) d.image = 'gold'
-              else if (d.logros_count < 480 && d.logros_count >= 320) d.image = 'silver'
-              else if (d.logros_count >= 160 && d.logros_count < 320) d.image = 'bronze'
-              else d.image = null
-              return d;
-            })
-            resolve({source: "ajax", data: tableData})
-          })
-        }
-      })
+      if (this.state.ranking) return this.state.ranking
+      return doRequest(store, {
+          url: 'ranking',
+          mutation: 'ranking',
+      });
     },
 
     updateAccount ({ commit }, model) {
-      var self = this;
-      return new Promise((resolve, reject) => {
-        axios.post(process.env.API_URL + 'edit-account',model,{
-          headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
-          }
-        }).then(function (response) {
-          self.commit('authCimero', response.data)
-          resolve(response.data)
-        }).catch(err => reject(err.response.data)); // Returns to form
-      })
+      return doAuthRequest(store, {
+          method: 'post',
+          data: model,
+          url: 'edit-account',
+          mutation: 'authCimero',
+      });
     },
 
     verify ({ dispatch, commit }) {
@@ -329,6 +308,7 @@ const store = new Vuex.Store({
           url: 'cimero-logros/' + pid,
       });
     },
+
   }
 })
 
