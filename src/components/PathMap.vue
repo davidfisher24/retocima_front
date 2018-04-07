@@ -1,5 +1,5 @@
 <template> 
-    <div id="wrapper">
+    <div id="wrapper" class="ma-3">
         <gmap-map
           v-if="coords && mounted"
           :center="getPathMapCenter()"
@@ -50,11 +50,13 @@
         },
 
         mounted() {
-            this.mounted = true;
-            this.getMapLines();  
+            this.mounted = true
+            this.getMapLines()
         },
 
         methods: {
+
+
             getMapLines(){
                 var self = this;
                 ajax.maplines(this.id).then(data => {
@@ -69,7 +71,7 @@
                     self.coords = coords;
                     var w = document.getElementById('wrapper').parentElement.offsetWidth;
                     var h = document.getElementById('wrapper').parentElement.parentElement.offsetHeight;
-                    if (h<1) h = w/1.6;
+                    if (h<1 || h > w) h = w;
                     self.style = "width: "+w+"px; height: "+h+"px; margin:0;";
                     self.putLine(); 
                 })
@@ -117,9 +119,9 @@
 
         watch: { 
             id(newVal, oldVal) { 
-                this.coords = null;
-                this.path = [];
-                this.getMapLines();
+                this.coords = null
+                this.path = []
+                this.getMapLines()
             }
         }
     }

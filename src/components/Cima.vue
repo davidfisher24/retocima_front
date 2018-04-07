@@ -6,10 +6,10 @@
 
           <v-system-bar status color="background" v-if="cimas && cimas.length > 1">
             <v-layout row>
-              <v-flex xs2 offset-xs4>
+              <v-flex xs4 md2 offset-md4 offset-xs2>
                 <v-btn flat left @click="previous" style="text-transform: capitalize;">< Anterior</v-btn>
               </v-flex>
-              <v-flex xs2>
+              <v-flex xs4 md2 offset-xs-2>
                 <v-btn flat right @click="next" style="text-transform: capitalize;">Siguiente ></v-btn>
               </v-flex>
             </v-layout>
@@ -20,18 +20,31 @@
               {{cima.codigo}} {{cima.nombre}}
             </v-toolbar-title>
           </v-toolbar>
+          <v-layout row wrap class="white primary--text pl-2">
+            <v-flex class="d-inline-block mr-4">Ascensiones: 
+                <span class="accent--text">&nbsp;{{cima.logros_count}}</span>
+              </v-flex>
+              <v-flex class="d-inline-block mr-4" style="text-transform:uppercase;font-style:italic;" >
+                {{cima.provincia.nombre}} / {{cima.communidad.nombre}}
+              </v-flex>
+              <v-flex class="d-inline-block">
+                GPS: {{cima.latitude}} {{cima.longitude}}
+              </v-flex>
+          </v-layout>
 
-          <v-system-bar status color="white" class="primary--text">
-            <div class="d-inline-flex">Ascensiones: 
-              <span class="accent--text">&nbsp;{{cima.logros_count}}</span>
-            </div>
-            <div class="d-inline-flex ml-4" style="text-transform:uppercase;font-style:italic;" >
-              {{cima.provincia.nombre}} / {{cima.communidad.nombre}}
-            </div>
-            <div class="d-inline-flex ml-4" >
-              GPS: {{cima.latitude}} {{cima.longitude}}
-            </div>
-          </v-system-bar>
+          <!--<v-system-bar status flat color="white" class="primary--text">
+            <v-layout row wrap>
+              <div class="d-inline-flex mr-4 ml-2">Ascensiones: 
+                <span class="accent--text">&nbsp;{{cima.logros_count}}</span>
+              </div>
+              <div class="d-inline-flex mr-4" style="text-transform:uppercase;font-style:italic;" >
+                {{cima.provincia.nombre}} / {{cima.communidad.nombre}}
+              </div>
+              <div class="d-inline-flex">
+                GPS: {{cima.latitude}} {{cima.longitude}}
+              </div>
+            </v-layout>
+          </v-system-bar>-->
         </v-flex>
         <v-flex xs12>
 
@@ -114,8 +127,8 @@
                       </v-btn>
                     </v-card>
                 </v-flex>
-                <v-flex xs12 md4>
-                  <PathMap :id="cima.vertientes[i].id" class="ma-3"></PathMap>
+                <v-flex xs12 md8>
+                  <PathMap :id="cima.vertientes[i].id"></PathMap>
                 </v-flex>
               </v-layout>
             </v-tab-item>

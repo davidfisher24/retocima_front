@@ -222,7 +222,6 @@ const store = new Vuex.Store({
     },
 
     patanegra (context) {
-      console.log(this.state.patanegra)
       if (this.state.patanegra) return this.state.patanegra
       return doRequest(store, {
           url: 'patanegra',
