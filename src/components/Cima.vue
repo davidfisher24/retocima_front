@@ -1,111 +1,126 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="background">
     <v-slide-y-transition mode="out-in">
       <v-layout row wrap v-if="cima">
         <v-flex xs12>
-        <v-toolbar color="primary">
-        <v-toolbar-title class="white--text">{{cima.codigo}} {{cima.nombre}}</v-toolbar-title>
-        <v-divider></v-divider>
-        <v-toolbar-items>
-          <v-btn flat @click="previous" v-if="cimas && cimas.length > 1">Anterior</v-btn>
-          <v-btn flat @click="next" v-if="cimas && cimas.length > 1">Siguiente</v-btn>
-        </v-toolbar-items>
-        <v-spacer></v-spacer>
-        <v-chip color="white" text-color="secondary" label style="border:none;">
-          <v-avatar class="accent white--text" tile>{{cima.logros_count}}</v-avatar>
-          Logros
-        </v-chip>
-      </v-toolbar>
-      <v-card width="100%">
-        <v-system-bar status color="primary" dark>
-          {{cima.provincia.nombre}} / {{cima.communidad.nombre}}
-        </v-system-bar>
-        <v-system-bar status color="primary" dark>
-          GPS:  Latitude: {{cima.latitude}}  Longitude: {{cima.longitude}}
-        </v-system-bar>
-      </v-card>
-      </v-flex>
-      <v-flex xs12>
-    <v-tabs
-      v-model="active"
-      color="white"
-      dark
-      slider-color="secondary"
-      width="100%"
-    >
-      <v-tab
-        v-for="n,i in cima.vertientes"
-        :key="i"
-        ripple
-        class="secondary--text"
-      >
-        {{ cima.vertientes[i].vertiente }} 
-      </v-tab>
-      <v-tab-item
-        v-for="n,i in cima.vertientes"
-        :key="i"
-      >
-            <v-layout wrap>
-                <v-flex md4 xs12>
-                    <v-card raised class="pa-2">
-                        <v-layout>
-                            <v-flex md6><p><strong>Altitud:</strong></p></v-flex>
-                            <v-flex md6><p>{{cima.vertientes[i].altitud}}</p></v-flex>
-                        </v-layout>
-                        <v-layout>
-                            <v-flex md6><p><strong>Desnivel:</strong></p></v-flex>
-                            <v-flex md6><p>{{cima.vertientes[i].desnivel}}</p></v-flex>
-                        </v-layout>
-                        <v-layout>
-                            <v-flex md6><p><strong>Longitud:</strong></p></v-flex>
-                            <v-flex md6><p>{{cima.vertientes[i].longitud}}</p></v-flex>
-                        </v-layout>
-                        <v-layout>
-                            <v-flex md6><p><strong>% medio:</strong></p></v-flex>
-                            <v-flex md6><p>{{cima.vertientes[i].porcentage_medio}}</p></v-flex>
-                        </v-layout>
-                        <v-layout>
-                            <v-flex md6><p><strong>% máx.:</strong></p></v-flex>
-                            <v-flex md6><p>{{cima.vertientes[i].porcentage_maximo}}</p></v-flex>
-                        </v-layout>
-                        <v-layout>
-                            <v-flex md6><p><strong>APM:</strong></p></v-flex>
-                            <v-flex md6><p>{{cima.vertientes[i].apm}}</p></v-flex>
-                        </v-layout>
-                        <v-layout>
-                            <v-flex md12><p><strong>ENLACES</strong></p></v-flex>
-                        </v-layout>
-                        <v-layout>
-                            <v-flex md12 v-if="cima.vertientes[i].enlaces.length === 0"><p>No Disponible!</p></v-flex>
-                        </v-layout>
-                        <v-layout>
-                            <v-flex md12 v-for="(enlace,index) in cima.vertientes[i].enlaces" :key="index">
-                                <v-btn><a :href="enlace.url" target="_blank">Enlace {{index + 1}}</a></v-btn>
-                            </v-flex>
-                        </v-layout>
+
+          <v-system-bar status color="background" v-if="cimas && cimas.length > 1">
+            <v-layout row>
+              <v-flex xs2 offset-xs4>
+                <v-btn flat left @click="previous" style="text-transform: capitalize;">< Anterior</v-btn>
+              </v-flex>
+              <v-flex xs2>
+                <v-btn flat right @click="next" style="text-transform: capitalize;">Siguiente ></v-btn>
+              </v-flex>
+            </v-layout>
+          </v-system-bar>
+
+          <v-toolbar color="white" flat>
+            <v-toolbar-title class="primary--text subheading" style="text-transform:uppercase;">
+              {{cima.codigo}} {{cima.nombre}}
+            </v-toolbar-title>
+          </v-toolbar>
+
+          <v-system-bar status color="white" class="primary--text">
+            <div class="d-inline-flex">Ascensiones: 
+              <span class="accent--text">&nbsp;{{cima.logros_count}}</span>
+            </div>
+            <div class="d-inline-flex ml-4" style="text-transform:uppercase;font-style:italic;" >
+              {{cima.provincia.nombre}} / {{cima.communidad.nombre}}
+            </div>
+            <div class="d-inline-flex ml-4" >
+              GPS: {{cima.latitude}} {{cima.longitude}}
+            </div>
+          </v-system-bar>
+        </v-flex>
+        <v-flex xs12>
+
+
+          <v-system-bar status width="100%" color="white" class="primary--text mt-2">
+            Vertientes
+          </v-system-bar>
+          <v-tabs
+          v-model="active"
+          color="white"
+          slider-color="accent"
+          width="100%"
+          >
+              
+              <v-tab
+              v-for="n,i in cima.vertientes"
+              :key="i"
+              ripple
+              class="primary--text"
+              active-class="default-class accent--text"
+              >
+                {{ cima.vertientes[i].vertiente }} 
+              </v-tab>
+
+            <v-tab-item
+            v-for="n,i in cima.vertientes"
+            :key="i"
+            >
+
+
+              <v-layout wrap>
+                <v-flex xs12 md4>
+                    <v-card class="text-xs-center primary--text my-3 mr-1 py-2">
+                      <v-layout row class="py-2">
+                        <v-flex xs5 class="text-xs-right">Altitud</v-flex> 
+                        <v-flex xs2></v-flex> 
+                        <v-flex xs5 class="text-xs-left">{{cima.vertientes[i].altitud}}</v-flex>
+                      </v-layout>
+                      <v-layout row class="py-2">
+                        <v-flex xs5 class="text-xs-right">Desnivel</v-flex> 
+                        <v-flex xs2></v-flex> 
+                        <v-flex xs5 class="text-xs-left">{{cima.vertientes[i].desnivel}}</v-flex>
+                      </v-layout>
+                      <v-layout row class="py-2">
+                        <v-flex xs5 class="text-xs-right">Longitud</v-flex> 
+                        <v-flex xs2></v-flex> 
+                        <v-flex xs5 class="text-xs-left">{{cima.vertientes[i].longitud}}</v-flex>
+                      </v-layout>
+                      <v-layout row class="py-2">
+                        <v-flex xs5 class="text-xs-right">% medio</v-flex> 
+                        <v-flex xs2></v-flex> 
+                        <v-flex xs5 class="text-xs-left">{{cima.vertientes[i].porcentage_medio}}</v-flex>
+                      </v-layout>
+                      <v-layout row class="py-2">
+                        <v-flex xs5 class="text-xs-right">% max</v-flex> 
+                        <v-flex xs2></v-flex> 
+                        <v-flex xs5 class="text-xs-left">{{cima.vertientes[i].porcentage_maximo}}</v-flex>
+                      </v-layout>
+                      <v-layout row class="py-2">
+                        <v-flex xs5 class="text-xs-right">APM</v-flex> 
+                        <v-flex xs2></v-flex> 
+                        <v-flex xs5 class="text-xs-left">{{cima.vertientes[i].apm}}</v-flex>
+                      </v-layout>
+                    </v-card>
+
+                    <v-card class="primary--text my-3 mr-1 py-2">
+                      <v-card-text class="py-1" v-if="cima.vertientes[i].inicio">Inicio: {{cima.vertientes[i].inicio}}</v-card-text>
+                      <v-card-text class="py-1" v-if="cima.vertientes[i].dudas">Dudas: {{cima.vertientes[i].dudas}}</v-card-text>
+                      <v-card-text class="py-1" v-if="cima.vertientes[i].final">Final: {{cima.vertientes[i].final}}</v-card-text>
+                      <v-card-text class="py-1" v-if="cima.vertientes[i].obeservaciones">Observaciones: {{cima.vertientes[i].observaciones}}</v-card-text>
+                    </v-card>
+
+                    <v-card class="primary--text my-3 mr-1 py-2"> 
+                      <v-card-title>ENLACES DE INTERES</v-card-title>
+                      <v-card-text v-if="cima.vertientes[i].enlaces.length === 0" class="py-1">
+                        No Disponible!
+                      </v-card-text>
+                      <v-btn outline color="primary" v-for="(enlace,index) in cima.vertientes[i].enlaces" :key="index" @click="openExternalLink(enlace.url)">
+                        Enlace {{index + 1}}
+                      </v-btn>
                     </v-card>
                 </v-flex>
-                <v-flex md8 xs12>
-                  <PathMap :id="cima.vertientes[i].id"></PathMap>
+                <v-flex xs12 md4>
+                  <PathMap :id="cima.vertientes[i].id" class="ma-3"></PathMap>
                 </v-flex>
-            </v-layout>
-            <v-card raised class="pa-2">
-                <v-layout>
-                    <v-flex md12><p><strong>Inicio: </strong>{{cima.vertientes[i].inicio}}</p></v-flex>
-                </v-layout>
-                <v-layout>
-                    <v-flex md12><p><strong>Dudas:  </strong>{{cima.vertientes[i].dudas}}</p></v-flex>
-                </v-layout>
-                 <v-layout>
-                    <v-flex md12><p><strong>Final:  </strong>{{cima.vertientes[i].final}}</p></v-flex>
-                </v-layout>
-                <v-layout>
-                    <v-flex md12><p><strong>Observaciones: </strong>{{cima.vertientes[i].observaciones}}</p></v-flex>
-                </v-layout>
-            </v-card>
-      </v-tab-item>
-    </v-tabs>
-    </v-flex>
+              </v-layout>
+            </v-tab-item>
+          </v-tabs>
+        </v-flex>
       </v-layout>
     </v-slide-y-transition>
   </v-container>
@@ -120,7 +135,7 @@ import PathMap from './PathMap'
 export default {
   data () {
     return {
-      active:0,
+      active:"0",
       id:1,
       cima: null,
       cimas:null,
@@ -133,8 +148,12 @@ export default {
 
   watch: {
     '$route.params.id': function (id) {
-      this.$store.dispatch('cima',id).then(cima => this.cima = cima);
-      this.active = 0;
+      this.$store.dispatch('cima',id).then(cima => {
+        this.cima = cima
+        this.active = null
+        this.active = "0"
+      });
+      
     }
   },
 
@@ -158,6 +177,8 @@ export default {
   mounted (){
     this.cimas = this.$route.params.cimas || null;
     this.cima = this.cimas ? this.cimas.find(x => x.id === this.$route.params.cid) : this.$route.params.cima;
+    this.active = null
+    this.active = "0";
   },
 
   methods: {
@@ -170,7 +191,10 @@ export default {
       var index = this.cimas.findIndex(x => x.id === this.cima.id) - 1;
       if (index === 0) index = this.cimas.length - 1;
       this.cima = this.cimas[index];
-    }
+    },
+    openExternalLink (url) {
+      window.open(url, '_blank')
+    },
   }
 }
 </script>

@@ -100,6 +100,22 @@
       <v-progress-circular v-if="loading" indeterminate color="primary" :size="70"  style="position:fixed;bottom:3%;right:3%;z-index:1000;"></v-progress-circular>
       <router-view/>
     </v-content>
+
+    <v-footer color="primary" height="auto">
+      <v-layout row class="white--text hidden-sm-and-down">
+        <v-flex class="text-xs-center">
+        Coordinadores <strong>Diego Aguero y Miguel Bernabe</strong> |
+        Esta aventura comenzo el 13 de junio de 2007 |
+        Email de contacto: <strong>cima@altimetrias.com</strong>
+        </v-flex>
+      </v-layout>
+
+      <v-layout row wrap class="white--text hidden-md-and-up text-xs-center">
+        <v-flex xs12>Coordinadores <strong>Diego Aguero y Miguel Bernabe</strong></v-flex>
+        <v-flex xs12>Esta aventura comenzo el 13 de junio de 2007 </v-flex>
+        <v-flex xs12>Email de contacto: <strong>cima@altimetrias.com</strong></v-flex>
+      </v-layout>
+    </v-footer>
   </v-app>
 </template>
 
@@ -149,12 +165,6 @@ export default {
     if (this.loggedIn && !this.loggedInUser) this.$store.dispatch('verify')
   },
 
-  watch: {
-    loggedIn (state) {
-      alert("Change +" + state)
-    }
-  },
-  
   methods: {
     logout () {
       this.$store.dispatch('logout')
