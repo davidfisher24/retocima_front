@@ -31,20 +31,6 @@
                 GPS: {{cima.latitude}} {{cima.longitude}}
               </v-flex>
           </v-layout>
-
-          <!--<v-system-bar status flat color="white" class="primary--text">
-            <v-layout row wrap>
-              <div class="d-inline-flex mr-4 ml-2">Ascensiones: 
-                <span class="accent--text">&nbsp;{{cima.logros_count}}</span>
-              </div>
-              <div class="d-inline-flex mr-4" style="text-transform:uppercase;font-style:italic;" >
-                {{cima.provincia.nombre}} / {{cima.communidad.nombre}}
-              </div>
-              <div class="d-inline-flex">
-                GPS: {{cima.latitude}} {{cima.longitude}}
-              </div>
-            </v-layout>
-          </v-system-bar>-->
         </v-flex>
         <v-flex xs12>
 
@@ -163,10 +149,11 @@ export default {
     '$route.params.id': function (id) {
       this.$store.dispatch('cima',id).then(cima => {
         this.cima = cima
-        this.active = null
-        this.active = "0"
-      });
-      
+        this.resetTabs()
+      })
+    },
+    cima (newOne) {
+      this.resetTabs()
     }
   },
 
@@ -190,11 +177,15 @@ export default {
   mounted (){
     this.cimas = this.$route.params.cimas || null;
     this.cima = this.cimas ? this.cimas.find(x => x.id === this.$route.params.cid) : this.$route.params.cima;
-    this.active = null
-    this.active = "0";
+    this.resetTabs()
   },
 
   methods: {
+    resetTabs (){
+      // Consider if and if the number doesn't exist in the next panel
+      this.active = null
+      this.active = "0";
+    },
     next() {
       var index = this.cimas.findIndex(x => x.id === this.cima.id);
       if (index === this.cimas.length -1) index = 0;
