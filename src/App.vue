@@ -64,6 +64,7 @@
     </v-list>
     </v-navigation-drawer>
 
+
   
     <v-toolbar class="primary" app>
       <img src="@/assets/icons/logowhite.png" height="38px" width="38px">
@@ -77,14 +78,14 @@
       <!-- Desktop main navigation -->
       <span class="hidden-sm-and-down">
         <v-toolbar-items>
-          <Button v-for="route in routes" :key="route.text" :text="route.text" :route="route.route" :params="route.params"></Button>
+          <Button v-for="route in routes" :key="route.text" :text="route.text" textColor="white" underline="true" :route="route.route" :params="route.params"></Button>
         </v-toolbar-items>
       </span>
       <span class="hidden-sm-and-down">
       <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="loggedIn" class="white--text"></v-toolbar-side-icon>
         <v-toolbar-items v-if="!loggedIn">
-          <v-btn flat dark @click.native.stop="showLogin = !showLogin">Entrar</v-btn>
-          <Button text="darse alta" route="register"></Button>
+          <Button text="entrar" textColor="primary" lowercase="true" bgColor="white" @click.native.stop="showLogin = !showLogin" class="mr-2"></Button>
+          <Button text="darse alta" route="register" lowercase="true"  bgColor="white" textColor="primary" class="mr-2"></Button>
           <login v-if="showLogin" @close="showLogin = false"></login>
         </v-toolbar-items>
       </span>
@@ -96,7 +97,7 @@
       </span>
     </v-toolbar>
 
-    <v-content>
+    <v-content class="background">
       <v-progress-circular v-if="loading" indeterminate color="primary" :size="70"  style="position:fixed;bottom:3%;right:3%;z-index:1000;"></v-progress-circular>
       <router-view/>
     </v-content>

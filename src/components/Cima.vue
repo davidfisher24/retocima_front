@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid class="background">
+  <v-container fluid>
     <v-slide-y-transition mode="out-in">
       <v-layout row wrap v-if="cima">
         <v-flex xs12>

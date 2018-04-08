@@ -1,17 +1,26 @@
 <template>
-	<v-btn flat dark @click="router()" class="hover"><a class="white--text">{{text}}</a></v-btn>
+	<v-btn flat @click="trigger()" :class="classes('parent')"><a :class="classes('child')">{{text}}</a></v-btn>
 </template>
 
 <style>
+
+	.btn-bg-white {
+		background-color: white !important;
+	}
+
+	.btn-lowercase {
+		text-transform:capitalize;
+		font-weight:600;
+	}
 	
-	.hover a {
+	.btn-underline a {
 	    transition: 0.6s;
 	    text-decoration: none;
 	    margin: 0 10px;
 	    position:relative;
 	}
 
-	.hover a::before	{
+	.btn-underline a::before	{
 		content: "";
         position: absolute;
         width: 100%;
@@ -26,7 +35,7 @@
         transition: all 0.3s ease-in-out 0s;
 	}
 
-	.hover a:hover::before {
+	.btn-underline:hover a::before {
 		visibility: visible;
 	    -webkit-transform: scaleX(1);
 	    transform: scaleX(1);
@@ -37,12 +46,39 @@
 <script>
 
 export default {
-	props:["text","route","params"],
+	props:["text","bgColor","textColor","underline","lowercase","route","action","params"],
+
+
 	methods: {
+		classes (component) {
+			if (component == "child") {
+				if (this.textColor) return this.textColor + "--text"
+			}
+			if (component == "parent") {
+				var style = ""
+				if (this.underline) style += "btn-underline "
+				if (this.lowercase) style += "btn-lowercase "
+				if (this.bgColor) style += "btn-bg-" + this.bgColor
+				return style
+			}
+				
+				
+				
+		},
+
+		trigger () {
+			if (this.route) return this.router()
+			if (this.action) return this.act()
+		},
+
 		router () {
 			var parameters = this.params ? this.params : undefined;
 			this.$router.push({name: this.route, params: parameters});
 		},
+
+		act () {
+
+		}
 	}
 }
 </script>
