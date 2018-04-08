@@ -87,21 +87,20 @@
       <span class="hidden-sm-and-down">
       <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="loggedIn" class="white--text"></v-toolbar-side-icon>
         <v-toolbar-items v-if="!loggedIn">
-          <!--<Button text="entrar" textColor="primary" lowercase="true" bgColor="white" @click.native.stop="showLogin = !showLogin" class="mr-2"></Button>-->
-          <Button text="entrar" textColor="primary" lowercase="true" bgColor="white" @click="showLogin = !showLogin" class="mr-2"></Button>
+          <Button text="entrar" textColor="primary" lowercase="true" bgColor="white" @click.native.stop="showLogin = !showLogin" class="mr-2"></Button>
           <Button text="darse alta" route="register" lowercase="true"  bgColor="white" textColor="primary" class="mr-2"></Button>
-          <login v-if="showLogin" @close="showLogin = false"></login>
+          
         </v-toolbar-items>
       </span>
 
       <!-- Mobile main navigation -->
       <span class="hidden-md-and-up">
-        <login v-if="showLogin" @close="showLogin = false"></login>
         <v-toolbar-side-icon @click.stop="drawer = !drawer" class="white--text"></v-toolbar-side-icon>
       </span>
     </v-toolbar>
 
     <v-content class="background">
+    <v-dialog :value='showLogin' persistant><login @close="showLogin = false"></login></v-dialog>
       <v-progress-circular v-if="loading" indeterminate color="primary" :size="70"  style="position:fixed;bottom:3%;right:3%;z-index:1000;"></v-progress-circular>
       <router-view/>
     </v-content>
@@ -171,6 +170,7 @@ export default {
   },
 
   methods: {
+
     logout () {
       this.$store.dispatch('logout')
       this.showLogin = false

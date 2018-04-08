@@ -1,12 +1,11 @@
 <template>  
   <div>
-    <v-dialog :value='show' persistant>
       <v-card hover>
         <v-flex>
           <v-card-title class="py-1">
             Entrar
             <v-spacer></v-spacer>
-            <v-btn small icon @click="show = false">
+            <v-btn small icon @click="$emit('close',null)">
               <v-icon>close</v-icon>
             </v-btn>
           </v-card-title>
@@ -38,12 +37,10 @@
             </v-alert>
             <v-card-actions>
               <v-btn flat @click="submit" :disabled="!valid">Entrar</v-btn>
-              <v-btn flat @click="empty">Vaciar</v-btn>
             </v-card-actions>
           </v-card-text>
         </v-flex>
       </v-card>
-    </v-dialog>
   </div>      
 </template>
 
@@ -66,17 +63,9 @@ export default {
         ],
       },
       valid: true,
-      show: true,
       alert: false,
       disabled: false,
     }
-  },
-
-  watch: {
-    'this.$parent.showLogin' (val) {
-      alert(val)
-      this.show = val;
-    },
   },
 
   
@@ -85,17 +74,13 @@ export default {
       this.disabled = true;
       if (this.$refs.form.validate()) {
         this.$store.dispatch("login", this.model).then(data => {
-          this.show = false;
-          this.disabled = false;
+          this.disabled = false
+          this.$emit('close',null)
         }).catch(err => {
-          this.alert = true;
-          this.disabled = false;
+          this.alert = true
+          this.disabled = false
         });
       }
-    },
-    empty (){
-      this.model.email = '';
-      this.model.password = '';
     },
   },
 }
