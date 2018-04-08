@@ -13,8 +13,8 @@
       <v-toolbar flat class="transparent">
       <v-list class="pa-0">
         <v-list-tile avatar v-if="loggedInUser">
-          <v-list-tile-avatar color="primary">
-            {{loggedInUser.substring(0, 1).toUpperCase()}}
+          <v-list-tile-avatar color="primary" >
+            <span class="white--text">{{loggedInUser.substring(0, 1).toUpperCase()}}</span>
           </v-list-tile-avatar>
           <v-list-tile-content>
             <v-list-tile-title>{{loggedInUser}}</v-list-tile-title>
@@ -38,29 +38,32 @@
       class="hidden-md-and-up"
       app
     >
-    <v-list class="pt-0" dense>
+    <v-list class="pt-0 primary--text" dense>
       <v-list-tile avatar v-if="loggedIn && loggedInUser">
-        <v-list-tile-avatar color="primary">
+        <v-list-tile-avatar color="primary" class="white--text">
           {{loggedInUser.substring(0, 1).toUpperCase()}}
         </v-list-tile-avatar>
         <v-list-tile-content>
           <v-list-tile-title>{{loggedInUser}}</v-list-tile-title>
         </v-list-tile-content>
       </v-list-tile>
-      <v-divider></v-divider>
-      <v-list-tile @click.native.stop="showLogin = !showLogin" v-if="!loggedIn">
+
+      <v-list-tile v-for="r in routes" :key="r.text" @click="route(r.route,r.params)">
+        <v-list-tile-action primary style="text-transform:uppercase;"><span>{{r.text}}</span></v-list-tile-action>
+      </v-list-tile>
+
+      <v-divider></v-divider><hr class="primary mx-3" style="font-weight:400;">
+      <v-list-tile v-if="loggedIn" v-for="r in userRoutes" @click="route(r.route)">
+        <v-list-tile-action >{{r.text}}</v-list-tile-action>
+      </v-list-tile>
+
+      <v-list-tile v-if="!loggedIn" @click.native.stop="showLogin = !showLogin" @click="">
         <v-list-tile-action>Entrar</v-list-tile-action>
       </v-list-tile>
-      <v-list-tile @click="route('register')" v-if="!loggedIn">
+      <v-list-tile v-if="!loggedIn" @click="route('register')">
         <v-list-tile-action>Darse Alta</v-list-tile-action>
       </v-list-tile>
-      <v-list-tile v-if="loggedIn" v-for="r in userRoutes" @click="route(r.route)">
-        <v-list-tile-action>{{r.text}}</v-list-tile-action>
-      </v-list-tile>
-      <v-divider></v-divider>
-      <v-list-tile v-for="r in routes" :key="r.text" @click="route(r.route,r.params)">
-        <v-list-tile-action>{{r.text}}</v-list-tile-action>
-      </v-list-tile>
+
     </v-list>
     </v-navigation-drawer>
 
@@ -84,7 +87,8 @@
       <span class="hidden-sm-and-down">
       <v-toolbar-side-icon @click.stop="drawer = !drawer" v-if="loggedIn" class="white--text"></v-toolbar-side-icon>
         <v-toolbar-items v-if="!loggedIn">
-          <Button text="entrar" textColor="primary" lowercase="true" bgColor="white" @click.native.stop="showLogin = !showLogin" class="mr-2"></Button>
+          <!--<Button text="entrar" textColor="primary" lowercase="true" bgColor="white" @click.native.stop="showLogin = !showLogin" class="mr-2"></Button>-->
+          <Button text="entrar" textColor="primary" lowercase="true" bgColor="white" @click="showLogin = !showLogin" class="mr-2"></Button>
           <Button text="darse alta" route="register" lowercase="true"  bgColor="white" textColor="primary" class="mr-2"></Button>
           <login v-if="showLogin" @close="showLogin = false"></login>
         </v-toolbar-items>

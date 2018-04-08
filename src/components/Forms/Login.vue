@@ -3,7 +3,13 @@
     <v-dialog :value='show' persistant>
       <v-card hover>
         <v-flex>
-          <v-card-title>Entrar</v-card-title>
+          <v-card-title class="py-1">
+            Entrar
+            <v-spacer></v-spacer>
+            <v-btn small icon @click="show = false">
+              <v-icon>close</v-icon>
+            </v-btn>
+          </v-card-title>
         </v-flex>
         <v-flex>
           <v-card-text>
@@ -65,6 +71,15 @@ export default {
       disabled: false,
     }
   },
+
+  watch: {
+    'this.$parent.showLogin' (val) {
+      alert(val)
+      this.show = val;
+    },
+  },
+
+  
   methods: {
     submit(){
       this.disabled = true;

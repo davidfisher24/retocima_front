@@ -7,8 +7,6 @@
         <div class="mt-2 body-2">{{cima.communidad}} - {{cima.provincia}}</div>
         <div class="mt-1 body-2">Acensiones: {{cima.logros_count}}</div>
         <Button text="ver" lowercase="true" route="cima" :params="params"></Button>
-
-        <!--<v-btn flat @click="$emit('discover',cima.id)">Ver</v-btn>-->
     </v-card>
 </template>
 
