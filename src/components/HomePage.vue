@@ -45,6 +45,7 @@ export default {
     'HomePageCarousel' : HomePageCarousel,
   },
 
+
   mounted (){
     this.$store.dispatch("discover").then(data => this.discoverCimas = data);
   },
