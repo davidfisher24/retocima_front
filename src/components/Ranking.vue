@@ -1,5 +1,8 @@
 <template>
-    <v-container>
+    <v-container
+        :class="{'px-0': $vuetify.breakpoint.smAndDown}"
+        app
+    >
         <v-layout>
             <v-flex>
                 <BaseTable 
