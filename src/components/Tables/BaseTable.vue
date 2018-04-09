@@ -3,7 +3,7 @@
 
   <v-card flat>
       <v-card-title>
-        <p class="title" color="primary">{{title}}</p> 
+        <p class="title my-0" color="primary">{{title}}</p> 
           <v-spacer></v-spacer>
           <v-text-field
             append-icon="search"
@@ -11,8 +11,21 @@
             single-line
             hide-details
             v-model="search"
+            class="hidden-sm-and-down"
           ></v-text-field>
       </v-card-title>
+
+      <v-card-title class="hidden-md-and-up py-1">
+          <v-text-field
+            append-icon="search"
+            label="Buscar"
+            single-line
+            hide-details
+            v-model="search" 
+          ></v-text-field>
+      </v-card-title>
+
+
       <v-data-table
         :headers="columns"
         :items="data"
@@ -54,6 +67,7 @@
             Busqueda para "{{ search }}" no ha encontrado resultados.
           </v-alert>
       </v-data-table>
+
   </v-card>
 
 </template>

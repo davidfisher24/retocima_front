@@ -1,25 +1,18 @@
 <template>
-    <v-container
-        :class="{'px-0': $vuetify.breakpoint.smAndDown}"
-        app
-    >
-        <v-layout>
-            <v-flex>
-                <BaseTable 
-                    store = "ranking"
-                    :storeData="storeData"
-                    :columns="columns"
-                    :filterOptions="{Provincia:'provinciaName'}"
-                    :searchOptions="['fullName']"
-                    :defaultPagination='defaultPagination'
-                    :title="title"
-                    @action="action"
-                ></BaseTable>
-            </v-flex>
-        </v-layout>
+    <v-container :class="{'px-0': $vuetify.breakpoint.smAndDown}">
+        <div style="max-width:100%;">
+            <BaseTable 
+                store = "ranking"
+                :storeData="storeData"
+                :columns="columns"
+                :filterOptions="{Provincia:'provinciaName'}"
+                :searchOptions="['fullName']"
+                :defaultPagination='defaultPagination'
+                :title="title"
+                @action="action"
+            ></BaseTable>
+        </div>
     </v-container>
-</div>
-
 </template>
 
 <script>
