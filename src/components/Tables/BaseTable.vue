@@ -1,7 +1,9 @@
 <template>
-  <v-card>
+
+
+  <v-card flat>
       <v-card-title>
-            {{title}}
+        <p class="title" color="primary">{{title}}</p> 
           <v-spacer></v-spacer>
           <v-text-field
             append-icon="search"
@@ -17,13 +19,30 @@
         :search="search"
         :pagination.sync="pagination"
         :custom-filter="customFilter"
-        class="elevation-1"
+        class="elevation-1 stats-table"
         rows-per-page-text="Filas por pagina"
       >
+
+
+        <template slot="headers" slot-scope="props">
+          <tr>
+            <th
+              class="stats-table-header"
+              v-for="header in props.headers"
+              :key="header.text"
+              :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+              @click="changeSort(header)"
+            >
+              <v-icon small v-if="header.sortable">arrow_upward</v-icon>
+              {{ header.text }}
+            </th>
+          </tr>
+        </template>
+
         <template slot="items" slot-scope="props" >
         <tr v-bind:class="classCell(props.index)">
           <td v-for="(col, i) in columns" @click="$emit('action',props.item.id)">
-            <img v-if="col.type === 'image' && props.item[col.value]" :src="images[props.item[col.value]]" style="max-width:50px;height:auto;">
+            <img v-if="col.type === 'image' && props.item[col.value]" :src="images[props.item[col.value]]" style="width:auto;height:100%;">
             <span v-if="col.type !== 'image'">{{ props.item[col.value]}}</span>
           </td>
           </tr>
@@ -36,6 +55,7 @@
           </v-alert>
       </v-data-table>
   </v-card>
+
 </template>
 
 
@@ -80,8 +100,18 @@
 
         methods: {
             classCell(i){
-                if(i%2 === 0) return 'light';
-                return null;
+                if(i%2 === 0) return 'light stats-table-row';
+                return 'stats-table-row';
+            },
+
+            changeSort (header) {
+                if (!header.sortable) return
+                if (this.pagination.sortBy === header.value) {
+                  this.pagination.descending = !this.pagination.descending
+                } else {
+                  this.pagination.sortBy = header.value
+                  this.pagination.descending = false
+                }
             },
 
             customFilter(items, search, filter) {
@@ -124,8 +154,9 @@
 </script>
 
 <style  scoped>
-    table {border: 1px solid #333}
-    thead {border: 0.5px solid #333}
-    th {border-right: 0.5px solid #333; border-bottom:1px solid #333; text-align:center; text-transform:uppercase;}
-    td:hover {cursor:pointer}
+    .stats-table-header {border: 0.5px solid #333;}
+    .stats-table-row:hover {cursor:pointer;}
+    .stats-table-row {border-left: 0.5px solid #333 !important; border-right: 0.5px solid #333 !important;}
+    .stats-table-row:last-of-type  {border-bottom: 0.5px solid #333 !important;}
+    .stats-table-row td {height: 32px !important;}
 </style>

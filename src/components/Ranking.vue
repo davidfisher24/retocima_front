@@ -1,5 +1,4 @@
 <template>
-<v-app>
     <v-container>
         <v-layout>
             <v-flex>
@@ -16,7 +15,6 @@
             </v-flex>
         </v-layout>
     </v-container>
-</v-app>
 </div>
 
 </template>
@@ -34,8 +32,8 @@
         data: function() {
             return {
                 columns: [
-                    { value: 'rank', text: 'Posicion', sortable:true },
-                    { value: 'image', text: '', type: 'image', sortable: false },
+                    { value: 'rank', text: null, sortable:true,  },
+                    { value: 'image', text: null, type: 'image', sortable: false },
                     { value: 'fullName', text: 'Nombre', sortable: true},
                     { value: 'provinciaName', text: 'Provincia', sortable: true},
                     { value: 'logros_count', text: 'Logros', sortable: true }
