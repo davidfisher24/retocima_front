@@ -32,7 +32,7 @@ export default {
   },
   computed: {
      chunkedCommunidads () {
-          return _.chunk(this.comms,this.comms.length/2);
+          return _.chunk(this.comms,Math.ceil(this.comms.length/2));
      },
   },
   methods: {
