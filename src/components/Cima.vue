@@ -59,12 +59,12 @@
             v-for="n,i in cima.vertientes"
             :key="i"
             flat
-            class = "text-xs-center primary--text body-2 my-3 py-2"
+            class = "body-2 my-3 py-2"
             >
 
             <v-card  :class="{'mx-1': $vuetify.breakpoint.smAndDown, 'mx-4' : $vuetify.breakpoint.mdAndUp, }">
               <v-layout wrap >
-                <v-flex xs12 md4 >
+                <v-flex xs12 md4 class="primary--text ">
                     
                       <v-layout row class="py-2">
                         <v-flex xs5 class="text-xs-right">Altitud</v-flex> 

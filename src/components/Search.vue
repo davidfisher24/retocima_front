@@ -1,6 +1,6 @@
 <template>
-  <v-layout row wrap>
-        <v-flex xs12 class="mx-3">
+  <v-layout row wrap :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
+        <v-flex xs12>
             <v-text-field
               box
               label="Buscar"

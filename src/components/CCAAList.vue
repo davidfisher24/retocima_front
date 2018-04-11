@@ -1,6 +1,6 @@
 <template>
     <v-layout row wrap v-if="comms">
-      <v-flex md6 xs12 sm12  v-for="(chunk,index) in chunkedCommunidads" :key="index" class="px-3">
+      <v-flex md6 xs12 sm12  v-for="(chunk,index) in chunkedCommunidads" :key="index" :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
           <v-expansion-panel>
               <v-expansion-panel-content v-for="(communidad,index) in chunk" :key="communidad.id" class="primary--text">
                 <div slot="header" >

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="pa-0 mt-2">
     <v-slide-y-transition mode="out-in">
       <v-layout row wrap v-if="cimas">
 
@@ -19,7 +19,7 @@
             </v-toolbar-items>
           </v-toolbar>
 
-        <v-flex md6 xs12 sm12  v-for="(chunk,index) in chunkedCimas" :key="index" class="px-3">
+        <v-flex md6 xs12 sm12  v-for="(chunk,index) in chunkedCimas" :key="index" :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
           
           <v-list three-line class="primary--text py-0">
             <CimaListData v-for="(cima, i) in chunk" :cima="cima" @route="route"></CimaListData>

@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="pa-0 mt-2">
     <v-slide-y-transition mode="out-in">
       <v-layout row wrap>
             <Search @select="chooseCima" @results="showList"></Search>

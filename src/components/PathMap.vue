@@ -71,7 +71,7 @@
                     self.coords = coords;
                     var w = document.getElementById('wrapper').parentElement.offsetWidth;
                     var h = document.getElementById('wrapper').parentElement.parentElement.parentElement.offsetHeight;
-                    if (h<=15 || h > w) h = w;
+                    if (h<=30 || h > w) h = w;
                     self.style = "width: "+w+"px; height: "+h+"px; margin:0;";
                     self.putLine(); 
                 })
@@ -81,7 +81,7 @@
                 this.coords = [{lat: parseFloat(cima.longitude), lng: parseFloat(cima.latitude)}];
                 var w = document.getElementById('wrapper').parentElement.offsetWidth;
                 var h = document.getElementById('wrapper').parentElement.parentElement.parentElement.offsetHeight;
-                if (h<=15) h = w/1.6;
+                if (h<=30) h = w/1.6;
                 this.style = "width: "+w+"px; height: "+h+"px; margin:0;";
             },
 
