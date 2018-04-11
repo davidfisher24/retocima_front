@@ -1,5 +1,5 @@
 <template> 
-    <div id="wrapper" class="ma-3">
+    <div id="wrapper">
         <gmap-map
           v-if="coords && mounted"
           :center="getPathMapCenter()"
@@ -70,8 +70,8 @@
                     });
                     self.coords = coords;
                     var w = document.getElementById('wrapper').parentElement.offsetWidth;
-                    var h = document.getElementById('wrapper').parentElement.parentElement.offsetHeight;
-                    if (h<1 || h > w) h = w;
+                    var h = document.getElementById('wrapper').parentElement.parentElement.parentElement.offsetHeight;
+                    if (h<=15 || h > w) h = w;
                     self.style = "width: "+w+"px; height: "+h+"px; margin:0;";
                     self.putLine(); 
                 })
@@ -80,8 +80,8 @@
             putCenter (cima) {
                 this.coords = [{lat: parseFloat(cima.longitude), lng: parseFloat(cima.latitude)}];
                 var w = document.getElementById('wrapper').parentElement.offsetWidth;
-                var h = document.getElementById('wrapper').parentElement.parentElement.offsetHeight;
-                if (h<1) h = w/1.6;
+                var h = document.getElementById('wrapper').parentElement.parentElement.parentElement.offsetHeight;
+                if (h<=15) h = w/1.6;
                 this.style = "width: "+w+"px; height: "+h+"px; margin:0;";
             },
 

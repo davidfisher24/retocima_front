@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="pa-0 mt-2">
     <v-slide-y-transition mode="out-in">
       <v-layout row wrap v-if="cima">
         <v-flex xs12>
@@ -58,12 +58,14 @@
             <v-tab-item
             v-for="n,i in cima.vertientes"
             :key="i"
+            flat
+            class = "text-xs-center primary--text body-2 my-3 py-2"
             >
 
-
-              <v-layout wrap>
-                <v-flex xs12 md4>
-                    <v-card class="text-xs-center primary--text body-2 my-3 mr-1 py-2">
+            <v-card  :class="{'mx-1': $vuetify.breakpoint.smAndDown, 'mx-4' : $vuetify.breakpoint.mdAndUp, }">
+              <v-layout wrap >
+                <v-flex xs12 md4 >
+                    
                       <v-layout row class="py-2">
                         <v-flex xs5 class="text-xs-right">Altitud</v-flex> 
                         <v-flex xs2></v-flex> 
@@ -115,12 +117,18 @@
                           </v-btn>
                         </v-flex>
                       </v-layout>
-                    </v-card>
-                </v-flex>
-                <v-flex xs12 md8>
-                  <PathMap :id="cima.vertientes[i].id"></PathMap>
+                   
+                    </v-flex>
+                    <v-flex xs12 md8>
+                      <v-layout class="ma-2">
+                        <v-flex>
+                          <PathMap :id="cima.vertientes[i].id"></PathMap>
+                        </v-flex>
+                      </v-layout>
+                    
                 </v-flex>
               </v-layout>
+              </v-card>
             </v-tab-item>
           </v-tabs>
         </v-flex>
@@ -180,7 +188,7 @@ export default {
   
   mounted (){
     this.cimas = this.$route.params.cimas || null;
-    this.cima = this.cimas ? this.cimas.find(x => x.id === this.$route.params.cid) : this.$route.params.cima;
+    this.cima = this.cimas ? this.cimas.find(x => x.id === Number(this.$route.params.cid)) : this.$route.params.cima;
     this.resetTabs()
   },
 
