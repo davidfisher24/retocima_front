@@ -2,9 +2,11 @@
   <v-layout row wrap>
         <v-flex xs12 class="mx-3">
             <v-text-field
+              box
               label="Buscar"
               v-model="searchInput"
               clearable
+              append-icon="search"
               :error-messages="searchNotFound"
             ></v-text-field>
             <v-list v-if="searchCimas.length > 0">

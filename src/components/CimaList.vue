@@ -43,69 +43,6 @@
               </v-list>
             </div>
         </v-flex>
-          <!--<v-flex xs12 class="mx-3">
-                <v-toolbar>
-                <v-toolbar-title>
-                    <span v-if="$route.name=='provincia'">{{cimas[0].communidad.nombre}} - {{cimas[0].provincia.nombre}}</span>
-                    <span v-if="$route.name=='patanegra'">Pata Negra</span>
-                </v-toolbar-title>
-                <v-spacer></v-spacer>
-                <v-toolbar-items>
-                  <v-btn flat @click="changeMap()">MAPA</v-btn>
-                </v-toolbar-items>
-              </v-toolbar>
-
-                <v-data-table
-                    :headers="provinciaSectionHeaders"
-                    :items="cimas"
-                    hide-actions
-                    class="elevation-1"
-                  >
-                    <template slot="items" slot-scope="props">
-                      <tr  @click="route(props.item.id)" v-if="props.item.estado === 1">
-                          <td>{{ props.item.codigo }}</td>
-                          <td>{{ props.item.nombre }}</td>
-                          <td class="text-xs-center">{{ props.item.logros_count }}</td>
-                          <td class="text-xs-center"><span v-if="props.item.vertientes[0]">{{ props.item.vertientes[0].altitud}}m</span></td>
-                          <td class="hidden-sm-and-down">
-                            <p v-for="vert in props.item.vertientes">{{vert.vertiente}}</p>
-                          </td>
-                          <td class="hidden-md-and-up">
-                            <v-badge>
-                              <span slot="badge">{{props.item.vertientes.length}}</span>
-                            </v-badge>
-                          </td>
-                      </tr>
-                    </template>
-                  </v-data-table>
-                  <v-subheader v-if="needCimasElimitedRow()"><p class="subheading">Cimas que fueron eliminadas o sustituidas</p></v-subheader>
-                  <v-data-table
-                    v-if="needCimasElimitedRow()"
-                    :headers="provinciaSectionHeaders"
-                    :items="cimas"
-                    hide-actions
-                    hide-headers
-                    class="elevation-1"
-                  >
-
-                    <template slot="items" slot-scope="props">
-                      <tr v-if="props.item.estado !== 1">
-                          <td>{{ props.item.codigo }}</td>
-                          <td>{{ props.item.nombre }}</td>
-                          <td class="text-xs-right">{{ props.item.logros_count }}</td>
-                          <td class="text-xs-right"><span v-if="props.item.vertientes[0]">{{ props.item.vertientes[0].altitud}}m</span></td>
-                          <td class="hidden-sm-and-down">
-                            <p v-for="vert in props.item.vertientes">{{vert.vertiente}}</p>
-                          </td>
-                          <td class="hidden-md-and-up">
-                            <v-badge>
-                              <span slot="badge">{{props.item.vertientes.length}}</span>
-                            </v-badge>
-                          </td>
-                      </tr>
-                    </template>
-                  </v-data-table>
-            </v-flex>-->
       </v-layout> 
     </v-slide-y-transition>
   </v-container>
