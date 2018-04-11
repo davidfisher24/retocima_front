@@ -70,10 +70,12 @@
 
   
     <v-toolbar class="primary" app>
-      <img src="@/assets/icons/logowhite.png" height="38px" width="38px">
-      <v-toolbar-title>
+      <router-link :to="{ name: 'home'}">
+        <img src="@/assets/icons/logowhite.png" height="38px" width="38px">
+      </router-link>
+      <v-toolbar-title class="ml-0">
         <router-link :to="{ name: 'home'}" class="white--text"  style="text-decoration:none;">
-          Reto Cima
+          <span class="display-3">Reto CIMA</span>
         </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>

@@ -16,19 +16,19 @@
           </v-system-bar>
 
           <v-toolbar color="white" flat>
-            <v-toolbar-title class="primary--text subheading" style="text-transform:uppercase;">
-              {{cima.codigo}} {{cima.nombre}}
+            <v-toolbar-title class="primary--text headline ml-2" >
+              {{cima.codigo}} {{cima.nombre.toUpperCase()}}
             </v-toolbar-title>
           </v-toolbar>
-          <v-layout row wrap class="white primary--text pl-2">
+          <v-layout row wrap class="white primary--text pl-2 subheading">
             <v-flex class="d-inline-block mr-4">Ascensiones: 
                 <span class="accent--text">&nbsp;{{cima.logros_count}}</span>
               </v-flex>
-              <v-flex class="d-inline-block mr-4" style="text-transform:uppercase;font-style:italic;" >
-                {{cima.provincia.nombre}} / {{cima.communidad.nombre}}
+              <v-flex class="d-inline-block mr-4" >
+                <i>{{cima.provincia.nombre.toUpperCase()}} / {{cima.communidad.nombre.toUpperCase()}}</i>
               </v-flex>
               <v-flex class="d-inline-block">
-                GPS: {{cima.latitude}} {{cima.longitude}}
+                <strong>GPS: {{cima.latitude}} {{cima.longitude}}</strong>
               </v-flex>
           </v-layout>
         </v-flex>
@@ -36,7 +36,7 @@
 
 
           <v-system-bar status width="100%" color="white" class="primary--text mt-2">
-            Vertientes
+            <span class="title">Vertientes</span>
           </v-system-bar>
           <v-tabs
           v-model="active"
@@ -49,8 +49,8 @@
               v-for="n,i in cima.vertientes"
               :key="i"
               ripple
-              class="primary--text"
-              active-class="default-class accent--text"
+              class="primary--text headline"
+              active-class="default-class accent--text headline"
               >
                 {{ cima.vertientes[i].vertiente }} 
               </v-tab>
@@ -63,7 +63,7 @@
 
               <v-layout wrap>
                 <v-flex xs12 md4>
-                    <v-card class="text-xs-center primary--text my-3 mr-1 py-2">
+                    <v-card class="text-xs-center primary--text body-2 my-3 mr-1 py-2">
                       <v-layout row class="py-2">
                         <v-flex xs5 class="text-xs-right">Altitud</v-flex> 
                         <v-flex xs2></v-flex> 
@@ -94,23 +94,27 @@
                         <v-flex xs2></v-flex> 
                         <v-flex xs5 class="text-xs-left">{{cima.vertientes[i].apm}}</v-flex>
                       </v-layout>
-                    </v-card>
 
-                    <v-card class="primary--text my-3 mr-1 py-2">
-                      <v-card-text class="py-1" v-if="cima.vertientes[i].inicio">Inicio: {{cima.vertientes[i].inicio}}</v-card-text>
-                      <v-card-text class="py-1" v-if="cima.vertientes[i].dudas">Dudas: {{cima.vertientes[i].dudas}}</v-card-text>
-                      <v-card-text class="py-1" v-if="cima.vertientes[i].final">Final: {{cima.vertientes[i].final}}</v-card-text>
-                      <v-card-text class="py-1" v-if="cima.vertientes[i].obeservaciones">Observaciones: {{cima.vertientes[i].observaciones}}</v-card-text>
-                    </v-card>
+                      <v-layout>
+                        <v-flex xs12 class="text-xs-left body-1">
+                          <v-card-text class="py-1" v-if="cima.vertientes[i].inicio">INICIO: {{cima.vertientes[i].inicio}}</v-card-text>
+                          <v-card-text class="py-1" v-if="cima.vertientes[i].dudas">DUDAS: {{cima.vertientes[i].dudas}}</v-card-text>
+                          <v-card-text class="py-1" v-if="cima.vertientes[i].final">FINAL: {{cima.vertientes[i].final}}</v-card-text>
+                          <v-card-text class="py-1" v-if="cima.vertientes[i].obeservaciones">OBSERVACIONES: {{cima.vertientes[i].observaciones}}</v-card-text>
+                        </v-flex>
+                      </v-layout>
 
-                    <v-card class="primary--text my-3 mr-1 py-2"> 
-                      <v-card-title>ENLACES DE INTERES</v-card-title>
-                      <v-card-text v-if="cima.vertientes[i].enlaces.length === 0" class="py-1">
-                        No Disponible!
-                      </v-card-text>
-                      <v-btn outline color="primary" v-for="(enlace,index) in cima.vertientes[i].enlaces" :key="index" @click="openExternalLink(enlace.url)">
-                        Enlace {{index + 1}}
-                      </v-btn>
+                      <v-layout>
+                        <v-flex xs12 class="text-xs-left body-1">
+                          <v-card-title>ENLACES DE INTERES</v-card-title>
+                          <v-card-text v-if="cima.vertientes[i].enlaces.length === 0" class="py-1">
+                            No Disponible!
+                          </v-card-text>
+                          <v-btn outline color="primary" v-for="(enlace,index) in cima.vertientes[i].enlaces" :key="index" @click="openExternalLink(enlace.url)">
+                            Enlace {{index + 1}}
+                          </v-btn>
+                        </v-flex>
+                      </v-layout>
                     </v-card>
                 </v-flex>
                 <v-flex xs12 md8>

@@ -4,10 +4,14 @@
       <v-layout row wrap v-if="cimas">
 
         <!-- Title -->
-        <v-toolbar color="white" flat dense class="primary--text mb-3">
-            <v-toolbar-title>
-               <span v-if="$route.name=='provincia'"><strong>Listado de cimas en </strong> {{cimas[0].provincia.nombre}}</span>
-                <span v-if="$route.name=='patanegra'"><strong>Listado de cimas </strong> Pata Negra</span>
+        <v-toolbar color="white" flat dense class="primary--text mb-3 ">
+            <v-toolbar-title class="display-2">
+               <span v-if="$route.name=='provincia'"><strong>Listado de cimas en </strong> 
+                  <span class="display-1">{{cimas[0].provincia.nombre}}</span>
+                </span>
+                <span v-if="$route.name=='patanegra'"><strong>Listado de cimas </strong> 
+                  <span class="display-1">Pata Negra</span>
+                </span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>

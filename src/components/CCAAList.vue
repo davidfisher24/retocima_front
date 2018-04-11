@@ -1,16 +1,16 @@
 <template>
     <v-layout row wrap v-if="comms">
       <v-flex md6 xs12 sm12  v-for="(chunk,index) in chunkedCommunidads" :key="index" class="px-3">
-          <v-expansion-panel >
+          <v-expansion-panel>
               <v-expansion-panel-content v-for="(communidad,index) in chunk" :key="communidad.id" class="primary--text">
                 <div slot="header" >
                       <Flag :id="communidad.id"></Flag>
-                      <span class="subheading"><strong>{{communidad.nombre}}</strong></span>&nbsp;&nbsp;&nbsp;
+                      <span class="headline"><strong>{{communidad.nombre}}</strong></span>&nbsp;&nbsp;&nbsp;
                       <span class="subheading"><i>{{communidad.cimas_count}} cimas</i></span>
                 </div>
                 <v-list dense>
                   <v-list-tile v-for="provincia in communidad.provincias" :key="provincia.id" @click="$emit('chooseProvincia',provincia.id)">
-                    <v-list-tile-title class="primary--text text-xs-center">{{provincia.nombre}}</v-list-tile-title>
+                    <v-list-tile-title class="primary--text text-xs-center subheading">{{provincia.nombre}}</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
               </v-expansion-panel-content>
