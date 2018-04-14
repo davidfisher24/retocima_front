@@ -1,85 +1,74 @@
 <template> 
-      <vue-highcharts :options="options" ref="barChart"></vue-highcharts>
+      <highcharts :options="options"></highcharts>
 </template>
 
 
-
 <script>
-    import VueHighcharts from 'vue2-highcharts';
-    const baseOptions = {
-      chart: {
-        type: 'column',
-      },
-      title: {
-        text: 'Logros por communidad',
-      },
-      xAxis: {
-        categories: [],
-        title: {
-          text: null,
-        },
-        labels: {
-            rotation: -45,
-            style: {
-                fontSize: '13px',
-                fontFamily: 'Verdana, sans-serif',
-            }
-        }
-      },
-      yAxis: {
-        min: 0,
-        max: 0,
-        title: {
-          text: 'Ascensiones',
-        },
-      },
-      plotOptions: {
-        legend: {
-            enabled:false
-        },
-        column: {
-            showInLegends: false,
-        }
-      },
-      legend: {
-        enabled: false,
-      },
-      credits: {
-        enabled: false,
-      },
-    }
+    import Vue from 'vue';
+    import VueHighcharts from 'vue-highcharts';
+
 
     export default {
-      components: {
-        VueHighcharts,
-      },
-
       props: ["data"],
+      computed: {
+        options () {
+          var data = []
+          var categories = [];
+          var max = 0;
+          for (var key in this.data) {
+              data.push(this.data[key].count)
+              categories.push(this.data[key].nombre);
+              max = this.data[key].count > max ? this.data[key].count : max;
+          }
 
-      data() {
-        return {
-          options: baseOptions,
-        }
-      },
-
-      mounted:function(){
-        var barChart = this.$refs.barChart;
-        var series = {
-            name: 'Ascensiones',
-            data: [],
-        };
-        var categories = [];
-        var max = 0;
-        for (var key in this.data) {
-            series.data.push(this.data[key].count)
-            categories.push(this.data[key].nombre);
-            max = this.data[key].count > max ? this.data[key].count : max;
-        }
-        this.options.yAxis.max = max;
-        this.options.xAxis.categories = categories;
-        barChart.mergeOption(this.options);
-        barChart.addSeries(series);
-      },
+          return {
+            chart: {
+              type: 'column',
+            },
+            title: {
+              text: 'Logros por communidad',
+            },
+            xAxis: {
+              categories: categories,
+              title: {
+                text: null,
+              },
+              labels: {
+                  rotation: -45,
+                  style: {
+                      fontSize: '13px',
+                      fontFamily: 'Verdana, sans-serif',
+                  }
+              }
+            },
+            yAxis: {
+              min: 0,
+              max: max,
+              title: {
+                text: 'Ascensiones',
+              },
+            },
+            plotOptions: {
+              legend: {
+                  enabled:false
+              },
+              column: {
+                  showInLegends: false,
+              }
+            },
+            legend: {
+              enabled: false,
+            },
+            credits: {
+              enabled: false,
+            },
+            series: [{
+                "name":"Ascensiones",
+                "data": data
+            }]
+          }
+        },
+      }
     }
 
 </script>

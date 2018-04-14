@@ -1,69 +1,58 @@
 <template> 
-      <vue-highcharts :options="options" ref="pieChart"></vue-highcharts>
+      <highcharts :options="options"></highcharts>
 </template>
 
-
-
 <script>
-    import VueHighcharts from 'vue2-highcharts';
-    const baseOptions = {
-      chart: {
-        type: 'pie',
-        options3d: {
-          enabled: true,
-          alpha: 45,
-          beta: 0,
-        },
-      }, 
-      title: {
-        text: 'Logros por provincia',
-      },
-      pie: {
-        allowPointSelect: true,
-        cursor: "pointer",
-        depth: 35,
-        dataLabels: {
-          enabled: true,
-          format: "{point.name}"
-        }
-      },
-      legend: {
-        enabled: false,
-      },
-      credits: {
-        enabled: false,
-      },
-    }
+    import Vue from 'vue';
+    import VueHighcharts from 'vue-highcharts';
 
     export default {
-      components: {
-        VueHighcharts,
-      },
-
       props: ["data"],
+      computed: {
+        options () {
+          var series = []
+          for (var key in this.data) {
+              series.push({
+                name: this.data[key].nombre,
+                y: this.data[key].count
+              })
+          }
 
-      data() {
-        return {
-          options: baseOptions,
-        }
-      },
-
-      mounted:function(){
-        var pieChart = this.$refs.pieChart;
-        var series = {
-            name: 'Ascensiones',
-            type: "pie",
-            data: [],
-        };
-        for (var key in this.data) {
-            series.data.push({
-              name: this.data[key].nombre,
-              y: this.data[key].count
-            })
-        }
-        pieChart.mergeOption(this.options);
-        pieChart.addSeries(series);
-      },
+          return {
+            chart: {
+              type: 'pie',
+                options3d: {
+                  enabled: true,
+                  alpha: 45,
+                  beta: 0,
+              },
+            }, 
+            title: {
+              text: 'Logros por provincia',
+            },
+            pie: {
+              allowPointSelect: true,
+              cursor: "pointer",
+              depth: 35,
+              dataLabels: {
+                enabled: true,
+                format: "{point.name}"
+              }
+            },
+            legend: {
+              enabled: false,
+            },
+            credits: {
+              enabled: false,
+            },
+            series:[{
+                  name: 'Ascensiones',
+                  type: "pie",
+                  data: series,
+              }]
+          }
+        },
+      }
     }
 
 </script>

@@ -14,7 +14,7 @@
             <v-tab key="pie" ripple>Logros Por Provincia</v-tab>
 
             <v-tab-item key="bar">
-              <LogrosPorCommunidadBar :data="organizeBar()"></LogrosPorCommunidadBar> 
+              <LogrosPorCommunidadBar :data="organizeBar()"></LogrosPorCommunidadBar>
             </v-tab-item>
             <v-tab-item key="pie">
               <LogrosPorProvinciaPie :data="organizePie()"></LogrosPorProvinciaPie> 
@@ -28,9 +28,8 @@
 
 <script>
 
-import Vue from 'vue';
-import LogrosPorCommunidadBar from './LogrosPorCommunidadBar';
-import LogrosPorProvinciaPie from './LogrosPorProvinciaPie';
+import LogrosPorCommunidadBar from './LogrosPorCommunidadBar'
+import LogrosPorProvinciaPie from './LogrosPorProvinciaPie'
 
 export default {
   data () {
@@ -44,9 +43,6 @@ export default {
     'LogrosPorProvinciaPie' : LogrosPorProvinciaPie,
   },
 
-  watch: {
-
-  },
 
   computed: {
     cimero () {
