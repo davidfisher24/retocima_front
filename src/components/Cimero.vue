@@ -1,28 +1,15 @@
 <template>
-    <v-container> 
+    <v-container fluid class="px-0"> 
         <v-layout>
-            <v-flex class="px-3">
-                <v-toolbar color="primary" v-if="cimero" class="white--text">
-                    <v-toolbar-title >{{cimero.fullname}}</v-toolbar-title>
-                    <v-spacer></v-spacer>
-                </v-toolbar>
-                <v-expansion-panel v-for="communidad in logros" :key="communidad.id" v-if="logros" focusable>
-                    <v-expansion-panel-content >
-                        <div slot="header">{{communidad[0][0].communidad.nombre}}
-                            <v-badge color="primary">
-                                <span slot="badge" v-html="countLogros(communidad)"></span>
-                            </v-badge>
-                        </div>
-                        <v-list two-line>
-                            <v-list-tile  v-for="provincia in communidad" :key="provincia.id">
-                                <v-list-tile-content>
-                                    <v-list-tile-title>{{provincia[0].provincia.nombre}}</v-list-tile-title>
-                                    <v-list-tile-sub-title>{{provincia.length}} Logros</v-list-tile-sub-title>
-                                </v-list-tile-content>
-                            </v-list-tile>
-                        </v-list>
-                    </v-expansion-panel-content>
-                </v-expansion-panel>
+            <v-flex xs4>
+                <v-card>
+                    <v-list v-for="communidad in communidads" :key="communidad.id" v-if="communidad.completed > 0">
+                        {{communidad.nombre}} {{communidad.completed}} / {{communidad.total}}
+                    </v-list>
+                </v-card>
+            </v-flex>
+            <v-flex xs8>
+                <highmaps :options="options"></highmaps>
             </v-flex>
         </v-layout>
     </v-container>
@@ -32,38 +19,92 @@
 
 <script>
 
+    import Vue from 'vue';
+    import VueHighcharts from 'vue-highcharts';
+    import Highcharts from 'highcharts';
+    import loadMap from 'highcharts/modules/map';
+    import provinceMap from './SVG/provinceMap'
+    loadMap(Highcharts);
+    Vue.use(VueHighcharts, { Highcharts });
+
     export default {
         props: ["userLogros"],
         data: function() {
             return {
-                communidads: [],
-                cimas: [],
-                loading: true,
-                dialog: false,
-                logros: null,
-                cimero: null,
+                options: null,
+                cimero: this.$route.params.cimero.cimero,
+                logros: this.$route.params.cimero.logros,
+                provincias: this.$route.params.cimero.provincias,
+                communidads: this.$route.params.cimero.communidads,
             };
         },
 
-        mounted: function() {
-            this.cimero = this.$route.params.cimero;
-            this.organizeLogros(this.cimero.logros);
+        beforeMount () {
+            this.createMapData()
         },
 
         methods: {
 
-            organizeLogros (logros) {
-                var comms = _.values(_.groupBy(logros,"communidad.id"));
-                this.logros = comms.map(comm => {return _.values(_.groupBy(comm,"provincia.id"))})
-                this.loading = false;
+            createMapData () {
+                var that = this;
+                this.provincias = this.provincias.map(x => {
+                    x.total = x.active_cimas_count;
+                    x.completed = that.logros[x.id.toString()] ? that.logros[x.id.toString()].length : 0 ;
+                    x.value = x.completed / x.total;
+                    return x;
+                })
 
-            },
+                this.communidads = this.communidads.map(x => {
+                    x.total = x.active_cimas_count;
+                    x.completed = this.provincias.filter(p => p.communidad_id == x.id).reduce((prev, cur) => prev + cur.completed, 0)
+                    return x;
+                })
 
-            countLogros (communidad) {
-                var count = 0;
-                communidad.forEach(prov => prov.forEach(logro => count++));
-                return count;
-            },
+                this.options = {
+                    width: '100%',
+                    plotOptions: {
+                        series: {
+                            dataLabels: {
+                                enabled: true,
+                                color: '#ffffff',
+                                formatter: function(){
+                                    return this.point.completed
+                                }
+                            }
+                        }
+                    },
+                    mapNavigation: {
+                        enabled: true,
+                    },
+                    title: false,
+                    series: [{
+                        type: 'map',
+                        joinBy: ['id'],
+                        data: that.provincias,
+                        mapData: provinceMap.data
+                    }],
+                    colorAxis: {
+                        min: 0,
+                        max: 1,
+                        showInLegend: false,
+                        type: 'linear',
+                        //minColor: '#00ff00',
+                        minColor: '#f5eee7',
+                        //maxColor: '#ff0000',
+                        maxColor: '#030f24',
+                        /*stops: [
+                            [0, '#00ff00'],
+                            [0.5, '#ffff00'],
+                            [1, '#ff0000']
+                        ]*/
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: 'grey',
+                        headerFormat: '<span style="font-size: 10px">{point.name}</span><br/>.'
+                    },
+                }
+            }
         }
     }
 </script>
