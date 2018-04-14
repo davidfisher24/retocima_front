@@ -64,14 +64,44 @@
                     width: '100%',
                     plotOptions: {
                         series: {
+                            point: {
+                                events: {
+                                    mouseOver: function (e) {
+                                        this.update({
+                                            dataLabels:{
+                                               formatter: function(){
+                                                    if (this.point.id === e.target.id) return this.point.completed + " / " + this.point.total
+                                                    return ''
+
+                                                } 
+                                            }
+                                        });
+                                    },
+                                    mouseOut: function (e) {
+                                        this.update({
+                                            dataLabels:{
+                                               formatter: function(){
+                                                    return ''
+                                                } 
+                                            }
+                                        });
+                                    }
+                                }
+                            },
                             dataLabels: {
                                 enabled: true,
-                                color: '#ffffff',
+                                color: 'rgb(0,0,0)',
+                                y: -12,
+                                borderWidth: 0.5,
+                                borderColor: '#333',
                                 formatter: function(){
-                                    return this.point.completed
-                                }
-                            }
-                        }
+                                    return ''
+                                },
+                            },
+
+                            
+                        },
+
                     },
                     mapNavigation: {
                         enabled: true,
@@ -81,7 +111,9 @@
                         type: 'map',
                         joinBy: ['id'],
                         data: that.provincias,
-                        mapData: provinceMap.data
+                        mapData: provinceMap.data,
+
+
                     }],
                     colorAxis: {
                         min: 0,
@@ -99,9 +131,12 @@
                         ]*/
                     },
                     tooltip: {
-                        enabled: true,
-                        backgroundColor: 'grey',
-                        headerFormat: '<span style="font-size: 10px">{point.name}</span><br/>.'
+                        enabled: false,
+                        backgroundColor: 'transparent',
+                        shadow: false,
+                        formatter: function(){
+                            return this.point.completed
+                        }
                     },
                 }
             }
