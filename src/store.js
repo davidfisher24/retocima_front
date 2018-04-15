@@ -205,6 +205,7 @@ const store = new Vuex.Store({
       });
     },
 
+    /* Uses all cimas list */
     allCimas (context) {
       if (this.state.allCimas) return this.state.allCimas
       return doRequest(store, {
@@ -213,6 +214,7 @@ const store = new Vuex.Store({
       });
     },
 
+    /* Uses all cimas list */
     provincia (context, id) {
       if (this.state.allCimas) return this.state.allCimas.filter(c => c.provincia_id === id)
       return doRequest(store, {
@@ -224,6 +226,7 @@ const store = new Vuex.Store({
       });
     },
 
+    /* Uses all cimas list */
     patanegra (context) {
       if (this.state.allCimas) return this.state.allCimas.filter(c => c.pata_negra === 1)
       return doRequest(store, {

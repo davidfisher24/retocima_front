@@ -57,6 +57,17 @@
             'ProvinciaLogroList' : ProvinciaLogroList
         },
 
+        watch: {
+            '$route.query': function (route) {
+                this.cimero = this.$route.params.cimero.cimero
+                this.logros = this.$route.params.cimero.logros
+                this.provincias = this.$route.params.cimero.provincias
+                this.communidads = this.$route.params.cimero.communidads
+                this.cimas = this.$route.params.cimas
+                this.createMapData()
+            }
+        },
+
         beforeMount () {
             this.createMapData()
         },
