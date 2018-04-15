@@ -203,10 +203,19 @@ router.beforeEach((to, from, next) => {
     })
   } else if (to.name === 'user-logros' || to.name === "cimero" || to.name === 'user-charts' || to.name === 'user-edit') {
     var dispatch = to.name === 'user-logros' || to.name === 'user-charts' || to.name === 'user-edit' ? "authCimero" : "cimeros";
-    store.dispatch(dispatch,to.params.uid).then(cimero => {
+    var promise1 = store.dispatch(dispatch,to.params.uid)
+    var promise2 = store.dispatch('allCimas')
+
+    Promise.all([promise1,promise2]).then(data => {
+      to.params.cimero = data[0]
+      to.params.cimas = data[1]
+      next();
+    })
+
+    /*store.dispatch(dispatch,to.params.uid).then(cimero => {
         to.params.cimero = cimero;
         next();
-    });
+    });*/
   } else if (to.name === 'user-provincia') {
     store.dispatch("userProvinceLogros",to.params.pid).then(data => {
         to.params.data = data;

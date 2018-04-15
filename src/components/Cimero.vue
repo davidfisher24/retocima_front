@@ -1,14 +1,21 @@
 <template>
-    <v-container fluid class="px-0"> 
-        <v-layout>
-            <v-flex xs4>
-                <v-card>
-                    <v-list v-for="communidad in communidads" :key="communidad.id" v-if="communidad.completed > 0">
-                        {{communidad.nombre}} {{communidad.completed}} / {{communidad.total}}
-                    </v-list>
-                </v-card>
+    <v-container fluid class="pa-0 my-2">
+        <v-layout row wrap>
+            <v-toolbar color="white" flat dense class="primary--text mb-3 ">
+                <v-toolbar-title class="display-2">
+                   {{cimero.fullname}}
+                </v-toolbar-title>
+              </v-toolbar>
+
+            <v-flex xs4 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
+                <v-expansion-panel class="dense-expansion">
+                    <v-expansion-panel-content  v-for="communidad in communidads" :key="communidad.id" v-if="communidad.completed > 0">
+                        <div slot="header" class="subheading primary--text py-0">{{communidad.nombre}} {{communidad.completed}} / {{communidad.total}}</div>
+                        <ProvinciaLogroList :provinciaGroup="provinceGroup(communidad.id)" :communidad="communidad" :cimas="cimas" :logros="logros"></ProvinciaLogroList>
+                    </v-expansion-panel-content>
+                </v-expansion-panel>
             </v-flex>
-            <v-flex xs8>
+            <v-flex xs8 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
                 <highmaps :options="options"></highmaps>
             </v-flex>
         </v-layout>
@@ -16,27 +23,35 @@
 </template>
 
 
-
 <script>
 
-    import Vue from 'vue';
-    import VueHighcharts from 'vue-highcharts';
-    import Highcharts from 'highcharts';
-    import loadMap from 'highcharts/modules/map';
+    import Vue from 'vue'
+    import VueHighcharts from 'vue-highcharts'
+    import Highcharts from 'highcharts'
+    import loadMap from 'highcharts/modules/map'
     import provinceMap from './SVG/provinceMap'
-    loadMap(Highcharts);
-    Vue.use(VueHighcharts, { Highcharts });
+    loadMap(Highcharts)
+    Vue.use(VueHighcharts, { Highcharts })
+
+    import tick from '../assets/icons/tick-small.png'
+    import ProvinciaLogroList from './Dialogs/ProvinciaLogroList'
 
     export default {
         props: ["userLogros"],
         data: function() {
             return {
+                tick: tick,
                 options: null,
                 cimero: this.$route.params.cimero.cimero,
                 logros: this.$route.params.cimero.logros,
                 provincias: this.$route.params.cimero.provincias,
                 communidads: this.$route.params.cimero.communidads,
+                cimas: this.$route.params.cimas,
             };
+        },
+
+        components: {
+            'ProvinciaLogroList' : ProvinciaLogroList
         },
 
         beforeMount () {
@@ -45,6 +60,10 @@
 
         methods: {
 
+            provinceGroup (commId) {
+                return this.provincias.filter(x => x.communidad_id === commId)
+            },
+            
             createMapData () {
                 var that = this;
                 this.provincias = this.provincias.map(x => {
@@ -61,7 +80,7 @@
                 })
 
                 this.options = {
-                    width: '100%',
+                    //width: '100%',
                     plotOptions: {
                         series: {
                             point: {
@@ -91,6 +110,7 @@
                             dataLabels: {
                                 enabled: true,
                                 color: 'rgb(0,0,0)',
+                                backgroundColor: 'rgb(255,255,255)',
                                 y: -12,
                                 borderWidth: 0.5,
                                 borderColor: '#333',
