@@ -185,7 +185,7 @@ router.beforeEach((to, from, next) => {
       next()
     })
   } else if (to.name === 'provincia-cima' || to.name === 'provincia' || to.name === 'provincia-map') {
-    store.dispatch('provincia', to.params.pid).then(cimas => {
+    store.dispatch('provincia', Number(to.params.pid)).then(cimas => {
       to.params.cimas = cimas
       next()
     })

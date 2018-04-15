@@ -7,11 +7,12 @@ import _ from 'lodash'
 
 Vue.use(Vuex)
 
-const doRequest = (store, { url, mutation, params, resolveMutation }) => {
+const doRequest = (store, { url, mutation, params, resolveMutation, callback }) => {
   return new Promise((resolve, reject) => {
     axios.get(process.env.API_URL + url).then(function (response) {
       store.commit(mutation, {data: response.data, params: params})
-      resolve(response.data)
+      var data = callback ? callback(response.data) : response.data
+      resolve(data)
     }).catch(err => {
       // Change page depending where we are
       reject(err.response.data)
@@ -213,19 +214,24 @@ const store = new Vuex.Store({
     },
 
     provincia (context, id) {
-      if (this.state.provincias.find(x => x.id === id)) return this.state.provincias.find(x => x.id === id).val
+      if (this.state.allCimas) return this.state.allCimas.filter(c => c.provincia_id === id)
       return doRequest(store, {
-          url: 'cimas/' + id,
-          mutation: 'provincia',
-          params: {id: id}
+          url: 'cimas',
+          mutation: 'allCimas',
+          callback: function(data){
+            return data.filter(c => c.provincia_id === id)
+          }
       });
     },
 
     patanegra (context) {
-      if (this.state.patanegra) return this.state.patanegra
+      if (this.state.allCimas) return this.state.allCimas.filter(c => c.pata_negra === 1)
       return doRequest(store, {
-          url: 'patanegra',
-          mutation: 'patanegra',
+          url: 'cimas',
+          mutation: 'allCimas',
+          callback: function(data){
+            return data.filter(c => c.pata_negra === 1)
+          }
       });
     },
 
