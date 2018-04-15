@@ -10,7 +10,7 @@
                 </v-toolbar-title>
             </v-toolbar>
 
-            <v-flex xs12 md4 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
+            <v-flex xs12 md4 order-md1 order-xs2 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
                 <v-expansion-panel class="dense-expansion">
                     <v-expansion-panel-content  v-for="communidad in communidads" :key="communidad.id" v-if="communidad.completed > 0">
                         <div slot="header" class="subheading primary--text py-0">{{communidad.nombre}} {{communidad.completed}} / {{communidad.total}}</div>
@@ -18,7 +18,7 @@
                     </v-expansion-panel-content>
                 </v-expansion-panel>
             </v-flex>
-            <v-flex xs12 md8 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
+            <v-flex xs12 md8 order-md2 order-xs1 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
                 <highmaps :options="options"></highmaps>
             </v-flex>
         </v-layout>
@@ -45,11 +45,6 @@
             return {
                 tick: tick,
                 options: null,
-                cimero: this.$route.params.cimero.cimero,
-                logros: this.$route.params.cimero.logros,
-                provincias: this.$route.params.cimero.provincias,
-                communidads: this.$route.params.cimero.communidads,
-                cimas: this.$route.params.cimas,
             };
         },
 
@@ -59,16 +54,13 @@
 
         watch: {
             '$route.query': function (route) {
-                this.cimero = this.$route.params.cimero.cimero
-                this.logros = this.$route.params.cimero.logros
-                this.provincias = this.$route.params.cimero.provincias
-                this.communidads = this.$route.params.cimero.communidads
-                this.cimas = this.$route.params.cimas
+                this.createData()
                 this.createMapData()
             }
         },
 
         beforeMount () {
+            this.createData()
             this.createMapData()
         },
 
@@ -77,7 +69,16 @@
             provinceGroup (commId) {
                 return this.provincias.filter(x => x.communidad_id === commId)
             },
-            
+
+            createData () {
+                this.cimero = this.$route.params.cimero.cimero
+                this.logros = this.$route.params.cimero.logros
+                this.provincias = this.$route.params.cimero.provincias
+                this.communidads = this.$route.params.cimero.communidads
+                this.cimas = this.$route.params.cimas
+            },
+
+        
             createMapData () {
                 var that = this;
                 this.provincias = this.provincias.map(x => {
@@ -96,6 +97,9 @@
                 this.options = {
                     plotOptions: provinceMap.plotOptions,
                     tooltip: {
+                        enabled: false,
+                    },
+                    credits: {
                         enabled: false,
                     },
                     title: false,

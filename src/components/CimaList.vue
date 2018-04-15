@@ -94,8 +94,8 @@ export default {
 
   watch: {
     '$route': function (route) {
-      if (route.name === 'provincia') this.$store.dispatch('provincia',route.params.pid).then(cimas => this.cimas = cimas);
-      if (route.name === 'patanegra') this.$store.dispatch('patanegra').then(cimas => this.cimas = cimas);
+      if (this.$route.name === 'provincia') this.$store.dispatch('provincia',Number(this.$route.params.pid)).then(cimas => this.cimas = cimas);
+      if (this.$route.name === 'patanegra') this.$store.dispatch('patanegra').then(cimas => this.cimas = cimas);
     }
   },
 
