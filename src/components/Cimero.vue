@@ -1,13 +1,16 @@
 <template>
     <v-container fluid class="pa-0 my-2">
+        
+        
         <v-layout row wrap>
+
             <v-toolbar color="white" flat dense class="primary--text mb-3 ">
                 <v-toolbar-title class="display-2">
                    {{cimero.fullname}}
                 </v-toolbar-title>
-              </v-toolbar>
+            </v-toolbar>
 
-            <v-flex xs4 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
+            <v-flex xs12 md4 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
                 <v-expansion-panel class="dense-expansion">
                     <v-expansion-panel-content  v-for="communidad in communidads" :key="communidad.id" v-if="communidad.completed > 0">
                         <div slot="header" class="subheading primary--text py-0">{{communidad.nombre}} {{communidad.completed}} / {{communidad.total}}</div>
@@ -15,7 +18,7 @@
                     </v-expansion-panel-content>
                 </v-expansion-panel>
             </v-flex>
-            <v-flex xs8 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
+            <v-flex xs12 md8 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
                 <highmaps :options="options"></highmaps>
             </v-flex>
         </v-layout>
@@ -80,58 +83,16 @@
                 })
 
                 this.options = {
-                    //width: '100%',
-                    plotOptions: {
-                        series: {
-                            point: {
-                                events: {
-                                    mouseOver: function (e) {
-                                        this.update({
-                                            dataLabels:{
-                                               formatter: function(){
-                                                    if (this.point.id === e.target.id) return this.point.completed + " / " + this.point.total
-                                                    return ''
-
-                                                } 
-                                            }
-                                        });
-                                    },
-                                    mouseOut: function (e) {
-                                        this.update({
-                                            dataLabels:{
-                                               formatter: function(){
-                                                    return ''
-                                                } 
-                                            }
-                                        });
-                                    }
-                                }
-                            },
-                            dataLabels: {
-                                enabled: true,
-                                color: 'rgb(0,0,0)',
-                                backgroundColor: 'rgb(255,255,255)',
-                                y: -12,
-                                borderWidth: 0.5,
-                                borderColor: '#333',
-                                formatter: function(){
-                                    return ''
-                                },
-                            },
-
-                            
-                        },
-
-                    },
-                    mapNavigation: {
-                        enabled: true,
+                    plotOptions: provinceMap.plotOptions,
+                    tooltip: {
+                        enabled: false,
                     },
                     title: false,
                     series: [{
                         type: 'map',
                         joinBy: ['id'],
                         data: that.provincias,
-                        mapData: provinceMap.data,
+                        mapData: provinceMap.map.data,
 
 
                     }],
@@ -140,23 +101,8 @@
                         max: 1,
                         showInLegend: false,
                         type: 'linear',
-                        //minColor: '#00ff00',
                         minColor: '#f5eee7',
-                        //maxColor: '#ff0000',
                         maxColor: '#030f24',
-                        /*stops: [
-                            [0, '#00ff00'],
-                            [0.5, '#ffff00'],
-                            [1, '#ff0000']
-                        ]*/
-                    },
-                    tooltip: {
-                        enabled: false,
-                        backgroundColor: 'transparent',
-                        shadow: false,
-                        formatter: function(){
-                            return this.point.completed
-                        }
                     },
                 }
             }

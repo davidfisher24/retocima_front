@@ -1,4 +1,6 @@
-const provinceMap =  {
+const provinceMap = {}
+
+provinceMap.map =  {
         "type": "map",
         "data": [
             {
@@ -428,5 +430,47 @@ const provinceMap =  {
         ]
 }
 
+provinceMap.plotOptions = {
+    series: {
+        point: {
+            events: {
+                mouseOver: function (e) {
+                    this.update({
+                        dataLabels:{
+                           formatter: function(){
+                                if (this.point.id === e.target.id) return this.point.completed + " / " + this.point.total
+                                return ''
+
+                            } 
+                        }
+                    });
+                },
+                mouseOut: function (e) {
+                    this.update({
+                        dataLabels:{
+                           formatter: function(){
+                                return ''
+                            } 
+                        }
+                    });
+                }
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            color: 'rgb(0,0,0)',
+            backgroundColor: 'rgb(255,255,255)',
+            y: -12,
+            borderWidth: 0.5,
+            borderColor: '#333',
+            formatter: function(){
+                return ''
+            },
+        },
+
+        
+    },
+
+}
 
 export default provinceMap

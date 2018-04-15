@@ -36,6 +36,7 @@ export default {
     return {
       active:0,
       id:"bar",
+      cimero: this.$route.params.cimero
     }
   },
   components: {
@@ -44,31 +45,26 @@ export default {
   },
 
 
-  computed: {
-    cimero () {
-      return this.$route.params.cimero;
-    },
-  },
-  
-
   methods: {
     organizeBar () {
-        var comms = _.values(_.groupBy(this.cimero.logros,"communidad.id"));
-        return comms.map(c => {
-          return {
-            nombre: c[0].communidad.nombre,
-            count: c.length,
-          }
-        })
+        var logros = _.flatMap(this.cimero.logros)
+        return _.chain(logros)
+              .groupBy('communidad_id')
+              .map((logro) => ({ 
+                count:logro.length, 
+                nombre: this.cimero.communidads.find(c => c.id == logro[0].communidad_id).nombre
+              }))
+              .value()
     },
     organizePie () {
-        var comms = _.values(_.groupBy(this.cimero.logros,"provincia.id"));
-        return comms.map(c => {
-          return {
-            nombre: c[0].provincia.nombre,
-            count: c.length,
-          }
-        })
+        var logros = _.flatMap(this.cimero.logros)
+        return _.chain(logros)
+              .groupBy('provincia_id')
+              .map((logro) => ({ 
+                count:logro.length, 
+                nombre: this.cimero.provincias.find(c => c.id == logro[0].provincia_id).nombre
+              }))
+              .value()
     }
   }
 }

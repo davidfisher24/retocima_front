@@ -5,7 +5,7 @@
             <v-layout>
                 <v-flex xs4 offset-xs1 class="primary--text">{{provincia.nombre}}</v-flex>
                 <v-flex xs7 class="primary--text">
-                    <span v-if="provincia.completed === provincia.total">!!COMPLETADA!!</span>
+                    <v-icon v-if="provincia.completed === provincia.total" color="yellow">star</v-icon>
                     {{provincia.completed}} / {{provincia.total}}
                 </v-flex>
             </v-layout>
