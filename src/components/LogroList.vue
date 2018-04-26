@@ -1,11 +1,14 @@
 <template>
-  <v-container fluid>
-    <v-slide-y-transition mode="out-in">
+  <v-container fluid class="pa-0 mt-2">
+
       <v-layout row wrap>
-          <v-flex xs12 class="mx-3">
+          <v-flex xs6 class="px-3">
               <v-card>
-                <v-list>
-                  <v-list-tile avatar v-for="item in incompleteList" :key="item.id">
+                <v-list dense>
+                  <v-list-tile-title >
+                      Example title
+                    </v-list-tile-title>
+                  <v-list-tile avatar v-for="(item,i) in provinciaCimas" :key="item.id">
                     <v-list-tile-avatar>
                       {{ item.codigo }}
                     </v-list-tile-avatar>
@@ -13,43 +16,43 @@
                       <v-list-tile-title>{{ item.nombre }}</v-list-tile-title>
                     </v-list-tile-content>
                     <v-list-tile-action>
-                      <v-btn fab dark small color="indigo" class="x-small" 
-                        v-if="adding.indexOf(item.id) === -1 && added.indexOf(item.id) === -1"
+                      <v-btn fab dark small color="primary" class="x-small" 
+                        v-if="adding.indexOf(item.id) === -1 && logroIds.indexOf(item.id) === -1"
                         @click="add(item.id)"
                     >+</v-btn>
-                      <v-btn fab dark small color="indigo" class="x-small" loading v-if="adding.indexOf(item.id) !== -1"></v-btn>
+                      <v-btn fab dark small color="indigo" class="x-small" loading v-if="adding.indexOf(item.id) !== -1 "></v-btn>
+                      <v-btn fab dark small color="accent" class="x-small" 
+                        v-if="adding.indexOf(item.id) === -1 && logroIds.indexOf(item.id) !== -1"
+                        @click="remove(item.id)"
+                    >-</v-btn>
                     </v-list-tile-action>
                   </v-list-tile>
+                </v-list>
+              </v-card>
+            </v-flex>
+
+          <v-flex xs6 class="px-3">
+              <v-card>
+                <v-list>
+                  <v-list-tile>
+                      Example title
+                    </v-list-tile>
+                    <v-divider inset></v-divider>
                   <v-divider inset></v-divider>
-
-                  <v-expansion-panel>
-                    <v-expansion-panel-content>
-                      <div slot="header">Cimas Completadas - {{completed.length}} logros</div>
-                        <v-list-tile avatar v-for="item in completeList" :key="item.id">
-                            <v-list-tile-avatar>
-                              {{ item.cima.codigo }}
-                            </v-list-tile-avatar>
-                            <v-list-tile-content>
-                              <v-list-tile-title>{{ item.cima.nombre }}</v-list-tile-title>
-                            </v-list-tile-content>
-                            <v-list-tile-action>
-                              <v-btn fab dark small color="cyan" class="x-small"  
-                                v-if="adding.indexOf(item.id) === -1 && added.indexOf(item.id) === -1"
-                                @click="remove(item.id)"
-                              >-</v-btn>
-                              <v-btn fab dark small color="cyan" class="x-small" loading v-if="adding.indexOf(item.id) !== -1"></v-btn>
-                            </v-list-tile-action>
-                          </v-list-tile>
-                    </v-expansion-panel-content>
-                  </v-expansion-panel>
-
-
-                   
+                   <v-list-tile>
+                      {{logros.length}} Completadas
+                    </v-list-tile>
+                     <v-list-tile>
+                      {{provinciaCimas.length - logros.length}} Por Ascender
+                    </v-list-tile>
+                     <v-list-tile>
+                      {{provinciaCimas.length}} Total de cimas de provincia
+                    </v-list-tile>
                 </v-list>
               </v-card>
             </v-flex>
       </v-layout> 
-    </v-slide-y-transition>
+
   </v-container>
 </template>
 
@@ -62,27 +65,26 @@ export default {
   data () {
     return {
       adding: [],
-      added: [],
-      completed: this.$route.params.data.complete,
-      incompleted: this.$route.params.data.incomplete,
+      provincia: this.$route.params.pid,
+      cimas: this.$route.params.cimas,
+      logros: this.$route.params.logros,
     }
   },
 
   computed: {
-    completeList () {
-      return _.orderBy(this.completed,"cima_codigo")
+    provinciaCimas () {
+      return this.cimas.filter(x => Number(x.provincia_id) === Number(this.provincia))
     },
-    incompleteList () {
-      return _.orderBy(this.incompleted,"codigo")
-    }
+    logroIds () {
+      return _.map(this.logros, 'cima_id');
+    },
   },
 
   methods: {
     add (id) {
       this.adding.push(id);
       this.$store.dispatch("addLogro",id).then(logro => {
-        this.completed.push(logro);
-        this.incompleted.splice(this.incompleted.indexOf(this.incompleted.find(x => x.id === id)),1)
+        this.logros.push(logro)
         this.adding.splice(this.adding.indexOf(id),1);
       }).catch(() => {
         this.adding.splice(this.adding.indexOf(id),1);
@@ -91,11 +93,10 @@ export default {
 
     remove (id) {
       this.adding.push(id);
-      var logro = this.completed.find(x => x.id === id);
+      var logro = this.logros.find(x => x.cima_id === id);
       this.$store.dispatch("removeLogro",logro).then(cima => {
-        this.incompleted.push(cima);
-        this.completed.splice(this.completed.indexOf(this.completed.find(x => x.cima_id === cima.id)),1);
         this.adding.splice(this.adding.indexOf(id),1);
+        this.logros.splice(this.logros.findIndex(x => x.cima_id === id),1);
       }).catch(() => {
         this.adding.splice(this.adding.indexOf(id),1);
       })

@@ -217,10 +217,18 @@ router.beforeEach((to, from, next) => {
         next();
     });*/
   } else if (to.name === 'user-provincia') {
-    store.dispatch("userProvinceLogros",to.params.pid).then(data => {
+    /*store.dispatch("userProvinceLogros",to.params.pid).then(data => {
         to.params.data = data;
         next();
-    });
+    });*/
+    var promise1 = store.dispatch('userProvinceLogros',to.params.pid)
+    var promise2 = store.dispatch('cimaNames')
+
+    Promise.all([promise1,promise2]).then(data => {
+      to.params.logros = data[0]
+      to.params.cimas = data[1]
+      next();
+    })
   } else {
     next()
 
