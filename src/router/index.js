@@ -165,7 +165,7 @@ router.beforeEach((to,from,next) => {
 
 router.beforeEach((to, from, next) => {
   store.commit('loading',true)
-  if (to.name === 'cima' || to.name === 'discover') {
+  if (to.name === 'cima' || to.name === 'discover' || to.name === 'map-cima') {
     store.dispatch('cima', to.params.id).then(cima => {
       to.params.cima = cima
       next()
@@ -194,7 +194,7 @@ router.beforeEach((to, from, next) => {
       to.params.listado = listado
       next()
     })
-  } else if (to.name === 'cima-map' || to.name === 'map-cima') {
+  } else if (to.name === 'cima-map') {
     store.dispatch('cimaMarkers').then(cimas => {
       to.params.cimas = cimas
       to.params.center = {lat: 40.416775, lng: -3.703790}

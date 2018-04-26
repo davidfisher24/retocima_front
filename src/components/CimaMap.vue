@@ -121,7 +121,7 @@
             },
 
             route (id) {
-              if (this.$route.name === 'cima-map') this.$router.push({name: 'map-cima', params: {cid: id}});
+              if (this.$route.name === 'cima-map') this.$router.push({name: 'map-cima', params: {id: id}});
               else if (this.$route.name === 'provincia-map') this.$router.push({name: 'provincia-cima', params: {pid: this.$route.params.pid, cid: id}});
               else if (this.$route.name === 'patanegra-map') this.$router.push({name: 'patanegra-cima', params: {cid: id}});
             },

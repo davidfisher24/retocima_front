@@ -5,7 +5,6 @@ export default {
   state: {
   	provincias: {},
   	cimas: [],
-  	//allCimas: null,
     patanegra: null,
     markers: null,
     names: null,
@@ -17,12 +16,8 @@ export default {
 
   mutations: {
   	provincia (state, {data, params}) {
-      //if (!state.provincias.find(x => x.id === params.id)) state.provincias.push({val: data, id: params.id})
-      stata.provincias[params.id] = data
+      state.provincias[params.id] = data
     },
-    /*allCimas (state, {data, params}) {
-      state.allCimas = data
-    },*/
     cima (state, {data, params}) {
       if (!state.cimas.find(x => x.id === data.id)) state.cimas.push(data)
     },
@@ -45,50 +40,21 @@ export default {
           mutation: 'cima',
       });
     },
-     /* Uses all cimas list */
-    /*allCimas (store) {
-      if (store.state.allCimas) return store.state.allCimas
-      return doRequest(store, {
-          url: 'cimas',
-          mutation: 'allCimas',
-      });
-    },*/
-
-    /* Uses all cimas list */
-    /*provincia (store, id) {
-      if (store.state.allCimas) return store.state.allCimas.filter(c => c.provincia_id === id)
-      return doRequest(store, {
-          url: 'cimas',
-          mutation: 'allCimas',
-          callback: function(data){
-            return data.filter(c => c.provincia_id === id)
-          }
-      });
-    },*/
 
     provincia (store, id) {
       if (store.state.provincias[id]) return store.state.provincias[id]
       return doRequest(store, {
           url: 'cimas/' + id,
           mutation: 'provincia',
-          /*callback: function(data){
-            return data.filter(c => c.provincia_id === id)
-          }*/
+          params: {id: id}
       });
     },
 
-    /* Uses all cimas list */
     patanegra (store) {
-      //if (store.state.allCimas) return store.state.allCimas.filter(c => c.pata_negra === 1)
       if (store.state.patanegra) return store.state.patanegra
       return doRequest(store, {
       	url: 'patanegra',
       	mutation: 'patanegra'
-          //url: 'cimas',
-          //mutation: 'allCimas',
-          /*callback: function(data){
-            return data.filter(c => c.pata_negra === 1)
-          }*/
       });
     },
 
