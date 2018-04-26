@@ -195,7 +195,7 @@ router.beforeEach((to, from, next) => {
       next()
     })
   } else if (to.name === 'cima-map' || to.name === 'map-cima') {
-    store.dispatch('allCimas').then(cimas => {
+    store.dispatch('cimaMarkers').then(cimas => {
       to.params.cimas = cimas
       to.params.center = {lat: 40.416775, lng: -3.703790}
       to.params.zoom = 6
@@ -204,7 +204,7 @@ router.beforeEach((to, from, next) => {
   } else if (to.name === 'user-logros' || to.name === "cimero" || to.name === 'user-charts' || to.name === 'user-edit') {
     var dispatch = to.name === 'user-logros' || to.name === 'user-charts' || to.name === 'user-edit' ? "authCimero" : "cimeros";
     var promise1 = store.dispatch(dispatch,to.params.uid)
-    var promise2 = store.dispatch('allCimas')
+    var promise2 = store.dispatch('cimaNames')
 
     Promise.all([promise1,promise2]).then(data => {
       to.params.cimero = data[0]
