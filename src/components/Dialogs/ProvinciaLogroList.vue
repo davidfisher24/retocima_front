@@ -22,7 +22,7 @@
         <v-list>
             <v-list-tile avatar v-for="cima in cimaList" 
             :class="['ma-1', completed(cima.id) ? 'info' : '']">
-                <v-list-tile-avatar color="primary" tile>
+                <v-list-tile-avatar color="primary" tile class="cima-avatar">
                     <span class="white--text">{{cima.codigo}}</span>
                 </v-list-tile-avatar>
                 <v-list-tile-content>

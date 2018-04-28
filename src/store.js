@@ -22,6 +22,7 @@ const store = new Vuex.Store({
     ranking: null,
     loggedInUser: null,
     isLoggedIn: localStorage.getItem('cimero-token'),
+    provincias: null,
     
   },
   getters: {
@@ -57,6 +58,9 @@ const store = new Vuex.Store({
     },
     ranking (state, ranking) {
       state.ranking = ranking
+    },
+    provincias (state, provincias) {
+      state.provincias = provincias
     },
     loggedIn (state,{data, params}) {
       localStorage.setItem('cimero-token',data.token)
@@ -186,6 +190,19 @@ const store = new Vuex.Store({
           url: 'cimero-logros/' + pid,
       });
     },
+
+    provincias (context,pid) {
+      if (this.state.provincias && !pid) return this.state.provincias
+      if (this.state.provincias && pid) return this.state.provincias.find(p => p.id === Number(pid))
+      return doRequest(store, {
+          url: 'provincias',
+          mutation: 'provincias',
+          callback: function(data){
+            if (!pid) return data
+            return data.find(p => p.id === Number(pid))
+          }
+      }); 
+    }
 
   }
 })

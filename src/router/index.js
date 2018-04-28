@@ -222,11 +222,13 @@ router.beforeEach((to, from, next) => {
         next();
     });*/
     var promise1 = store.dispatch('userProvinceLogros',to.params.pid)
-    var promise2 = store.dispatch('cimaNames')
+    var promise2 = store.dispatch('provinciaNames',to.params.pid)
+    var promise3 = store.dispatch('provincias',to.params.pid)
 
-    Promise.all([promise1,promise2]).then(data => {
+    Promise.all([promise1,promise2,promise3]).then(data => {
       to.params.logros = data[0]
       to.params.cimas = data[1]
+      to.params.provincia = data[2]
       next();
     })
   } else {

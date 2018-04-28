@@ -3,7 +3,7 @@ import { doRequest } from './requests'
 export default {
 
   state: {
-  	provincias: {},
+  	provincia: {},
   	cimas: [],
     patanegra: null,
     markers: null,
@@ -42,7 +42,7 @@ export default {
     },
 
     provincia (store, id) {
-      if (store.state.provincias[id]) return store.state.provincias[id]
+      if (store.state.provincia[id]) return store.state.provincia[id]
       return doRequest(store, {
           url: 'cimas/' + id,
           mutation: 'provincia',
@@ -72,6 +72,16 @@ export default {
 	      	url: 'cimas/list/markers',
 	      	mutation: 'markers'
 	     });
-    }
+    },
+    provinciaNames (store,id) {
+      if (store.state.names) return store.state.names.filter(c => c.provincia_id === id)
+      return doRequest(store, {
+        url: 'cimas/list/names',
+        mutation: 'names',
+        callback: function(data){
+          return data.filter(c => c.provincia_id === Number(id))
+        },
+     });
+    },
   },
 }
