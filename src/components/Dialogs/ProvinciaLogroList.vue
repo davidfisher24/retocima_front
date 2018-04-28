@@ -13,7 +13,7 @@
     </a>
 
     <v-card v-if="province">
-        <v-card-title>
+        <v-card-title class="title pb-0 primary--text">
             {{currentProvince.nombre}} {{currentProvince.completed}} / {{currentProvince.total}}
             <v-spacer></v-spacer>
             <v-btn icon small flat @click.native="dialog = false"><v-icon>close</v-icon></v-btn>
@@ -26,7 +26,7 @@
                     <span class="white--text">{{cima.codigo}}</span>
                 </v-list-tile-avatar>
                 <v-list-tile-content>
-                  <v-list-tile-title class="title">
+                  <v-list-tile-title class="title primary--text">
                       {{cima.nombre}}
                       <v-icon v-if="completed(cima.id)">check</v-icon>
                   </v-list-tile-title>

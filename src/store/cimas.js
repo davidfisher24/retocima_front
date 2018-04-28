@@ -16,7 +16,7 @@ export default {
 
   mutations: {
   	provincia (state, {data, params}) {
-      state.provincias[params.id] = data
+      state.provincia[params.id] = data
     },
     cima (state, {data, params}) {
       if (!state.cimas.find(x => x.id === data.id)) state.cimas.push(data)
@@ -25,7 +25,7 @@ export default {
       state.patanegra = data
     },
     names (state, {data, params}) {
-      state.name = data
+      state.names = data
     },
     markers (state, {data, params}) {
       state.markers = data

@@ -15,12 +15,12 @@
                       <v-layout row wrap >
                         <v-flex xs12 md6>
                           <v-list-tile-title class="headline primary--text" >
-                            {{provincia.communidad.nombre.toUpperCase()}} -
+                            {{provincia.communidad.nombre}} -
                             <span class="subheading">{{provincia.nombre}}</span>
                           </v-list-tile-title>
                         </v-flex>
                         <v-flex xs12 md6>
-                          <v-list-tile-title class="headline primary--text">
+                          <v-list-tile-title class="headline primary--text text-xs-right">
                             {{logros.length}} completas | {{activeCimas.length}} total
                           </v-list-tile-title>
                         </v-flex>

@@ -6,15 +6,31 @@
 
             <v-toolbar color="white" flat dense class="primary--text mb-3 ">
                 <v-toolbar-title class="display-2">
-                   {{cimero.fullname}}
+                   Mis Logros
                 </v-toolbar-title>
             </v-toolbar>
 
             <v-flex xs12 md4 order-md1 order-xs2 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
                 <v-expansion-panel class="dense-expansion">
-                    <v-expansion-panel-content  v-for="communidad in communidads" :key="communidad.id" v-if="communidad.completed > 0">
-                        <div slot="header" class="subheading primary--text py-0">{{communidad.nombre}} {{communidad.completed}} / {{communidad.total}}</div>
-                        <ProvinciaLogroList :provinciaGroup="provinceGroup(communidad.id)" :communidad="communidad" :cimas="cimas" :logros="logros"></ProvinciaLogroList>
+                    <v-expansion-panel-content  v-for="communidad in communidads" :key="communidad.id">
+                        <div slot="header" class="subheading primary--text py-0"><strong>{{communidad.nombre}}</strong></div>
+                            <div v-for="provincia in provinceGroup(communidad.id)":key="provincia.id">
+                                <v-layout class="mb-1">
+                                    <v-flex xs4 offset-xs1 class="primary--text">{{provincia.nombre}}</v-flex>
+                                    <v-flex xs3 class="primary--text">
+                                        <strong>{{provincia.completed}} | {{provincia.total}}</strong>
+                                    </v-flex>
+                                    <v-flex xs2 class="primary--text" v-if="provincia.completed === provincia.total" >
+                                        <v-icon color="yellow">star</v-icon>
+                                    </v-flex>
+                                    <v-flex xs2 class="primary--text">
+                                        <v-btn fab dark small color="primary" class="xxxs-icon"
+                                        @click="$router.push({name: 'user-provincia', params: {pid: provincia.id}});"
+                                        ><img src="@/assets/icons/logowhite.png" height="14px" width="14px">
+                                        </v-btn>
+                                    </v-flex>
+                                </v-layout>
+                            </div>
                     </v-expansion-panel-content>
                 </v-expansion-panel>
             </v-flex>
@@ -27,7 +43,7 @@
 
 
 <script>
-    import ProvinciaLogroList from './Dialogs/ProvinciaLogroList'
+
     import SpainSVG from './SVG/SpainSVG'
     import provinceMap from './SVG/provinceMap'
 
@@ -40,7 +56,6 @@
         },
 
         components: {
-            'ProvinciaLogroList' : ProvinciaLogroList,
             'SpainSVG' : SpainSVG
         },
 
@@ -77,12 +92,6 @@
                     x.total = x.active_cimas_count;
                     x.completed = that.logros[x.id.toString()] ? that.logros[x.id.toString()].length : 0 ;
                     x.value = x.completed / x.total;
-                    return x;
-                })
-
-                this.communidads = this.communidads.map(x => {
-                    x.total = x.active_cimas_count;
-                    x.completed = this.provincias.filter(p => p.communidad_id == x.id).reduce((prev, cur) => prev + cur.completed, 0)
                     return x;
                 })
 

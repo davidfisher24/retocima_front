@@ -5,12 +5,14 @@ import _ from 'lodash'
 
 import { doRequest, doLoginRequest, doAuthRequest, doRefreshTokenRequest } from './store/requests'
 import cimas from './store/cimas'
+import authCimero from './store/authCimero'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   modules: {
     cimas,
+    authCimero,
   },
 
   state: {
@@ -18,7 +20,6 @@ const store = new Vuex.Store({
     discover: null,
     listado: null,
     cimeros: [],
-    authCimero: null,
     ranking: null,
     loggedInUser: null,
     isLoggedIn: localStorage.getItem('cimero-token'),
@@ -53,14 +54,11 @@ const store = new Vuex.Store({
     cimeros (state, {data, params}) {
       if (!state.cimeros.find(x => x.id === params.id)); state.cimeros.push({val: data, id: params.id})
     },
-    authCimero (state, {data}) {
-      state.authCimero = data
-    },
     ranking (state, ranking) {
       state.ranking = ranking
     },
-    provincias (state, provincias) {
-      state.provincias = provincias
+    provincias (state, {data}) {
+      state.provincias = data
     },
     loggedIn (state,{data, params}) {
       localStorage.setItem('cimero-token',data.token)
@@ -156,38 +154,6 @@ const store = new Vuex.Store({
           method: 'get',
           url: 'verify',
           mutation: 'verify',
-      });
-    },
-
-    authCimero (context) {
-      if (this.state.authCimero) return this.state.authCimero
-      return doAuthRequest(store, {
-          method: 'get',
-          url: 'cimero',
-          mutation: 'authCimero',
-      });
-    },
-
-    addLogro (context,id) {
-      return doAuthRequest(store, {
-          method: 'post',
-          url: 'update-logro',
-          data: {action: 'add', cima: id},
-      });
-    },
-
-    removeLogro (context,logro) {
-      return doAuthRequest(store, {
-          method: 'post',
-          url: 'update-logro',
-          data: {action: 'remove', logro: JSON.stringify(logro)},
-      });
-    },
-
-    userProvinceLogros (context,pid) {
-      return doAuthRequest(store, {
-          method: 'get',
-          url: 'cimero-logros/' + pid,
       });
     },
 

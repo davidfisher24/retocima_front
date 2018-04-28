@@ -14,15 +14,16 @@ import Cima from '@/components/Cima'
 import CimaMap from '@/components/CimaMap'
 
 import Cimero from '@/components/Cimero'
+import User from '@/components/User'
+
 import Charts from '@/components/Charts/Container'
-import AddLogros from '@/components/AddLogros'
 import LogroList from '@/components/LogroList'
 import EditAccount from '@/components/Forms/EditAccount'
 
 import Register from '@/components/Forms/Register'
 
 const protectedRoutes = [
-  'user-logros', 'user-charts', 'user-provincia', 'add-logros', 'user-edit'
+  'user-logros', 'user-charts', 'user-provincia', 'user-edit'
 ]
 
 Vue.use(Router)
@@ -132,16 +133,11 @@ const router = new Router({
       name: 'user-edit',
       component: EditAccount,
     },
-    {
-      path: '/cuenta/add-logros',
-      name: 'add-logros',
-      component: AddLogros,
-    },
     // Cuenta logros
     {
       path: '/cuenta/logros',
       name: 'user-logros',
-      component: Cimero
+      component: User,
     },
     // Logros in a provincia add
     {
@@ -189,7 +185,7 @@ router.beforeEach((to, from, next) => {
       to.params.cimas = cimas
       next()
     })
-  } else if (to.name === 'listado' || to.name === 'add-logros') {
+  } else if (to.name === 'listado') {
     store.dispatch('listado').then(listado => {
       to.params.listado = listado
       next()
@@ -201,9 +197,8 @@ router.beforeEach((to, from, next) => {
       to.params.zoom = 6
       next()
     })
-  } else if (to.name === 'user-logros' || to.name === "cimero" || to.name === 'user-charts' || to.name === 'user-edit') {
-    var dispatch = to.name === 'user-logros' || to.name === 'user-charts' || to.name === 'user-edit' ? "authCimero" : "cimeros";
-    var promise1 = store.dispatch(dispatch,to.params.uid)
+  } else if (to.name === "cimero") {
+    var promise1 = store.dispatch("cimeros",to.params.uid)
     var promise2 = store.dispatch('cimaNames')
 
     Promise.all([promise1,promise2]).then(data => {
@@ -211,16 +206,18 @@ router.beforeEach((to, from, next) => {
       to.params.cimas = data[1]
       next();
     })
+  } 
+  // CUENTA
+  else if (to.name === 'user-logros' || to.name === 'user-charts' || to.name === 'user-edit') {
+    var promise1 = store.dispatch("authCimero",to.params.uid)
+    //var promise2 = store.dispatch('cimaNames')
 
-    /*store.dispatch(dispatch,to.params.uid).then(cimero => {
-        to.params.cimero = cimero;
-        next();
-    });*/
+    Promise.all([promise1/*,promise2*/]).then(data => {
+      to.params.cimero = data[0]
+      //to.params.cimas = data[1]
+      next();
+    })
   } else if (to.name === 'user-provincia') {
-    /*store.dispatch("userProvinceLogros",to.params.pid).then(data => {
-        to.params.data = data;
-        next();
-    });*/
     var promise1 = store.dispatch('userProvinceLogros',to.params.pid)
     var promise2 = store.dispatch('provinciaNames',to.params.pid)
     var promise3 = store.dispatch('provincias',to.params.pid)

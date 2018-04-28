@@ -90,6 +90,10 @@ Vue.use(require('vue2-google-maps'), {
   }
 })
 
+import VueHighcharts from 'vue-highcharts'
+import Highcharts from 'highcharts'
+Vue.use(VueHighcharts, { Highcharts })
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

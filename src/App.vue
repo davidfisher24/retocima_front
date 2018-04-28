@@ -146,13 +146,11 @@ export default {
       routes: [
         {text:"listado", route:"listado"},
         {text:"ranking", route:"ranking"},
-        {text:"Estadistica"},
         {text:"Pata Negra", route:"patanegra", params:{"format": "list"}},
         {text:"Mapa", route:"cima-map"},
       ],
       userRoutes: [
         {text:"Mis Logros", route:"user-logros"},
-        {text:"Añadir Logros", route:"add-logros"},
         {text:"Graficos", route:"user-charts"},
         {text:"Editar Cuenta", route:"user-edit"},
         {text:"Cerrar Session", route:"logout"},
