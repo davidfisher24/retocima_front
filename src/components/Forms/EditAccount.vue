@@ -117,14 +117,14 @@ export default {
   data () {
     return {
       model: {
-        email: this.$route.params.cimero.email,
-        username: this.$route.params.cimero.nombre,
-        nombre: this.$route.params.cimero.nombre,
-        apellido1: this.$route.params.cimero.apellido1,
-        apellido2: this.$route.params.cimero.apellido2,
-        fechanacimiento: this.$route.params.cimero.fechanacimiento,
-        pais: this.$route.params.cimero.pais.id,
-        provincia: this.$route.params.cimero.provincia.id,
+        email: this.$route.params.cimero.cimero.email,
+        username: this.$route.params.cimero.cimero.nombre,
+        nombre: this.$route.params.cimero.cimero.nombre,
+        apellido1: this.$route.params.cimero.cimero.apellido1,
+        apellido2: this.$route.params.cimero.cimero.apellido2,
+        fechanacimiento: this.$route.params.cimero.cimero.fechanacimiento,
+        pais: this.$route.params.cimero.cimero.pais.id,
+        provincia: this.$route.params.cimero.cimero.provincia.id,
       },
       rules: {
         email:  [

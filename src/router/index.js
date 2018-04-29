@@ -210,11 +210,8 @@ router.beforeEach((to, from, next) => {
   // CUENTA
   else if (to.name === 'user-logros' || to.name === 'user-charts' || to.name === 'user-edit') {
     var promise1 = store.dispatch("authCimero",to.params.uid)
-    //var promise2 = store.dispatch('cimaNames')
-
-    Promise.all([promise1/*,promise2*/]).then(data => {
+    Promise.all([promise1]).then(data => {
       to.params.cimero = data[0]
-      //to.params.cimas = data[1]
       next();
     })
   } else if (to.name === 'user-provincia') {

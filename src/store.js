@@ -140,14 +140,7 @@ const store = new Vuex.Store({
       });
     },
 
-    updateAccount ({ commit }, model) {
-      return doAuthRequest(store, {
-          method: 'post',
-          data: model,
-          url: 'edit-account',
-          mutation: 'authCimero',
-      });
-    },
+  
 
     verify ({ dispatch, commit }) {
       return doAuthRequest(store, {

@@ -96,6 +96,8 @@ Vue.use(VueHighcharts, { Highcharts })
 
 Vue.config.productionTip = false
 
+
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
@@ -104,3 +106,7 @@ new Vue({
   template: '<App/>',
   store
 })
+
+import PageTitle from './components/layout/PageTitle'
+
+Vue.component('PageTitle', PageTitle)
