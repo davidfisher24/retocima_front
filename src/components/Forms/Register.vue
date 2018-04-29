@@ -161,9 +161,7 @@ export default {
         username:  [
           v => !!v || 'Usuario es requirido',
         ],
-        provincia:  [
-          v => this.spainId === this.model.pais && !!v || 'Provincia es requirida',
-        ],
+        provincia:  [],
         dob:  [
           v => !!v || 'Fecha de nacimiento es requirido',
         ],
@@ -176,6 +174,16 @@ export default {
       alert: false,
       alertMessage: [],
       show: true,
+    }
+  },
+
+  watch: {
+    "model.pais" () {
+      if (this.spainId === this.model.pais) {
+        this.rules.provincia = [(v) => !!v || 'Provincia es requirida']
+      } else {
+        this.rules.provincia = []
+      }
     }
   },
 

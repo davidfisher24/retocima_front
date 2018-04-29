@@ -4,11 +4,7 @@
         
         <v-layout row wrap>
 
-            <v-toolbar color="white" flat dense class="primary--text mb-3 ">
-                <v-toolbar-title class="display-2">
-                   Mis Logros
-                </v-toolbar-title>
-            </v-toolbar>
+            <PageTitle text="Mis Logros"></PageTitle>
 
             <v-flex xs12 md4 order-md1 order-xs2 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
                 <v-expansion-panel class="dense-expansion">
