@@ -153,6 +153,7 @@ export default {
         {text:"Mis Logros", route:"user-logros"},
         {text:"Graficos", route:"user-charts"},
         {text:"Editar Cuenta", route:"user-edit"},
+        {text:"Cambiar Contraseña", route:"user-update-password"},
         {text:"Cerrar Session", route:"logout"},
       ]
     }

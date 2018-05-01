@@ -20,6 +20,7 @@ import User from '@/components/User'
 import Charts from '@/components/Charts/Container'
 import LogroList from '@/components/LogroList'
 import EditAccount from '@/components/Forms/EditAccount'
+import UpdatePassword from '@/components/Forms/UpdatePassword'
 
 import Register from '@/components/Forms/Register'
 
@@ -153,6 +154,12 @@ const router = new Router({
       path: '/cuenta/graficos',
       name: 'user-charts',
       component: Charts
+    },
+    // Change Password
+    {
+      path: '/cuenta/update-password',
+      name: 'user-update-password',
+      component: UpdatePassword
     }
   ],
 })

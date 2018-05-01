@@ -31,7 +31,7 @@ export const doLoginRequest = (store, { method, url, data, mutation, params }) =
 }
 
 /* Checks jwt */
-export const doAuthRequest = (store, { method, url, data, mutation, params }) => {
+export const doAuthRequest = (store, { method, url, data, mutation, params, logout }) => {
   var decodedToken = jwt_decode(localStorage.getItem('cimero-token'));
   if (decodedToken.exp - 60 < (new Date().getTime() / 1000))  return doRefreshTokenRequest(store, { method, url, data, mutation, params });
   return new Promise((resolve, reject) => {
@@ -44,9 +44,15 @@ export const doAuthRequest = (store, { method, url, data, mutation, params }) =>
       if(mutation) store.commit(mutation, {data: response.data, params: params})
       resolve(response.data)
     }).catch(err => {
+      console.log(err);
       // also need to redirect here in case of a 401
       // Although there are some form functions
-      store.commit("loggedOut")
+      if (logout) {
+        store.commit("loggedOut")
+        // redirect
+      } else {
+        reject(err.response.data)
+      }
     })
   })
 }

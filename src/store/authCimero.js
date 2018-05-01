@@ -39,6 +39,7 @@ export default {
           method: 'get',
           url: 'cimero',
           mutation: 'authCimero',
+          logout: true,
       });
     },
 
@@ -47,7 +48,8 @@ export default {
           method: 'post',
           url: 'update-logro',
           data: {action: 'add', cima: id},
-          mutation: 'addLogro'
+          mutation: 'addLogro',
+          logout: false,
       });
     },
 
@@ -56,7 +58,8 @@ export default {
           method: 'post',
           url: 'update-logro',
           data: {action: 'remove', logro: JSON.stringify(logro)},
-          mutation: 'removeLogro'
+          mutation: 'removeLogro',
+          logout: false,
       });
     },
 
@@ -64,6 +67,7 @@ export default {
       return doAuthRequest(store, {
           method: 'get',
           url: 'cimero-logros/' + pid,
+          logout: true,
       });
     },
 
@@ -73,6 +77,16 @@ export default {
           data: model,
           url: 'edit-account',
           mutation: 'updateCimero',
+          logout: false,
+      });
+    },
+
+    updatePassword (store, creds) {
+      return doAuthRequest(store, {
+          method: 'post',
+          url: 'update-password',
+          data: creds,
+          logout: false,
       });
     },
   },
