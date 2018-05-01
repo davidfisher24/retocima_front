@@ -4,7 +4,7 @@ import jwt_decode from 'jwt-decode'
 export const doRequest = (store, { url, mutation, params, resolveMutation, callback }) => {
   return new Promise((resolve, reject) => {
     axios.get(process.env.API_URL + url).then(function (response) {
-      store.commit(mutation, {data: response.data, params: params})
+      if (mutation) store.commit(mutation, {data: response.data, params: params})
       var data = callback ? callback(response.data) : response.data
       resolve(data)
     }).catch(err => {

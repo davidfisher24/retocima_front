@@ -30,7 +30,6 @@
 </template>
 
 <script>
-    import ajax from '../ajax';
     import pin from '../assets/icons/pin.png';
     import finish from '../assets/icons/finish.png';
 
@@ -59,7 +58,7 @@
 
             getMapLines(){
                 var self = this;
-                ajax.maplines(this.id).then(data => {
+                this.$store.dispatch("cimaMapline",this.id).then(data => {
                     if (!data.data) {
                         self.putCenter(data);
                         return;

@@ -23,8 +23,6 @@
 
 <script>
 
-import ajax from '../ajax';
-
 export default {
   data () {
     return {
@@ -70,7 +68,7 @@ export default {
     searchCimasAjax: _.debounce(
       function () {
         var self = this;
-        ajax.search(this.searchInput).then(data => {
+        this.$store.dispatch("cimaSearch",this.searchInput).then(data => {
           self.searchCimas = [];
             if (data.length === 0) {
                 self.searchNotFound = ["Nada Encontrado"];

@@ -83,5 +83,17 @@ export default {
         },
      });
     },
+
+    cimaMapline (store,id) {
+      return doRequest(store, {
+        url: 'maplines/'+id,
+      });
+    },
+
+    cimaSearch (store,input) {
+      return doRequest(store, {
+        url: 'cimas/search/' + input,
+      });
+    },
   },
 }

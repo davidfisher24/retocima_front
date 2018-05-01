@@ -112,7 +112,6 @@
 
 
 <script>
-import ajax from '../../ajax';
 export default {
   data () {
     return {
@@ -169,8 +168,8 @@ export default {
   mounted () {
     var self = this;
     Promise.all([
-      ajax.provincias(),
-      ajax.paises(),
+      this.$store.dispatch("allProvincias"),
+      this.$store.dispatch("paises")
     ]).then(function(data){
       self.provinces = data[0];
       self.countries = data[1];

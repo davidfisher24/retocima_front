@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import router from './router/index'
 import _ from 'lodash'
 
-import { doRequest, doLoginRequest, doAuthRequest, doRefreshTokenRequest } from './store/requests'
-import cimas from './store/cimas'
-import authCimero from './store/authCimero'
+import { doRequest, doLoginRequest, doAuthRequest, doRefreshTokenRequest } from './requests'
+import cimas from './cimas'
+import authCimero from './authCimero'
+import provincias from './provincias'
+import paises from './paises'
 
 Vue.use(Vuex)
 
@@ -13,6 +14,8 @@ const store = new Vuex.Store({
   modules: {
     cimas,
     authCimero,
+    provincias,
+    paises
   },
 
   state: {
