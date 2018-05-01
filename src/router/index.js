@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store'
+import scrollBehavior from './scrollBehavior'
 
 // Pages
 import HomePage from '@/components/HomePage'
@@ -29,6 +30,8 @@ const protectedRoutes = [
 Vue.use(Router)
 
 const router = new Router({
+  mode: 'history',
+  scrollBehavior,
   routes: [
     // Home page 
     {
@@ -151,7 +154,7 @@ const router = new Router({
       name: 'user-charts',
       component: Charts
     }
-  ]
+  ],
 })
 
 router.beforeEach((to,from,next) => {
