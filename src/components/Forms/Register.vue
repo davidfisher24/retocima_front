@@ -36,7 +36,9 @@
                         required
                         @change="alert = false"
                         :disabled="disabled"
-                        type="password"
+                        :type="passIcon ? 'password' : 'text'"
+                        :append-icon="passIcon ? 'visibility' : 'visibility_off'"
+                        :append-icon-cb="() => (passIcon = !passIcon)"
                       ></v-text-field>
                       <v-text-field
                         label="Confirmar Contrasena"
@@ -45,7 +47,9 @@
                         required
                         @change="alert = false"
                         :disabled="disabled"
-                        type="password"
+                        :type="confirmIcon ? 'password' : 'text'"
+                        :append-icon="confirmIcon ? 'visibility' : 'visibility_off'"
+                        :append-icon-cb="() => (confirmIcon = !confirmIcon)"
                       ></v-text-field>
                       <v-text-field
                         label="Nombre"
@@ -125,6 +129,7 @@
 
 
 <script>
+import rules from './rules'
 export default {
   data () {
     return {
@@ -140,31 +145,7 @@ export default {
         pais: null,
         provincia: null,
       },
-      rules: {
-        email:  [
-          v => !!v || 'Correo electronico es requirido',
-          v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Correo electronico tiene que ser valido'
-        ],
-        password:  [
-          v => !!v || 'Contrasena es requirida',
-        ],
-        password_confirmation:  [
-          v => !!v || 'Contrasena es requirida',
-        ],
-        nombre:  [
-          v => !!v || 'Nombre es requirido',
-        ],
-        apellido1:  [
-          v => !!v || 'Apellido es requirido',
-        ],
-        username:  [
-          v => !!v || 'Usuario es requirido',
-        ],
-        provincia:  [],
-        dob:  [
-          v => !!v || 'Fecha de nacimiento es requirido',
-        ],
-      },
+      rules: rules,
       provinces: [],
       countries: [],
       spainId: null,
@@ -173,6 +154,8 @@ export default {
       alert: false,
       alertMessage: [],
       show: true,
+      passIcon: true,
+      confirmIcon: true,
     }
   },
 

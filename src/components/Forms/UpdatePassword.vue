@@ -33,7 +33,7 @@
                         required
                         @change="alert = false"
                         :disabled="disabled"
-                        type="password"
+                        :type="newIcon ? 'password' : 'text'"
                         :append-icon="newIcon ? 'visibility' : 'visibility_off'"
                         :append-icon-cb="() => (newIcon = !newIcon)"
                       ></v-text-field>
@@ -44,7 +44,7 @@
                         required
                         @change="alert = false"
                         :disabled="disabled"
-                        type="password"
+                        :type="confirmIcon ? 'password' : 'text'"
                         :append-icon="confirmIcon ? 'visibility' : 'visibility_off'"
                         :append-icon-cb="() => (confirmIcon = !confirmIcon)"
                       ></v-text-field>
@@ -71,6 +71,7 @@
 
 
 <script>
+import rules from './rules'
 export default {
   data () {
     return {
@@ -79,26 +80,15 @@ export default {
         password: '',
         password_confirmation: '',
       },
-      rules: {
-        old:  [
-          v => !!v || 'Contrasena actual es requirida',
-        ],
-        password:  [
-          v => !!v || 'Contrasena nueva es requirida',
-        ],
-        password_confirmation:  [
-          v => !!v || 'Contrasena nueva es requirida',
-          v => v !== v.password || 'Contrasena tiene que ser igual'
-        ],
-      },
+      rules: rules,
       valid: true,
       disabled:false,
       alert: false,
       success:false,
       alertMessage: [],
-      oldIcon: false,
-      newIcon: false,
-      confirmIcon: false,
+      oldIcon: true,
+      newIcon: true,
+      confirmIcon: true,
     }
   },
 

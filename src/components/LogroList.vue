@@ -92,7 +92,6 @@ export default {
       cimas: this.$route.params.cimas,
       logros: this.$route.params.logros,
       provincia: this.$route.params.provincia,
-      //provinciaLogros: this.$route.params.provinciaLogros,
     }
   },
 
@@ -103,9 +102,6 @@ export default {
     logroIds () {
       return _.map(this.logros, 'cima_id');
     },
-    /*provinciaAverage () {
-      return _.sum(_.map(this.provinciaLogros, 'total')) / this.provinciaLogros.length;
-    },*/
   },
 
   methods: {

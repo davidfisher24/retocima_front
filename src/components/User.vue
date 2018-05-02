@@ -1,9 +1,6 @@
 <template>
     <v-container fluid class="pa-0 my-2">
-        
-        
         <v-layout row wrap>
-
             <PageTitle text="Mis Logros"></PageTitle>
 
             <v-flex xs12 md4 order-md1 order-xs2 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">

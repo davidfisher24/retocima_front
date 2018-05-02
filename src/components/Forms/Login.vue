@@ -28,7 +28,9 @@
                 :rules="rules.password"
                 @change="alert = false"
                 required
-                type="password"
+                :type="passIcon ? 'password' : 'text'"
+                :append-icon="passIcon ? 'visibility' : 'visibility_off'"
+                :append-icon-cb="() => (passIcon = !passIcon)"
                 :disabled="disabled"
               ></v-text-field>
             </v-form>
@@ -46,6 +48,7 @@
 
 
 <script>
+import rules from './rules'
 export default {
   data () {
     return {
@@ -53,18 +56,11 @@ export default {
         email: '',
         password: '',
       },
-      rules: {
-        email:  [
-          v => !!v || 'Correo electronico es requirido',
-          v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'Correo electronico tiene que ser valido'
-        ],
-        password:  [
-          v => !!v || 'Contrasena es requirida',
-        ],
-      },
+      rules: rules,
       valid: true,
       alert: false,
       disabled: false,
+      passIcon: true,
     }
   },
 

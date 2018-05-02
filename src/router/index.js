@@ -25,7 +25,7 @@ import UpdatePassword from '@/components/Forms/UpdatePassword'
 import Register from '@/components/Forms/Register'
 
 const protectedRoutes = [
-  'user-logros', 'user-charts', 'user-provincia', 'user-edit'
+  'user-logros', 'user-charts', 'user-provincia', 'user-edit', 'user-update-password'
 ]
 
 Vue.use(Router)

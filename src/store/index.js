@@ -7,7 +7,6 @@ import cimas from './cimas'
 import authCimero from './authCimero'
 import allProvincias from './allProvincias'
 import paises from './paises'
-import logros from './logros'
 
 Vue.use(Vuex)
 
@@ -17,7 +16,6 @@ const store = new Vuex.Store({
     authCimero,
     allProvincias,
     paises,
-    //logros
   },
 
   state: {
