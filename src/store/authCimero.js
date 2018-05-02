@@ -1,13 +1,23 @@
-import { doAuthRequest } from './requests'
+import { doAuthRequest, doLoginRequest, doRefreshTokenRequest } from './requests'
 
 export default {
 
   state: {
   	authCimero: null,
+    loggedInUser: null,
+    isLoggedIn: localStorage.getItem('cimero-token'),
   },
 
   getters: {
-
+    loggedIn: state => {
+      if (state.isLoggedIn !== null) return true
+      return false
+    },
+    loggedInUser: state => {
+      if (state.loggedInUser === null && state.isLoggedIn === null) return "What to do"
+      if (state.loggedInUser !== null) return state.loggedInUser
+      return null;
+    },
   },
 
   mutations: {
@@ -28,6 +38,19 @@ export default {
     updateCimero (state, {data}) {
       state.authCimero.cimero = data
       state.loggedInUser = data.username
+    },
+    loggedIn (state,{data, params}) {
+      localStorage.setItem('cimero-token',data.token)
+      state.isLoggedIn = data.token
+      state.loggedInUser = data.cimero.username
+    },
+    verify (state,{data}) {
+      state.loggedInUser = data.cimero.username
+    },
+    loggedOut (state) {
+      localStorage.removeItem('cimero-token')
+      state.isLoggedIn = null
+      state.loggedInUser = null
     },
   },
 
@@ -87,6 +110,37 @@ export default {
           url: 'update-password',
           data: creds,
           logout: false,
+      });
+    },
+
+    login (store, creds) {
+      return doLoginRequest(store, {
+          method: 'post',
+          url: 'auth/login',
+          data: creds,
+          mutation: 'loggedIn',
+      });
+    },
+
+    register (store, creds) {
+      return doLoginRequest(store, {
+          method: 'post',
+          url: 'auth/register',
+          data: creds,
+          mutation: 'loggedIn',
+      });
+    },
+
+    logout (store) {
+      this.commit('loggedOut');
+      return true
+    },
+
+    verify (store) {
+      return doAuthRequest(store, {
+          method: 'get',
+          url: 'verify',
+          mutation: 'verify',
       });
     },
   },

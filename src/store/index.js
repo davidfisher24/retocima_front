@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import _ from 'lodash'
 
-import { doRequest, doLoginRequest, doAuthRequest, doRefreshTokenRequest } from './requests'
+import { doRequest } from './requests'
 import cimas from './cimas'
 import authCimero from './authCimero'
 import allProvincias from './allProvincias'
@@ -24,21 +24,9 @@ const store = new Vuex.Store({
     listado: null,
     cimeros: [],
     ranking: null,
-    loggedInUser: null,
-    isLoggedIn: localStorage.getItem('cimero-token'),
-    provincias: null,
     
   },
   getters: {
-    loggedIn: state => {
-      if (state.isLoggedIn !== null) return true
-      return false
-    },
-    loggedInUser: state => {
-      if (state.loggedInUser === null && state.isLoggedIn === null) return "What to do"
-      if (state.loggedInUser !== null) return state.loggedInUser
-      return null;
-    },
     loading: state => {
       return state.loading
     },
@@ -60,53 +48,9 @@ const store = new Vuex.Store({
     ranking (state, ranking) {
       state.ranking = ranking
     },
-    provincias (state, {data}) {
-      state.provincias = data
-    },
-    loggedIn (state,{data, params}) {
-      localStorage.setItem('cimero-token',data.token)
-      state.isLoggedIn = data.token
-      state.loggedInUser = data.cimero.username
-    },
-    verify (state,{data}) {
-      state.loggedInUser = data.cimero.username
-    },
-    loggedOut (state) {
-      localStorage.removeItem('cimero-token')
-      state.isLoggedIn = null
-      state.loggedInUser = null
-    },
   },
 
   actions: {
-    login ({ commit }, creds) {
-      return doLoginRequest(store, {
-          method: 'post',
-          url: 'auth/login',
-          data: creds,
-          mutation: 'loggedIn',
-      });
-    },
-
-    register ({ commit }, creds) {
-      return doLoginRequest(store, {
-          method: 'post',
-          url: 'auth/register',
-          data: creds,
-          mutation: 'loggedIn',
-      });
-    },
-
-    logout ({ commit }) {
-      this.commit('loggedOut');
-      return true
-    },
-
-    cimero (context, cimero) {
-      this.state.cimero = cimero
-    },
-
-    
     discover(context) {
       if (this.state.discover) return this.state.discover
       return doRequest(store, {
@@ -114,8 +58,6 @@ const store = new Vuex.Store({
           mutation: 'discover',
       });
     },
-
-   
 
     listado (context) {
       if (this.state.listado) return this.state.listado
@@ -141,30 +83,6 @@ const store = new Vuex.Store({
           mutation: 'ranking',
       });
     },
-
-  
-
-    verify ({ dispatch, commit }) {
-      return doAuthRequest(store, {
-          method: 'get',
-          url: 'verify',
-          mutation: 'verify',
-      });
-    },
-
-    provincias (context,pid) {
-      if (this.state.provincias && !pid) return this.state.provincias
-      if (this.state.provincias && pid) return this.state.provincias.find(p => p.id === Number(pid))
-      return doRequest(store, {
-          url: 'provincias',
-          mutation: 'provincias',
-          callback: function(data){
-            if (!pid) return data
-            return data.find(p => p.id === Number(pid))
-          }
-      }); 
-    }
-
   }
 })
 

@@ -118,7 +118,7 @@ export default {
     return {
       model: {
         email: this.$route.params.cimero.cimero.email,
-        username: this.$route.params.cimero.cimero.nombre,
+        username: this.$route.params.cimero.cimero.username,
         nombre: this.$route.params.cimero.cimero.nombre,
         apellido1: this.$route.params.cimero.cimero.apellido1,
         apellido2: this.$route.params.cimero.cimero.apellido2,
