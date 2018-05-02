@@ -166,14 +166,10 @@ export default {
     }),
   },
 
-  mounted () {
-    if (this.loggedIn && !this.loggedInUser) this.$store.dispatch('verify')
-  },
-
   methods: {
-
     logout () {
       this.$store.dispatch('logout')
+      if (this.$router.protected(this.$route)) this.$router.push({name: 'home'})
       this.showLogin = false
     },
     route (page,params) {

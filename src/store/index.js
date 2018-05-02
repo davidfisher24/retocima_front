@@ -5,8 +5,9 @@ import _ from 'lodash'
 import { doRequest, doLoginRequest, doAuthRequest, doRefreshTokenRequest } from './requests'
 import cimas from './cimas'
 import authCimero from './authCimero'
-import provincias from './provincias'
+import allProvincias from './allProvincias'
 import paises from './paises'
+import logros from './logros'
 
 Vue.use(Vuex)
 
@@ -14,8 +15,9 @@ const store = new Vuex.Store({
   modules: {
     cimas,
     authCimero,
-    provincias,
-    paises
+    allProvincias,
+    paises,
+    //logros
   },
 
   state: {
@@ -73,7 +75,6 @@ const store = new Vuex.Store({
     },
     loggedOut (state) {
       localStorage.removeItem('cimero-token')
-      localStorage.removeItem('cimero-user')
       state.isLoggedIn = null
       state.loggedInUser = null
     },

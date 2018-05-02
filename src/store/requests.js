@@ -44,7 +44,6 @@ export const doAuthRequest = (store, { method, url, data, mutation, params, logo
       if(mutation) store.commit(mutation, {data: response.data, params: params})
       resolve(response.data)
     }).catch(err => {
-      console.log(err);
       // also need to redirect here in case of a 401
       // Although there are some form functions
       if (logout) {
@@ -70,7 +69,7 @@ export const doRefreshTokenRequest = (store, { method, url, data, mutation, para
         method: method,
         url: process.env.API_URL + url,
         data: data,
-        headers: {'Authorization': 'Bearer ' + response.data.token },
+        headers: {'Authorization': 'Bearer ' + localStorage.getItem('cimero-token') },
       })
     }).then(response => {
       if(mutation) store.commit(mutation, {data: response.data, params: params})

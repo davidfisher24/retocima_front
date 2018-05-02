@@ -164,8 +164,15 @@ const router = new Router({
   ],
 })
 
+/* Checks to protect pages if no logged in use */
 router.beforeEach((to,from,next) => {
   if (protectedRoutes.indexOf(to.name) !== -1 && !store.getters.loggedIn) next("/")
+  else next()
+})
+
+/* Verifies an undefined user before doing anything else */
+router.beforeEach((to,from,next) => {
+  if (store.getters.loggedIn && !store.getters.loggedInUser) store.dispatch('verify').then(() => next())
   else next()
 })
 
@@ -228,11 +235,13 @@ router.beforeEach((to, from, next) => {
     var promise1 = store.dispatch('userProvinceLogros',to.params.pid)
     var promise2 = store.dispatch('provinciaNames',to.params.pid)
     var promise3 = store.dispatch('provincias',to.params.pid)
+    //var promise4 = store.dispatch('provinciaLogros',to.params.pid)
 
-    Promise.all([promise1,promise2,promise3]).then(data => {
+    Promise.all([promise1,promise2,promise3/*,promise4*/]).then(data => {
       to.params.logros = data[0]
       to.params.cimas = data[1]
       to.params.provincia = data[2]
+      //to.params.provinciaLogros = data[3]
       next();
     })
   } else {
