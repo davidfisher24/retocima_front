@@ -24,5 +24,16 @@ export default {
           mutation: 'allProvincias',
       });
     },
+
+    oneProvincia (store,pid) {
+      if (store.state.allProvincias) return store.state.allProvincias.find(p => p.id === Number(pid))
+      return doRequest(store, {
+          url: 'provincias',
+          mutation: 'allProvincias',
+          callback: function(data){
+            return data.find(p => p.id === Number(pid))
+          }
+      });
+    },
   }
 }

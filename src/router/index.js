@@ -31,7 +31,6 @@ const protectedRoutes = [
 Vue.use(Router)
 
 const router = new Router({
-  mode: 'history',
   scrollBehavior,
   routes: [
     // Home page 
@@ -234,10 +233,11 @@ router.beforeEach((to, from, next) => {
   } else if (to.name === 'user-provincia') {
     var promise1 = store.dispatch('userProvinceLogros',to.params.pid)
     var promise2 = store.dispatch('provinciaNames',to.params.pid)
-    var promise3 = store.dispatch('provincias',to.params.pid)
+    var promise3 = store.dispatch('oneProvincia',to.params.pid)
     //var promise4 = store.dispatch('provinciaLogros',to.params.pid)
 
     Promise.all([promise1,promise2,promise3/*,promise4*/]).then(data => {
+      console.log(data)
       to.params.logros = data[0]
       to.params.cimas = data[1]
       to.params.provincia = data[2]

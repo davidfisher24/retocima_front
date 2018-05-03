@@ -4,7 +4,6 @@ import Vue from 'vue'
 import App from './App'
 import store from './store'
 import router from './router'
-import axios from 'axios'
 import {
   Vuetify,
   VApp,
@@ -68,8 +67,7 @@ Vue.use(Vuetify, {
     VPagination,
     VProgressCircular,
     VProgressLinear,
-    transitions,
-    axios
+    transitions
   },
   theme: {
     primary: '#44608c',
