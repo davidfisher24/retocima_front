@@ -1,5 +1,5 @@
 import axios from 'axios';
-import jwt_decode from 'jwt-decode'
+
 
 export const doRequest = (store, { url, mutation, params, resolveMutation, callback }) => {
   return new Promise((resolve, reject) => {
@@ -24,7 +24,6 @@ export const doLoginRequest = (store, { method, url, data, mutation, params }) =
       store.commit(mutation, {data: response.data, params: params})
       resolve(response.data)
     }).catch(err => {
-      // Goes back to form - form requests routed here
       reject(err.response.data)
     })
   })
@@ -32,8 +31,6 @@ export const doLoginRequest = (store, { method, url, data, mutation, params }) =
 
 /* Checks jwt */
 export const doAuthRequest = (store, { method, url, data, mutation, params, logout }) => {
-  var decodedToken = jwt_decode(localStorage.getItem('cimero-token'));
-  if (decodedToken.exp - 60 < (new Date().getTime() / 1000))  return doRefreshTokenRequest(store, { method, url, data, mutation, params });
   return new Promise((resolve, reject) => {
     axios({
       method: method,
@@ -57,26 +54,18 @@ export const doAuthRequest = (store, { method, url, data, mutation, params, logo
 }
 
 /* Carries out token request */
-export const doRefreshTokenRequest = (store, { method, url, data, mutation, params }) => {
+export const doRefreshTokenRequest = (store) => {
   return new Promise((resolve, reject) => {
     axios({
       method: 'get',
       url: process.env.API_URL + 'auth/refresh',
-      headers: {'Authorization': 'Bearer ' + localStorage.getItem('cimero-token') },
+      headers: {'Authorization': 'Bearer ' + localStorage.getItem('cimero-token')},
     }).then(response => {
       localStorage.setItem('cimero-token',response.data.token)
-      return axios({
-        method: method,
-        url: process.env.API_URL + url,
-        data: data,
-        headers: {'Authorization': 'Bearer ' + localStorage.getItem('cimero-token') },
-      })
-    }).then(response => {
-      if(mutation) store.commit(mutation, {data: response.data, params: params})
-      resolve(response.data)
+      resolve()
     }).catch(err => {
-      // also need to redirect here in case of a 401
-      store.commit("loggedOut")
+      localStorage.removeItem('cimero-token')
+      reject()
     })
   })
 }

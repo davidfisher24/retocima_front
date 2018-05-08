@@ -1,4 +1,5 @@
 import { doAuthRequest, doLoginRequest, doRefreshTokenRequest } from './requests'
+import jwt_decode from 'jwt-decode'
 
 export default {
 
@@ -14,9 +15,14 @@ export default {
       return false
     },
     loggedInUser: state => {
-      if (state.loggedInUser === null && state.isLoggedIn === null) return "What to do"
       if (state.loggedInUser !== null) return state.loggedInUser
       return null;
+    },
+    expiredToken: state => {
+      if (!state.isLoggedIn) return false;
+      var decodedToken = jwt_decode(state.isLoggedIn);
+      if (decodedToken.exp - 60 < (new Date().getTime() / 1000)) return true;
+      return false;
     },
   },
 
@@ -142,6 +148,10 @@ export default {
           url: 'verify',
           mutation: 'verify',
       });
+    },
+
+    refresh (store) {
+      return doRefreshTokenRequest(store);
     },
   },
 }

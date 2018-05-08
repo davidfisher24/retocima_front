@@ -163,20 +163,38 @@ const router = new Router({
   ],
 })
 
-/* Checks to protect pages if no logged in use */
+/* Display the loading contain */
+router.beforeEach((to,from,next) => {
+  store.commit('loading',true)
+})
+
+/* Checks to protect pages if no logged in user */
 router.beforeEach((to,from,next) => {
   if (protectedRoutes.indexOf(to.name) !== -1 && !store.getters.loggedIn) next("/")
   else next()
 })
 
-/* Verifies an undefined user before doing anything else */
+/* Refreshes an expired token before continuing */
+router.beforeEach((to,from,next) => {
+  if (store.getters.loggedIn && store.getters.expiredToken) {
+    store.dispatch('refresh').then(() => next())
+    .catch(() => {
+      if (protectedRoutes.indexOf(to.name) !== -1 && !store.getters.loggedIn) next("/")
+      else next()
+    })
+  } else {
+    next()
+  }
+})
+
+/* Verifies an undefined user before continuing */
 router.beforeEach((to,from,next) => {
   if (store.getters.loggedIn && !store.getters.loggedInUser) store.dispatch('verify').then(() => next())
   else next()
 })
 
+/* Brings the data back from the server */
 router.beforeEach((to, from, next) => {
-  store.commit('loading',true)
   if (to.name === 'cima' || to.name === 'discover' || to.name === 'map-cima') {
     store.dispatch('cima', to.params.id).then(cima => {
       to.params.cima = cima
@@ -250,10 +268,10 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+/* Turns off the loading container */
 router.afterEach((to, from) => {
   store.commit('loading',false)
 })
-
 
 
 router.protected = function(route){
