@@ -1,9 +1,9 @@
 import { doRequest } from './requests'
 
 export default {
-
+  namespaced: true,
   state: {
-    paises: null,
+    all: null,
   },
 
   getters: {
@@ -11,17 +11,17 @@ export default {
   },
 
   mutations: {
-    paises (state, {data, params}) {
-      state.paises = data
+    all (state, {data, params}) {
+      state.all = data
     },
   },
 
   actions: {
-    paises (store) {
-      if (store.state.paises) return store.state.paises
+    all (store) {
+      if (store.state.all) return store.state.all
       return doRequest(store, {
           url: 'paises',
-          mutation: 'paises',
+          mutation: 'all',
       });
     },
   }

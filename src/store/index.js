@@ -5,17 +5,17 @@ import _ from 'lodash'
 import { doRequest } from './requests'
 import cimas from './cimas'
 import authCimero from './authCimero'
-import allProvincias from './allProvincias'
+import provincias from './provincias'
 import paises from './paises'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   modules: {
-    cimas,
-    authCimero,
-    allProvincias,
-    paises,
+    'cimas' : cimas,
+    'user' : authCimero,
+    'provincias' : provincias,
+    'paises' : paises,
   },
 
   state: {

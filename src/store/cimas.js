@@ -1,9 +1,10 @@
 import { doRequest } from './requests'
 
 export default {
+  namespaced: true,
 
   state: {
-  	provincia: {},
+  	provincias: {},
   	cimas: [],
     patanegra: null,
     markers: null,
@@ -15,10 +16,10 @@ export default {
   },
 
   mutations: {
-  	provincia (state, {data, params}) {
-      state.provincia[params.id] = data
+  	provincias (state, {data, params}) {
+      state.provincias[params.id] = data
     },
-    cima (state, {data, params}) {
+    one (state, {data, params}) {
       if (!state.cimas.find(x => x.id === data.id)) state.cimas.push(data)
     },
     patanegra (state, {data, params}) {
@@ -33,19 +34,19 @@ export default {
   },
 
   actions: {
-  	cima (store,id) {
+  	one (store,id) {
       if (store.state.cimas.find(x => x.id === id)) return store.state.cimas.find(x => x.id === id)
       return doRequest(store, {
           url: 'cima/' + id,
-          mutation: 'cima',
+          mutation: 'one',
       });
     },
 
-    provincia (store, id) {
-      if (store.state.provincia[id]) return store.state.provincia[id]
+    provincias (store, id) {
+      if (store.state.provincias[id]) return store.state.provincias[id]
       return doRequest(store, {
           url: 'cimas/' + id,
-          mutation: 'provincia',
+          mutation: 'provincias',
           params: {id: id}
       });
     },
@@ -58,7 +59,7 @@ export default {
       });
     },
 
-    cimaNames (store) {
+    names (store) {
     	if (store.state.names) return store.state.names
     	if (store.state.markers) return store.state.markers
     	return doRequest(store, {
@@ -66,7 +67,7 @@ export default {
 	      	mutation: 'names',
 	     });
     },
-    cimaMarkers (store) {
+    markers (store) {
     	if (store.state.markers) return store.state.markers
     	return doRequest(store, {
 	      	url: 'cimas/list/markers',
@@ -84,13 +85,13 @@ export default {
      });
     },
 
-    cimaMapline (store,id) {
+    mapline (store,id) {
       return doRequest(store, {
         url: 'maplines/'+id,
       });
     },
 
-    cimaSearch (store,input) {
+    search (store,input) {
       return doRequest(store, {
         url: 'cimas/search/' + input,
       });

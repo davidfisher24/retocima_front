@@ -111,7 +111,7 @@ export default {
 
     add (id) {
       this.adding.push(id);
-      this.$store.dispatch("addLogro",id).then(logro => {
+      this.$store.dispatch("user/addLogro",id).then(logro => {
         this.logros.push(logro)
         this.adding.splice(this.adding.indexOf(id),1);
       }).catch(() => {
@@ -122,7 +122,7 @@ export default {
     remove (id) {
       this.adding.push(id);
       var logro = this.logros.find(x => x.cima_id === id);
-      this.$store.dispatch("removeLogro",logro).then(cima => {
+      this.$store.dispatch("user/removeLogro",logro).then(cima => {
         this.adding.splice(this.adding.indexOf(id),1);
         this.logros.splice(this.logros.findIndex(x => x.cima_id === id),1);
       }).catch(() => {

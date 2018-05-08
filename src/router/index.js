@@ -166,20 +166,21 @@ const router = new Router({
 /* Display the loading contain */
 router.beforeEach((to,from,next) => {
   store.commit('loading',true)
+  next()
 })
 
 /* Checks to protect pages if no logged in user */
 router.beforeEach((to,from,next) => {
-  if (protectedRoutes.indexOf(to.name) !== -1 && !store.getters.loggedIn) next("/")
+  if (protectedRoutes.indexOf(to.name) !== -1 && !store.getters['user/loggedIn']) next("/")
   else next()
 })
 
 /* Refreshes an expired token before continuing */
 router.beforeEach((to,from,next) => {
-  if (store.getters.loggedIn && store.getters.expiredToken) {
-    store.dispatch('refresh').then(() => next())
+  if (store.getters['user/loggedIn'] && store.getters['user/expiredToken']) {
+    store.dispatch('user/refresh').then(() => next())
     .catch(() => {
-      if (protectedRoutes.indexOf(to.name) !== -1 && !store.getters.loggedIn) next("/")
+      if (protectedRoutes.indexOf(to.name) !== -1) next("/")
       else next()
     })
   } else {
@@ -189,14 +190,14 @@ router.beforeEach((to,from,next) => {
 
 /* Verifies an undefined user before continuing */
 router.beforeEach((to,from,next) => {
-  if (store.getters.loggedIn && !store.getters.loggedInUser) store.dispatch('verify').then(() => next())
+  if (store.getters['user/loggedIn'] && !store.getters['user/loggedInUser']) store.dispatch('user/verify').then(() => next())
   else next()
 })
 
 /* Brings the data back from the server */
 router.beforeEach((to, from, next) => {
   if (to.name === 'cima' || to.name === 'discover' || to.name === 'map-cima') {
-    store.dispatch('cima', to.params.id).then(cima => {
+    store.dispatch('cimas/one', to.params.id).then(cima => {
       to.params.cima = cima
       next()
     })
@@ -210,12 +211,12 @@ router.beforeEach((to, from, next) => {
       to.params.center = {lat: 40.416775, lng: -3.703790}
       to.params.zoom = 6
     }
-    store.dispatch('patanegra').then(cimas => {
+    store.dispatch('cimas/patanegra').then(cimas => {
       to.params.cimas = cimas
       next()
     })
   } else if (to.name === 'provincia-cima' || to.name === 'provincia' || to.name === 'provincia-map') {
-    store.dispatch('provincia', Number(to.params.pid)).then(cimas => {
+    store.dispatch('cimas/provincias', Number(to.params.pid)).then(cimas => {
       to.params.cimas = cimas
       next()
     })
@@ -225,7 +226,7 @@ router.beforeEach((to, from, next) => {
       next()
     })
   } else if (to.name === 'cima-map') {
-    store.dispatch('cimaMarkers').then(cimas => {
+    store.dispatch('cimas/markers').then(cimas => {
       to.params.cimas = cimas
       to.params.center = {lat: 40.416775, lng: -3.703790}
       to.params.zoom = 6
@@ -233,7 +234,7 @@ router.beforeEach((to, from, next) => {
     })
   } else if (to.name === "cimero") {
     var promise1 = store.dispatch("cimeros",to.params.uid)
-    var promise2 = store.dispatch('cimaNames')
+    var promise2 = store.dispatch('cimas/names')
 
     Promise.all([promise1,promise2]).then(data => {
       to.params.cimero = data[0]
@@ -243,15 +244,16 @@ router.beforeEach((to, from, next) => {
   } 
   // CUENTA
   else if (to.name === 'user-logros' || to.name === 'user-charts' || to.name === 'user-edit') {
-    var promise1 = store.dispatch("authCimero",to.params.uid)
+    console.log("Going to my account")
+    var promise1 = store.dispatch("user/account",to.params.uid)
     Promise.all([promise1]).then(data => {
       to.params.cimero = data[0]
       next();
     })
   } else if (to.name === 'user-provincia') {
-    var promise1 = store.dispatch('userProvinceLogros',to.params.pid)
-    var promise2 = store.dispatch('provinciaNames',to.params.pid)
-    var promise3 = store.dispatch('oneProvincia',to.params.pid)
+    var promise1 = store.dispatch('user/provinceLogros',to.params.pid)
+    var promise2 = store.dispatch('cimas/provinciaNames',to.params.pid)
+    var promise3 = store.dispatch('provincias/one',to.params.pid)
     //var promise4 = store.dispatch('provinciaLogros',to.params.pid)
 
     Promise.all([promise1,promise2,promise3/*,promise4*/]).then(data => {

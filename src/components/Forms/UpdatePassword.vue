@@ -97,7 +97,7 @@ export default {
       var self = this;
       if (this.$refs.form.validate()) {
         self.disabled = true;
-        this.$store.dispatch("updatePassword",this.model).then(() =>{
+        this.$store.dispatch("user/updatePassword",this.model).then(() =>{
           self.success = true;
           self.disabled = false;
         }).catch(err => {

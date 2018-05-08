@@ -58,7 +58,7 @@
 
             getMapLines(){
                 var self = this;
-                this.$store.dispatch("cimaMapline",this.id).then(data => {
+                this.$store.dispatch("cimas/mapline",this.id).then(data => {
                     if (!data.data) {
                         self.putCenter(data);
                         return;

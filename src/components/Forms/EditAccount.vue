@@ -151,8 +151,8 @@ export default {
   mounted () {
     var self = this;
     Promise.all([
-      this.$store.dispatch("allProvincias"),
-      this.$store.dispatch("paises")
+      this.$store.dispatch("provincias/all"),
+      this.$store.dispatch("paises/all")
     ]).then(function(data){
       self.provinces = data[0];
       self.countries = data[1];
@@ -170,7 +170,7 @@ export default {
       var self = this;
       if (this.$refs.form.validate()) {
         self.disabled = true;
-        this.$store.dispatch("updateAccount",this.model).then(() =>{
+        this.$store.dispatch("user/updateAccount",this.model).then(() =>{
           self.success = true;
           self.disabled = false;
         }).catch(err => {

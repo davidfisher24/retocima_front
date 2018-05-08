@@ -68,7 +68,7 @@ export default {
     searchCimasAjax: _.debounce(
       function () {
         var self = this;
-        this.$store.dispatch("cimaSearch",this.searchInput).then(data => {
+        this.$store.dispatch("cimas/search",this.searchInput).then(data => {
           self.searchCimas = [];
             if (data.length === 0) {
                 self.searchNotFound = ["Nada Encontrado"];

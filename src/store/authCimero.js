@@ -2,9 +2,9 @@ import { doAuthRequest, doLoginRequest, doRefreshTokenRequest } from './requests
 import jwt_decode from 'jwt-decode'
 
 export default {
-
+  namespaced: true,
   state: {
-  	authCimero: null,
+  	account: null,
     loggedInUser: null,
     isLoggedIn: localStorage.getItem('cimero-token'),
   },
@@ -27,22 +27,22 @@ export default {
   },
 
   mutations: {
-  	authCimero (state, {data}) {
-      state.authCimero = data
+  	account (state, {data}) {
+      state.account = data
     },
     addLogro (state, {data}) {
-      if (state.authCimero) {
-        if (data.provincia_id in state.authCimero.logros) state.authCimero.logros[data.provincia_id].push(data)
-        else state.authCimero.logros[data.provincia_id] = [data]
+      if (state.account) {
+        if (data.provincia_id in state.account.logros) state.account.logros[data.provincia_id].push(data)
+        else state.account.logros[data.provincia_id] = [data]
       }
     },
     removeLogro (state, {data}) {
-      if (state.authCimero) {
-        state.authCimero.logros[data.provincia_id].splice(state.authCimero.logros[data.provincia_id].findIndex(l => l.id === data.id),1)
+      if (state.account) {
+        state.account.logros[data.provincia_id].splice(state.account.logros[data.provincia_id].findIndex(l => l.id === data.id),1)
       }
     },
     updateCimero (state, {data}) {
-      state.authCimero.cimero = data
+      state.account.cimero = data
       state.loggedInUser = data.username
     },
     loggedIn (state,{data, params}) {
@@ -62,12 +62,12 @@ export default {
 
   actions: {
 
-    authCimero (store) {
-      if (store.state.authCimero) return store.state.authCimero
+    account (store) {
+      if (store.state.account) return store.state.account
       return doAuthRequest(store, {
           method: 'get',
           url: 'cimero',
-          mutation: 'authCimero',
+          mutation: 'account',
           logout: true,
       });
     },
@@ -92,7 +92,7 @@ export default {
       });
     },
 
-    userProvinceLogros (store,pid) {
+    provinceLogros (store,pid) {
       return doAuthRequest(store, {
           method: 'get',
           url: 'cimero-logros/' + pid,

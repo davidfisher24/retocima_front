@@ -172,8 +172,8 @@ export default {
   mounted () {
     var self = this;
     Promise.all([
-      this.$store.dispatch("allProvincias"),
-      this.$store.dispatch("paises")
+      this.$store.dispatch("provincias/all"),
+      this.$store.dispatch("paises/all")
     ]).then(function(data){
       self.provinces = data[0];
       self.countries = data[1];
@@ -191,7 +191,7 @@ export default {
       var self = this;
       if (this.$refs.form.validate()) {
         self.disabled = true;
-        this.$store.dispatch("register", this.model).then(() => {
+        this.$store.dispatch("user/register", this.model).then(() => {
           self.$router.push({name:"home"});
         }).catch(err => {
           self.alertMessage = [];

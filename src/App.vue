@@ -110,7 +110,7 @@
     <v-footer color="primary" height="auto">
       <v-layout row class="white--text hidden-sm-and-down">
         <v-flex class="text-xs-center">
-        Coordinadores <strong>Diego Aguero y Miguel Bernabe</strong> |
+        Coordinadores <strong>Diego Agüero y Miguel Bernabe</strong> |
         Esta aventura comenzo el 13 de junio de 2007 |
         Email de contacto: <strong>cima@altimetrias.com</strong>
         </v-flex>
@@ -160,15 +160,15 @@ export default {
   },
   computed: {
     ...mapGetters({
-      loggedIn: 'loggedIn',
-      loggedInUser: 'loggedInUser',
+      loggedIn: 'user/loggedIn',
+      loggedInUser: 'user/loggedInUser',
       loading: 'loading',
     }),
   },
 
   methods: {
     logout () {
-      this.$store.dispatch('logout')
+      this.$store.dispatch('user/logout')
       if (this.$router.protected(this.$route)) this.$router.push({name: 'home'})
       this.showLogin = false
     },
