@@ -44,6 +44,7 @@ export const doAuthRequest = (store, { method, url, data, mutation, params, logo
       // also need to redirect here in case of a 401
       // Although there are some form functions
       if (logout) {
+        // This won't work
         store.commit("loggedOut")
         // redirect
       } else {

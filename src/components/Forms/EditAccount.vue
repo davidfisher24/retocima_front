@@ -13,13 +13,14 @@
                 <v-progress-linear :indeterminate="true" color="primary" v-if="disabled"></v-progress-linear>
                 <v-form v-model="valid" ref="form" lazy-validation>
                   <v-layout>
+                  <!-- Include key ups on text fields -->
                     <v-flex xs6 md12 class="px-1">
                       <v-text-field
                         label="Usuario"
                         v-model="model.username"
                         :rules="rules.username"
                         required
-                        @change="alert = false, success = false"
+                        @keyup="alert = false, success = false"
                         :disabled="disabled"
                       ></v-text-field>
                       <v-text-field
@@ -27,7 +28,7 @@
                         v-model="model.email"
                         :rules="rules.email"
                         required
-                        @change="alert = false, success = false"
+                        @keyup="alert = false, success = false"
                         :disabled="disabled"
                       ></v-text-field>
                       <v-text-field
@@ -35,7 +36,7 @@
                         v-model="model.nombre"
                         :rules="rules.nombre"
                         required
-                        @change="alert = false, success = false"
+                        @keyup="alert = false, success = false"
                         :disabled="disabled"
                       ></v-text-field>
                       <v-text-field
@@ -43,7 +44,7 @@
                             v-model="model.apellido1"
                             :rules="rules.apellido1"
                             required
-                            @change="alert = false, success = false"
+                            @keyup="alert = false, success = false"
                             :disabled="disabled"
                           ></v-text-field>
                       </v-flex>
@@ -54,7 +55,7 @@
                             v-model="model.apellido2"
                             :rules="rules.apellido2"
                             required
-                            @change="alert = false, success = false"
+                            @keyup="alert = false, success = false"
                             :disabled="disabled"
                           ></v-text-field>
                           <v-select
@@ -86,7 +87,7 @@
                             name="fechanacimiento" 
                             v-model="model.fechanacimiento" 
                             :rules="rules.dob" 
-                            @change="alert = false, success = false"
+                            @keyup="alert = false, success = false"
                             :disabled="disabled"
                           ></v-text-field>
                       </v-flex>
@@ -95,11 +96,13 @@
                 <v-alert outline color="success" icon="check_circle" :value="success">
                   Cuenta actualizado con exito.
                 </v-alert>
-                <v-alert outline color="success" icon="warning" :value="alert">
+                <v-alert outline color="error" icon="warning" :value="alert">
+                  <!-- Map alert messages with v-for -->
                   <span v-for="message in alertMessage">{{message}}</span>
                 </v-alert>
                 <v-card-actions>
-                  <v-btn flat @click="submit" :disabled="!valid">Editar</v-btn>
+                  <!-- Button disabled during ajax -->
+                  <v-btn flat @click="submit" :disabled="!valid || disabled">Editar</v-btn>
                 </v-card-actions>
               </v-card-text>
             </v-flex>
@@ -174,8 +177,10 @@ export default {
           self.success = true;
           self.disabled = false;
         }).catch(err => {
+          // Parse error message in the correct way
           self.alertMessage = [];
-          for (var key in err) self.alertMessage.push(err[key]);
+          if ('message' in err) self.alertMessage.push(err.message);
+          else for (var key in err) self.alertMessage.push(err[key][0]);
           self.alert = true;
           self.disabled = false;
         })

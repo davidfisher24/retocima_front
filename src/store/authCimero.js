@@ -138,7 +138,7 @@ export default {
     },
 
     logout (store) {
-      this.commit('loggedOut');
+      store.commit('loggedOut');
       return true
     },
 

@@ -244,7 +244,6 @@ router.beforeEach((to, from, next) => {
   } 
   // CUENTA
   else if (to.name === 'user-logros' || to.name === 'user-charts' || to.name === 'user-edit') {
-    console.log("Going to my account")
     var promise1 = store.dispatch("user/account",to.params.uid)
     Promise.all([promise1]).then(data => {
       to.params.cimero = data[0]
