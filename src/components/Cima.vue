@@ -19,7 +19,9 @@
             <v-toolbar-title class="primary--text headline ml-2" >
               {{cima.codigo}} {{cima.nombre.toUpperCase()}}
             </v-toolbar-title>
+            <v-spacer></v-spacer>
           </v-toolbar>
+
           <v-layout row wrap class="white primary--text pl-2 subheading">
             <v-flex class="d-inline-block mr-4">Ascensiones: 
                 <span class="accent--text">&nbsp;{{cima.logros_count}}</span>
@@ -142,6 +144,7 @@
 <script>
 
 import PathMap from './PathMap'
+import CimaQuickAdd from './CimaQuickAdd'
 
 export default {
   data () {
@@ -155,11 +158,12 @@ export default {
 
   components: {
     'PathMap' : PathMap,
+    'CimaQuickAdd' : CimaQuickAdd,
   },
 
   watch: {
     '$route.params.id': function (id) {
-      this.$store.dispatch('cima',id).then(cima => {
+      this.$store.dispatch('cimas/one',id).then(cima => {
         this.cima = cima
         this.resetTabs()
       })
@@ -194,18 +198,17 @@ export default {
 
   methods: {
     resetTabs (){
-      // Consider if and if the number doesn't exist in the next panel
       this.active = null
       this.active = "0";
     },
     next() {
-      var index = this.cimas.findIndex(x => x.id === this.cima.id);
-      if (index === this.cimas.length -1) index = 0;
-      this.cima = this.cimas[index + 1];
+      var index = this.cimas.findIndex(x => x.id === this.cima.id) + 1;
+      if (index === this.cimas.length) index = 0;
+      this.cima = this.cimas[index];
     },
     previous () {
       var index = this.cimas.findIndex(x => x.id === this.cima.id) - 1;
-      if (index === 0) index = this.cimas.length - 1;
+      if (index === -1) index = this.cimas.length - 1;
       this.cima = this.cimas[index];
     },
     openExternalLink (url) {

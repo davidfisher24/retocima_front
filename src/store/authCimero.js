@@ -92,6 +92,15 @@ export default {
       });
     },
 
+    checkLogro (store,id) {
+      if (!store.getters.loggedIn) return false
+      return doAuthRequest(store, {
+          method: 'get',
+          url: 'check-logro/' + id,
+          logout: false,
+      });
+    },
+
     provinceLogros (store,pid) {
       return doAuthRequest(store, {
           method: 'get',
