@@ -9,6 +9,7 @@
       right
       class="hidden-sm-and-down"
       app
+      :permanent="preventDrawerClose"
     >
       <v-toolbar flat class="transparent">
       <v-list class="pa-0">
@@ -48,9 +49,21 @@
         </v-list-tile-content>
       </v-list-tile>
 
-      <v-list-tile v-for="r in routes" :key="r.text" @click="route(r.route,r.params)">
-        <v-list-tile-action primary style="text-transform:uppercase;"><span>{{r.text}}</span></v-list-tile-action>
-      </v-list-tile>
+      <template v-for="r in routes">
+        <v-list-tile v-if="r.route" :key="r.text" @click="route(r.route,r.params)">
+          <v-list-tile-action primary style="text-transform:uppercase;"><span>{{r.text}}</span></v-list-tile-action>
+        </v-list-tile>
+         <v-list-group v-else append-icon="">
+            <v-list-tile slot="activator" @mouseover="preventDrawerClose = true" @mouseleave="preventDrawerClose = false" >
+              <span style="text-transform:uppercase;" class="list__tile list__tile--link primary--text pl-0">{{r.text}}</span>
+              <v-icon style="position:absolute;right:0;">keyboard_arrow_down</v-icon>
+            </v-list-tile>
+            <v-list-tile v-for="r in r.menu" v-if="r.route" :key="r.text" @click="route(r.route,r.params)">
+              <v-list-tile-action primary><span class="pl-2">{{r.text}}</span></v-list-tile-action>
+            </v-list-tile>
+          </v-list-group>
+        </v-list-group>
+      </template>
 
       <v-divider></v-divider><hr class="primary mx-3" style="font-weight:400;">
       <v-list-tile v-if="loggedIn" v-for="r in userRoutes" @click="route(r.route)">
@@ -83,7 +96,16 @@
       <!-- Desktop main navigation -->
       <span class="hidden-sm-and-down">
         <v-toolbar-items>
-          <Button v-for="route in routes" :key="route.text" :text="route.text" textColor="white" underline="true" :route="route.route" :params="route.params"></Button>
+          <template  v-for="route in routes">
+          <Button v-if="route.route" :key="route.text" :text="route.text" textColor="white" underline="true" :route="route.route" :params="route.params"></Button>
+            <!-- Dropdown tamplate -->
+            <v-menu open-on-hover top offset-y v-else>
+              <Button :text="route.text" textColor="white" slot="activator"></Button>
+              <v-list dense class="mt-5"><v-list-tile v-for="route in route.menu" class="pa-0 ma-0">
+                <Button :key="route.text" :text="route.text" textColor="primary" underline="true" lowercase="true" :route="route.route" :params="route.params"></Button>
+              </v-list-tile></v-list>
+            </v-menu>
+          </template>
         </v-toolbar-items>
       </span>
       <span class="hidden-sm-and-down">
@@ -91,7 +113,6 @@
         <v-toolbar-items v-if="!loggedIn">
           <Button text="entrar" textColor="primary" lowercase="true" bgColor="white" @click.native.stop="showLogin = !showLogin" class="mr-2"></Button>
           <Button text="darse alta" route="register" lowercase="true"  bgColor="white" textColor="primary" class="mr-2"></Button>
-          
         </v-toolbar-items>
       </span>
 
@@ -141,9 +162,18 @@ export default {
   data () {
     return {
       drawer: false,
+      preventDrawerClose: false,
       showLogin: false,
       menu: false,
       routes: [
+        {text: "nosotros", menu: [
+          {text:"Bases", route:"bases"},
+          {text:"Normas Listado", route:"normas"},
+          {text:"Certificados", route:"certificates"},
+          {text:"Preguntas mas frecuentes", route:"faq"},
+          {text:"!!Al zurron!!", route:"zurron"},
+          {text:"Responsables", route:"responsables"},
+        ]},
         {text:"listado", route:"listado"},
         {text:"ranking", route:"ranking"},
         {text:"Pata Negra", route:"patanegra", params:{"format": "list"}},
@@ -175,7 +205,7 @@ export default {
     route (page,params) {
       if (page === 'logout') return this.logout();
       this.$router.push({name: page, params: params});
-    }
+    },
   }
 }
 </script>
