@@ -167,12 +167,12 @@ export default {
       menu: false,
       routes: [
         {text: "nosotros", menu: [
-          {text:"Bases", route:"bases"},
-          {text:"Normas Listado", route:"normas"},
-          {text:"Certificados", route:"certificates"},
-          {text:"Preguntas mas frecuentes", route:"faq"},
-          {text:"!!Al zurron!!", route:"zurron"},
-          {text:"Responsables", route:"responsables"},
+          {text:"Bases", route:"nosotros", params:{"page": "bases"}},
+          {text:"Normas Listado", route:"nosotros", params:{"page": "normas"}},
+          {text:"Certificados", route:"nosotros", params:{"page": "certificados"}},
+          {text:"Preguntas mas frecuentes", route:"nosotros", params:{"page": "pmf"}},
+          {text:"!!Al zurron!!", route:"nosotros", params:{"page": "zurron"}},
+          {text:"Responsables", route:"nosotros", params:{"page": "responsables"}}
         ]},
         {text:"listado", route:"listado"},
         {text:"ranking", route:"ranking"},

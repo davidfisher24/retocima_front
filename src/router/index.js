@@ -8,6 +8,7 @@ import HomePage from '@/components/HomePage'
 import Listado from '@/components/Listado'
 import PataNegra from '@/components/PataNegra'
 import Ranking from '@/components/Ranking'
+import Static from '@/components/Static/index'
 
 // Components
 import CimaList from '@/components/CimaList'
@@ -34,6 +35,14 @@ const router = new Router({
   scrollBehavior,
   routes: [
     // Home page 
+    {
+      path: '/',
+      name: 'home',
+      component: HomePage,
+      protected: true,
+    },
+    // Static Pages
+    {path: '/nosotros/:page', name: 'nosotros', component: Static},
     {
       path: '/',
       name: 'home',
