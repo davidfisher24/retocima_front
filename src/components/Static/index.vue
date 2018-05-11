@@ -30,6 +30,8 @@
 
 		computed: {
 			title () {
+				if (this.page === "pmf") return "PREGUNTAS MAS FRECUENTES"
+				if (this.page === "responsables") return "GRUPO DE RESPONSABLES C.I.P"
 				return this.page.toUpperCase()
 			}
 		},

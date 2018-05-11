@@ -1,22 +1,55 @@
 <template>
-  <v-flex xs12 class="text-xs-center primary--text">
-    <p class="headline">
-	  <span class="accent--text">B</span>ertificado 
-	  <span class="accent--text">A</span>bérico de 
-	  <span class="accent--text">S</span>ontañas 
-	  <span class="accent--text">E</span>scendidas</p>
-	  <p class="subheading">Los mejores puertos de montaña de España, Andorra y Portugal</p>
-	  <p class="subheading text-xs-left">¿Qué es el C.I.M.A.?</p>
-	  <p class="body-2" style="text-align: justify;">El CIMA puede considerarse como un reto personal de carácter lúdico y no competitivo, para todos aquellos amantes del cicloturismo que deseen disfrutar ascendiendo los puertos más representativos de cada provincia española, así como Andorra y Portugal.</p>
-	  <p class="body-2" style="text-align: justify;">Todas estas cumbres han sido debatidas y seleccionadas por representantes de las diferentes regiones de nuestra geografía para, tras varios años de ardua labor y discusión en el foro de 
-	  <a href="http://www.altimetrias.com" target="_BLANK" style="text-decoration:none;"><strong>www.altimetrias.com</strong></a>, 
-	  consensuar una lista de 640 ascensiones en las que se busca no sólo dureza, también belleza e historia, dentro de las posibilidades orográficas de cada región.</p>
-	  <p class="body-2" style="text-align: justify;">Descubre, pues, los principales puertos de montaña ibéricos, y lánzate a alcanzar el máximo número de ascensiones</p>
-	  <p class="subheading text-xs-center"><strong>Serás capaz de conseguirlas todas? Date de alta y !!<span class="accent--text">Empieza ya</span>!!</strong></p>
-  </v-flex>
+	<div>
+		<v-layout wrap row class="text-xs-center primary--text body-2 mx-2">
+		  <v-flex xs12 md8 class="px-2">
+		  	<p class="headline accent--text">COMITE PERMANENTE</p>
+		  	<v-layout row class="px-5">
+		  		<v-flex xs3>
+		  			<img src="@/assets/responsables/cip1.jpg"  alt="Diego Aguero" class="cip-image">
+		  			<p class="title pt-2">Diego Agüero</p>
+		  			<p class="subheading">(Girona)</p>
+		  		</v-flex>
+		  		<v-flex xs3>
+		  			<img src="@/assets/responsables/cip2.jpg"  alt="Juanto Uribarri" class="cip-image">
+		  			<p class="title pt-2">Juanto Uribarri</p>
+		  			<p class="subheading">(Bizkaia)</p>
+		  		</v-flex>
+		  		<v-flex xs3>
+		  			<img src="@/assets/responsables/cip3.jpg"  alt="Ander Guaza" class="cip-image">
+		  			<p class="title pt-2">Ander Guaza</p>
+		  			<p class="subheading">(Bizkaia)</p>
+		  		</v-flex>
+		  		<v-flex xs3>
+		  			<img src="@/assets/responsables/cip4.jpg"  alt="Miguel Bernabe" class="cip-image">
+		  			<p class="title pt-2">Miguel Bernabe</p>
+		  			<p class="subheading">(Zaragoza)</p>
+		  		</v-flex>
+		  	</v-layout>
+		  </v-flex>
+		  <v-flex xs12 md4 class="px-2">
+		  	<v-flex><img src="@/assets/mapa-zonas.png" alt="iberias-map" style="max-width:100%;height:auto;"></v-flex>
+		  </v-flex>
+		</v-layout>
+	</div>
+  
 </template>
 
+<style>
+	.cip-image {
+		-webkit-filter: grayscale(100%);
+		filter: grayscale(100%);
+		padding: 20px;
+		width:100%;
+	}
+</style>
+
 <script>
-	export default {}
+	export default {
+		data () {
+			return {
+		
+			}
+		}
+	}
 </script>
 

@@ -59,12 +59,13 @@
   	<v-layout row class="py-1">
 		<v-flex><img src="@/assets/mapa-iberias.png" alt="iberias-map" style="max-width:100%;height:auto;"></v-flex>
 	</v-layout>
-
+	
 
   </v-flex>
-  <v-flex xs12 md4 class="px-2 py-2">
+  <FlexImage :image="image"></FlexImage>
+  <!--<v-flex xs12 md4 class="px-2 py-2">
   	<img src="@/assets/stock-3.jpg" alt="bases" style="max-width:100%;max-height:100%;">
-  </v-flex>
+  </v-flex>-->
 </v-layout>
 </template>
 
@@ -78,9 +79,15 @@
 </style>
 
 <script>
+	import image from '../../assets/stock-3.jpg';
+	import FlexImage from './FlexImage'
 	export default {
+		components: {
+        	'FlexImage' : FlexImage,
+        },
 		data() {
 			return {
+				image: image,
 				zones: [
 					'Un miembro llega a ser “Escalador del Norte” cuando ha alcanzado todas las cumbres de la IBERIA VERDE (Galicia, Asturias, Cantabria, Euskadi, Navarra y La Rioja). Recibe el diploma “Iberia Verde”.',
 					'Un miembro llega a ser “Escalador del Este” cuando ha alcanzado todas las cumbres de la IBERIA MED (Catalunya, C. Valenciana, Murcia, Baleares y Andorra). Recibe el diploma “Iberia Mediterránea”.',

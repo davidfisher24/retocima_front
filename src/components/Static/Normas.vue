@@ -68,16 +68,23 @@
   	</v-layout>
 
   </v-flex>
-  <v-flex xs12 md4 class="px-2 py-2">
+  <FlexImage :image="image"></FlexImage>
+  <!--<v-flex xs12 md4 class="px-2 py-2">
   	<img src="@/assets/stock-2.jpg" alt="bases" style="max-width:100%;max-height:100%;">
-  </v-flex>
+  </v-flex>-->
 </v-layout>
 </template>
 
 <script>
+	import image from '../../assets/stock-2.jpg';
+	import FlexImage from './FlexImage'
 	export default {
+		components: {
+        	'FlexImage' : FlexImage,
+        },
 		data () {
 			return {
+				image: image,
 				rules: [
 					{title: 'PELIGROSIDAD', text: 'Demasiado tráfico que haga peligroso el circular por esa vía.'},
 					{title: 'IMPRACTICABILIDAD', text: 'Imposibilidad de circular por esa calzada con bicicleta de carretera, bien por el deterioro o por falta de asfalto (exceptuadas las obras en curso).'},

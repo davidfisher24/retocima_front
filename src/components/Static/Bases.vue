@@ -12,16 +12,23 @@
   		<v-flex v-html="paragraph" class="pl-1" style="text-indent:12px;"></v-flex>
   	</v-layout>
   </v-flex>
-  <v-flex xs12 md4 class="px-2 py-2">
+  <FlexImage :image="image"></FlexImage>
+  <!--<v-flex xs12 md4 class="px-2 py-2">
   	<img src="@/assets/stock-1.jpg" alt="bases" style="max-width:100%;max-height:100%;">
-  </v-flex>
+  </v-flex>-->
 </v-layout>
 </template>
 
 <script>
+	import image from '../../assets/stock-1.jpg';
+	import FlexImage from './FlexImage'
 	export default {
+		components: {
+        	'FlexImage' : FlexImage,
+        },
 		data () {
 			return {
+				image: image,
 				paragraphsA: [
 					'El <strong>desafío cicloturista CIMA</strong> está basado en una lista con un número determinado de cumbres ciclistas (aunque ésta puede cambiar), integradas en los tres países que conforman la Península Ibérica, divididos en 17 regiones que conforman las diferentes comunidades autónomas, más Ceuta, Andorra y Portugal, incluídas sus islas.',
 					'El fin básico del <strong>CIMA</strong> es el <strong>fomento de la práctica lúdica, deportiva y turística en el ámbito ciclista</strong>, excluyendo el carácter competitivo.',
