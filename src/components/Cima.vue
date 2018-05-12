@@ -7,32 +7,32 @@
           <v-system-bar status color="background" v-if="cimas && cimas.length > 1">
             <v-layout row>
               <v-flex xs4 md2 offset-md4 offset-xs2>
-                <v-btn flat left @click="previous" style="text-transform: capitalize;">< Anterior</v-btn>
+                <v-btn flat left @click="previous" style="text-transform: capitalize;" color="primary"><strong>< Anterior</strong></v-btn>
               </v-flex>
               <v-flex xs4 md2 offset-xs-2>
-                <v-btn flat right @click="next" style="text-transform: capitalize;">Siguiente ></v-btn>
+                <v-btn flat right @click="next" style="text-transform: capitalize;" color="primary"><strong>Siguiente ></strong></v-btn>
               </v-flex>
             </v-layout>
           </v-system-bar>
 
-          <v-toolbar color="white" flat>
-            <v-toolbar-title class="primary--text headline ml-2" >
-              {{cima.codigo}} {{cima.nombre.toUpperCase()}}
-            </v-toolbar-title>
-            <v-spacer></v-spacer>
-          </v-toolbar>
-
-          <v-layout row wrap class="white primary--text pl-2 subheading">
-            <v-flex class="d-inline-block mr-4">Ascensiones: 
-                <span class="accent--text">&nbsp;{{cima.logros_count}}</span>
-              </v-flex>
-              <v-flex class="d-inline-block mr-4" >
-                <i>{{cima.provincia.nombre.toUpperCase()}} / {{cima.communidad.nombre.toUpperCase()}}</i>
-              </v-flex>
-              <v-flex class="d-inline-block">
-                <strong>GPS: {{cima.latitude}} {{cima.longitude}}</strong>
-              </v-flex>
+          <!---->
+          <v-layout row wrap class="white primary--text" >
+            <v-flex xs12 class="py-2">
+              <span class="display-2 ml-2">{{cima.codigo}} {{cima.nombre.toUpperCase()}}</span>
+              <div :style="{float: $vuetify.breakpoint.smAndDown ? 'none' : 'right' }"><CimaQuickAdd :cima="cima.id"></CimaQuickAdd></div>
+            </v-flex>
+  
+            <v-flex class="d-inline-block ml-2">Ascensiones: 
+              <span class="accent--text">&nbsp;{{cima.logros_count}}</span>
+            </v-flex>
+            <v-flex class="d-inline-block mr-4">
+              <i>{{cima.provincia.nombre.toUpperCase()}} / {{cima.communidad.nombre.toUpperCase()}}</i>
+            </v-flex>
+            <v-flex :class="['d-inline-block',$vuetify.breakpoint.smAndDown ? 'ml-2' : '']">
+              <strong>GPS: {{cima.latitude}} {{cima.longitude}}</strong>
+            </v-flex>
           </v-layout>
+
         </v-flex>
         <v-flex xs12>
 
