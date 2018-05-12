@@ -9,7 +9,7 @@
 				<div style="display:block;overflow:hidden;position:relative;width:100%;">
 					<div style="width:20000px" id="wrapper">
 						<div v-for="region,i in regions" class="slide text-xs-center primary--text" style="float:left">
-							<p :class="['hidden-md-and-down', 'headline', 'carousel-border-title', 'mb-1', 'cbt-' + region.zone]">{{region.zone.toUpperCase()}}</p>
+							<p :class="['hidden-sm-and-down', 'headline', 'carousel-border-title', 'mb-1', 'cbt-' + region.zone]">{{region.zone.toUpperCase()}}</p>
 							<div v-for="profile in region.profiles" class="profile" style="display:inline-block;">
 					  			<img :src="imagePath(profile.image)"  :alt="profile.name" class="cip-small-image">
 					  			<p class="subheading py-0"><strong>{{profile.name}}</strong></p>

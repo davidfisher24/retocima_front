@@ -1,5 +1,7 @@
 <template>
-	<v-btn flat @click="trigger()" :class="classes('parent')"><a :class="classes('child')">{{text}}</a></v-btn>
+	<v-btn :flat="bgColor === undefined ? true : false" :color="bgColor"  @click="trigger()" :class="classes('parent')">
+		<a :class="classes('child')">{{text}}</a>
+	</v-btn>
 </template>
 
 <style>
@@ -58,12 +60,8 @@ export default {
 				var style = ""
 				if (this.underline) style += "btn-underline "
 				if (this.lowercase) style += "btn-lowercase "
-				if (this.bgColor) style += "btn-bg-" + this.bgColor
 				return style
-			}
-				
-				
-				
+			}	
 		},
 
 		trigger () {

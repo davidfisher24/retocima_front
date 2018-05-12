@@ -32,6 +32,7 @@
 			title () {
 				if (this.page === "pmf") return "PREGUNTAS MAS FRECUENTES"
 				if (this.page === "responsables") return "GRUPO DE RESPONSABLES C.I.P"
+				if (this.page === "zurron") return "¡¡ AL ZURRÓN !! , por María"
 				return this.page.toUpperCase()
 			}
 		},

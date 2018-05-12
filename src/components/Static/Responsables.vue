@@ -16,18 +16,6 @@
 		  </v-flex>
 		</v-layout>
 		<ResponsablesCarousel :regions="regions"></ResponsablesCarousel>
-
-		<!--<div v-for="region in regions">
-			<p class="headline">{{region.zone.toUpperCase()}}</p>
-			<v-layout row>
-				<v-flex xs3 v-for="profile in region.profiles">
-		  			<img :src="imagePath(profile.image)"  :alt="profile.name" class="cip-image">
-		  			<p class="subheading pt-2">{{profile.name}}</p>
-		  			<p class="body-2">({{profile.province}})</p>
-		  		</v-flex>
-			</v-layout>
-		</div>-->
-
   </v-container>
 </template>
 
