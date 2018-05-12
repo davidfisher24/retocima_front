@@ -1,10 +1,10 @@
 <template>
-<div>
+<v-container fluid>
 		<v-layout wrap row class="text-xs-center primary--text body-2 mx-2">
 		  <v-flex xs12 md8 class="px-2">
 		  	<p class="headline accent--text">COMITE PERMANENTE</p>
-		  	<v-layout row class="px-5">
-		  		<v-flex xs3 v-for="profile in cip">
+		  	<v-layout row wrap class="px-5">
+		  		<v-flex xs12 md3 v-for="profile in cip">
 		  			<img :src="imagePath(profile.image)"  :alt="profile.name" class="cip-image">
 		  			<p class="title pt-2">{{profile.name}}</p>
 		  			<p class="subheading">({{profile.province}})</p>
@@ -28,7 +28,7 @@
 			</v-layout>
 		</div>-->
 
-  </div>
+  </v-container>
 </template>
 
 <style>
@@ -66,7 +66,7 @@
 						{name: 'Luis Fdo. Vallejo ', province: 'Gipuzkoa', image: 'norte-2'},
 						{name: 'David Pérez ', province: 'Cantabria', image: 'norte-3'},
 					]},
-					{zone: 'este', profiles: [
+					{zone: 'este',  profiles: [
 						{name: 'María Fuster', province: 'Barcelona', image: 'este-1'},
 						{name: 'Roger Sala', province: 'Barcelona', image: 'este-2'},
 						{name: 'J. Javier Marco', province: 'Barcelona', image: 'este-3'},
