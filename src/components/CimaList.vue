@@ -12,6 +12,9 @@
                 <span v-if="$route.name=='patanegra'"><strong>Listado de cimas </strong> 
                   <span class="display-1">Pata Negra</span>
                 </span>
+                <span v-if="$route.name=='extrema'"><strong>Listado de cimas </strong> 
+                  <span class="display-1">Escalador Extrem</span>
+                </span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
@@ -96,6 +99,7 @@ export default {
     '$route': function (route) {
       if (this.$route.name === 'provincia') this.$store.dispatch('provincia',Number(this.$route.params.pid)).then(cimas => this.cimas = cimas);
       if (this.$route.name === 'patanegra') this.$store.dispatch('patanegra').then(cimas => this.cimas = cimas);
+      if (this.$route.name === 'extrema') this.$store.dispatch('extrema').then(cimas => this.cimas = cimas);
     }
   },
 
@@ -107,10 +111,12 @@ export default {
     changeMap() {
       if (this.$route.name === "provincia") this.$router.push({name:'provincia-map', params: {pid: this.$route.params.pid}});
       if (this.$route.name === "patanegra") this.$router.push({name:'patanegra-map'});
+      if (this.$route.name === "extrema") this.$router.push({name:'extrema-map'});
     },
     route (cid) {
       var obj = {};
-      obj.name = this.$route.name=='provincia' ? "provincia-cima" : "patanegra-cima";
+      //obj.name = this.$route.name=='provincia' ? "provincia-cima" : "patanegra-cima";
+      obj.name = this.$route.name + "-cima"
       obj.params = this.$route.name=='provincia' ? {pid: this.$route.params.pid, cid: cid} : {cid: cid};
       this.$router.push(obj);
     },

@@ -32,13 +32,15 @@ export default {
     },
     addLogro (state, {data}) {
       if (state.account) {
-        if (data.provincia_id in state.account.logros) state.account.logros[data.provincia_id].push(data)
-        else state.account.logros[data.provincia_id] = [data]
+        state.account.logros.push(data)
+        //if (data.provincia_id in state.account.logros) state.account.logros[data.provincia_id].push(data)
+        //else state.account.logros[data.provincia_id] = [data]
       }
     },
     removeLogro (state, {data}) {
       if (state.account) {
-        state.account.logros[data.provincia_id].splice(state.account.logros[data.provincia_id].findIndex(l => l.id === data.id),1)
+        state.account.logros.splice(state.account.logros.findIndex(l => l.id === data.id),1)
+        //state.account.logros[data.provincia_id].splice(state.account.logros[data.provincia_id].findIndex(l => l.id === data.id),1)
       }
     },
     updateCimero (state, {data}) {
@@ -94,11 +96,17 @@ export default {
 
     checkLogro (store,id) {
       if (!store.getters.loggedIn) return false
-      return doAuthRequest(store, {
-          method: 'get',
-          url: 'check-logro/' + id,
-          logout: false,
-      });
+      if (!store.state.account)   
+        return doAuthRequest(store, {
+            /*method: 'get',
+            url: 'check-logro/' + id,
+            logout: false,*/
+            method: 'get',
+            url: 'cimero',
+            mutation: 'account',
+            logout: true,
+        });
+      return store.state.account.logros.find(x => x.cima_id === id) 
     },
 
     provinceLogros (store,pid) {

@@ -99,6 +99,7 @@
             },
 
             getPathMapCenter(){
+                if (this.coords.length === 1) return L.latLng(this.coords[0].longitude, this.coords[0].latitude)
                 var lats = [], lngs = [];
                 this.coords.forEach(function(coord){
                     lats.push(coord.lat); lngs.push(coord.lng);

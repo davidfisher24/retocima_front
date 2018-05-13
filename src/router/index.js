@@ -72,6 +72,11 @@ const router = new Router({
       name: 'patanegra',
       component: CimaList
     },
+    {
+      path: '/extrema',
+      name: 'extrema',
+      component: CimaList
+    },
     // Provincia or pata negra with cima group page
     {
       path: '/provincia/:pid/:cid',
@@ -81,6 +86,11 @@ const router = new Router({
     {
       path: '/patanegra/cima/:cid',
       name: 'patanegra-cima',
+      component: Cima
+    },
+    {
+      path: '/extrema/cima/:cid',
+      name: 'extrema-cima',
       component: Cima
     },
     // Map with cima child
@@ -116,6 +126,18 @@ const router = new Router({
         {
           path: '/patanegra/cima/:cid',
           name: 'patanegra-cima',
+          component: Cima
+        }
+      ]
+    },
+    {
+      path: '/extrema-mapa',
+      name: 'extrema-map',
+      component: CimaMap,
+      children: [
+        {
+          path: '/extrema/cima/:cid',
+          name: 'extrema-cima',
           component: Cima
         }
       ]
@@ -221,6 +243,15 @@ router.beforeEach((to, from, next) => {
       to.params.zoom = 6
     }
     store.dispatch('cimas/patanegra').then(cimas => {
+      to.params.cimas = cimas
+      next()
+    })
+  } else if (to.name === 'extrema-cima' || to.name === 'extrema' || to.name === 'extrema-map') {
+    if (to.name === 'extrema-map') {
+      to.params.center = {lat: 40.416775, lng: -3.703790}
+      to.params.zoom = 6
+    }
+    store.dispatch('cimas/extrema').then(cimas => {
       to.params.cimas = cimas
       next()
     })

@@ -2,7 +2,7 @@
 <div style="width:100%;height:100%">
     <router-view></router-view><!-- remove for routing -->
     <l-map :zoom="getMapZoom()" :center="getMapCenter()" style="height:100%;width:100%;" v-if="mounted"
-    v-show="this.$route.name === 'cima-map' || this.$route.name === 'provincia-map' || this.$route.name === 'patanegra-map'"> <!-- Remove for routing -->
+    v-show="this.$route.name === 'cima-map' || this.$route.name === 'provincia-map' || this.$route.name === 'patanegra-map' || this.$route.name === 'extrema-map'"> 
 
      <v-marker-cluster v-if="addCimas">
       <l-marker v-for="c in validcimas" :lat-lng="c.marker" :icon="icon" @click="route(c.id)">
@@ -118,6 +118,7 @@
               if (this.$route.name === 'cima-map') this.$router.push({name: 'map-cima', params: {id: id}});
               else if (this.$route.name === 'provincia-map') this.$router.push({name: 'provincia-cima', params: {pid: this.$route.params.pid, cid: id}});
               else if (this.$route.name === 'patanegra-map') this.$router.push({name: 'patanegra-cima', params: {cid: id}});
+              else if (this.$route.name === 'extrema-map') this.$router.push({name: 'extrema-cima', params: {cid: id}});
             },
         },
     }

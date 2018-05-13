@@ -39,6 +39,7 @@
 
     import SpainSVG from './SVG/SpainSVG'
     import provinceMap from './SVG/provinceMap'
+    import _ from 'lodash'
 
     export default {
         props: ["userLogros"],
@@ -81,9 +82,11 @@
         
             createMapData () {
                 var that = this;
+                var logros = _.groupBy(this.logros,"provincia_id")
                 this.provincias = this.provincias.map(x => {
                     x.total = x.active_cimas_count;
-                    x.completed = that.logros[x.id.toString()] ? that.logros[x.id.toString()].length : 0 ;
+                    //x.completed = that.logros[x.id.toString()] ? that.logros[x.id.toString()].length : 0 ;
+                    x.completed = logros[x.id.toString()] ? logros[x.id.toString()].length : 0 ;
                     x.value = x.completed / x.total;
                     return x;
                 })

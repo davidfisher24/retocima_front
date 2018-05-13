@@ -7,6 +7,7 @@ export default {
   	provincias: {},
   	cimas: [],
     patanegra: null,
+    extrema: null,
     markers: null,
     names: null,
   },
@@ -30,6 +31,9 @@ export default {
     },
     markers (state, {data, params}) {
       state.markers = data
+    },
+    extrema (state, {data, params}) {
+      state.extrema = data
     },
   },
 
@@ -58,6 +62,15 @@ export default {
       	mutation: 'patanegra'
       });
     },
+
+    extrema (store) {
+      if (store.state.extrema) return store.state.extrema
+      return doRequest(store, {
+        url: 'extrema',
+        mutation: 'extrema'
+      });
+    },
+
 
     names (store) {
     	if (store.state.names) return store.state.names

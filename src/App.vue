@@ -180,7 +180,7 @@ export default {
         {text:"Mapa", route:"cima-map"},
         {text:"ranking", route:"ranking"},
         {text: "otros retos", menu: [
-          {text:"Escalador Extrem"},
+          {text:"Escalador Extrem", route:"extrema", params:{"format": "list"}},
           {text:"Madera y viento"},
           {text:"Pata negra", route:"patanegra", params:{"format": "list"}},
         ]}
