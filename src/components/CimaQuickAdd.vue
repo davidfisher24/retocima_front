@@ -46,7 +46,6 @@ export default {
   methods: {
     check () {
       this.$store.dispatch("user/checkLogro",this.cima).then(response =>{
-        console.log(response)
         if (response === false) return // No user
         this.user = true
         if (typeof(response) === 'object') this.done = true 

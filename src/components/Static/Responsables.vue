@@ -4,7 +4,7 @@
 		  <v-flex xs12 md8 class="px-2">
 		  	<p class="headline accent--text">COMITE PERMANENTE</p>
 		  	<v-layout row wrap class="px-5">
-		  		<v-flex xs12 md3 v-for="profile in cip">
+		  		<v-flex xs12 sm6 md3 v-for="profile in cip">
 		  			<img :src="imagePath(profile.image)"  :alt="profile.name" class="cip-image">
 		  			<p class="title pt-2">{{profile.name}}</p>
 		  			<p class="subheading">({{profile.province}})</p>

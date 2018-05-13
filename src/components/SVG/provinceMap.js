@@ -438,7 +438,7 @@ provinceMap.plotOptions = {
                     this.update({
                         dataLabels:{
                            formatter: function(){
-                                if (this.point.id === e.target.id) return this.point.completed + " / " + this.point.total
+                                if (this.point.id === e.target.id) return this.point.nombre + " / " + this.point.completed + " / " + this.point.total
                                 return ''
 
                             } 

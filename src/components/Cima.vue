@@ -29,7 +29,7 @@
               <i>{{cima.provincia.nombre.toUpperCase()}} / {{cima.communidad.nombre.toUpperCase()}}</i>
             </v-flex>
             <v-flex :class="['d-inline-block',$vuetify.breakpoint.smAndDown ? 'ml-2' : '']">
-              <strong>GPS: {{cima.latitude}} {{cima.longitude}}</strong>
+              <strong>GPS: {{Number(cima.latitude).toFixed(5)}} {{Number(cima.longitude).toFixed(5)}}</strong>
             </v-flex>
           </v-layout>
 
