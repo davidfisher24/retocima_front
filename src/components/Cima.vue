@@ -124,7 +124,7 @@
                     <v-flex xs12 md8>
                       <v-layout class="ma-2">
                         <v-flex>
-                          <PathMap :id="cima.vertientes[i].id"></PathMap>
+                          <PathMap :id="cima.vertientes[i].id" v-if="i == active"></PathMap>
                         </v-flex>
                       </v-layout>
                     

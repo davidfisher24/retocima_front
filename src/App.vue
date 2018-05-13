@@ -10,6 +10,7 @@
       class="hidden-sm-and-down"
       app
       :permanent="preventDrawerClose"
+      style="z-index:1200;"
     >
       <v-toolbar flat class="transparent">
       <v-list class="pa-0">
@@ -38,6 +39,7 @@
       right
       class="hidden-md-and-up"
       app
+      style="z-index:1200;"
     >
     <v-list class="pt-0 primary--text" dense>
       <v-list-tile avatar v-if="loggedIn && loggedInUser">
@@ -82,7 +84,7 @@
 
 
   
-    <v-toolbar class="primary" app>
+    <v-toolbar class="primary" app style="z-index:1100;">
       <router-link :to="{ name: 'home'}">
         <img src="@/assets/icons/logowhite.png" height="38px" width="38px">
       </router-link>
@@ -175,9 +177,13 @@ export default {
           {text:"Responsables", route:"nosotros", params:{"page": "responsables"}}
         ]},
         {text:"listado", route:"listado"},
-        {text:"ranking", route:"ranking"},
-        {text:"Pata Negra", route:"patanegra", params:{"format": "list"}},
         {text:"Mapa", route:"cima-map"},
+        {text:"ranking", route:"ranking"},
+        {text: "otros retos", menu: [
+          {text:"Escalador Extrem"},
+          {text:"Madera y viento"},
+          {text:"Pata negra", route:"patanegra", params:{"format": "list"}},
+        ]}
       ],
       userRoutes: [
         {text:"Mis Logros", route:"user-logros"},
