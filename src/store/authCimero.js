@@ -24,6 +24,11 @@ export default {
       if (decodedToken.exp - 60 < (new Date().getTime() / 1000)) return true;
       return false;
     },
+    /* Returns current account for mapping of data outside */
+    account: state => {
+      if (!state.account) return null
+      return state.account.cimero
+    },
   },
 
   mutations: {

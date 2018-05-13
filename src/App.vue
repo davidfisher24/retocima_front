@@ -101,9 +101,9 @@
           <template  v-for="route in routes">
           <Button v-if="route.route" :key="route.text" :text="route.text" textColor="white" underline="true" :route="route.route" :params="route.params"></Button>
             <!-- Dropdown tamplate -->
-            <v-menu open-on-hover top offset-y v-else>
+            <v-menu open-on-hover offset-y v-else>
               <Button :text="route.text" textColor="white" slot="activator"></Button>
-              <v-list dense class="mt-5"><v-list-tile v-for="route in route.menu" class="pa-0 ma-0">
+              <v-list dense class="mt-2"><v-list-tile v-for="route in route.menu" class="pa-0 ma-0">
                 <Button :key="route.text" :text="route.text" textColor="primary" underline="true" lowercase="true" :route="route.route" :params="route.params"></Button>
               </v-list-tile></v-list>
             </v-menu>

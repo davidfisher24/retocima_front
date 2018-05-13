@@ -77,6 +77,8 @@ const store = new Vuex.Store({
     },
 
     ranking (context) {
+      //context.rootGetters["user/account"];
+      //context.rootState.user.account.cimero
       if (this.state.ranking) return this.state.ranking
       return doRequest(store, {
           url: 'ranking',
