@@ -6,15 +6,8 @@
         <!-- Title -->
         <v-toolbar color="white" flat dense class="primary--text mb-3 ">
             <v-toolbar-title class="display-2">
-               <span v-if="$route.name=='provincia'"><strong>Listado de cimas en </strong> 
-                  <span class="display-1">{{cimas[0].provincia.nombre}}</span>
-                </span>
-                <span v-if="$route.name=='patanegra'"><strong>Listado de cimas </strong> 
-                  <span class="display-1">Pata Negra</span>
-                </span>
-                <span v-if="$route.name=='extrema'"><strong>Listado de cimas </strong> 
-                  <span class="display-1">Escalador Extrem</span>
-                </span>
+                <span><strong>Listado de cimas </strong> </span>
+                <span class="display-1">{{title}}</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
@@ -66,6 +59,7 @@ export default {
     return {
       type: '',
       cimas: null,
+      title: null,
       map:false,
       provinciaSectionHeaders: [
         { value: 'codigo', text: 'Cdg',sortable: true },
@@ -74,6 +68,7 @@ export default {
         { value: 'altitud', text: 'Altitud',sortable: true },
         { text: 'Vertientes',sortable: false }
       ],
+      params: this.$route.params, 
     }
   },
 
@@ -96,26 +91,29 @@ export default {
   },
 
   watch: {
+    // REPEATED
     '$route': function (route) {
-      if (this.$route.name === 'provincia') this.$store.dispatch('provincia',Number(this.$route.params.pid)).then(cimas => this.cimas = cimas);
-      if (this.$route.name === 'patanegra') this.$store.dispatch('patanegra').then(cimas => this.cimas = cimas);
-      if (this.$route.name === 'extrema') this.$store.dispatch('extrema').then(cimas => this.cimas = cimas);
+      this.$store.dispatch(route.params.dispatch,Number(route.params.pid)).then(cimas => {
+        this.cimas = cimas
+        this.title = route.params.title || this.cimas[0].provincia.nombre
+      });
     }
   },
 
+
   mounted (){
+    // REPEATED
     this.cimas = this.$route.params.cimas;
+    this.title = this.params.title || this.cimas[0].provincia.nombre
   },
 
   methods: {
     changeMap() {
-      if (this.$route.name === "provincia") this.$router.push({name:'provincia-map', params: {pid: this.$route.params.pid}});
-      if (this.$route.name === "patanegra") this.$router.push({name:'patanegra-map'});
-      if (this.$route.name === "extrema") this.$router.push({name:'extrema-map'});
+      this.$router.push({name:this.params.map, params: {pid: this.$route.params.pid}});
     },
     route (cid) {
+      // No idea why this doesn't work
       var obj = {};
-      //obj.name = this.$route.name=='provincia' ? "provincia-cima" : "patanegra-cima";
       obj.name = this.$route.name + "-cima"
       obj.params = this.$route.name=='provincia' ? {pid: this.$route.params.pid, cid: cid} : {cid: cid};
       this.$router.push(obj);

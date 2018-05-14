@@ -13,7 +13,7 @@
 <script>
 
 import CCAAList from './CCAAList'
-import Search from './Search'
+import Search from './Search/QuickSearch'
 export default {
   data () {
     return {

@@ -29,6 +29,7 @@ import {
   VChip,
   VAvatar,
   VSelect,
+  VSlider,
   VMenu,
   VPagination,
   VProgressCircular,

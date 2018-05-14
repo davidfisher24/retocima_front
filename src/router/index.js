@@ -6,7 +6,6 @@ import scrollBehavior from './scrollBehavior'
 // Pages
 import HomePage from '@/components/HomePage'
 import Listado from '@/components/Listado'
-import PataNegra from '@/components/PataNegra'
 import Ranking from '@/components/Ranking'
 import Static from '@/components/Static/index'
 
@@ -28,6 +27,14 @@ import Register from '@/components/Forms/Register'
 const protectedRoutes = [
   'user-logros', 'user-charts', 'user-provincia', 'user-edit', 'user-update-password'
 ]
+
+const lists = {
+  patanegra: {dispatch: "cimas/patanegra", title: "Pata Negra", center: {lat: 40.416775, lng: -3.703790}, zoom: 6, map: "patanegra-map", cima: "patanegra-cima"},
+  extrema: {dispatch: "cimas/extrema", title: "Escalador Extrema", center: {lat: 40.416775, lng: -3.703790}, zoom: 6, map: "extrema-map", cima: "extrema-cima"},
+  provincia: {dispatch: "cimas/provincias", map: "provincia-map", cima: "provincia-cima"},
+}
+
+const listRoutes = ["provincia","provincia-map","provincia-cima","patanegra","patanegra-map","patanegra-cima","extrema","extrema-map","extrema-cima"]
 
 Vue.use(Router)
 
@@ -237,26 +244,11 @@ router.beforeEach((to, from, next) => {
       to.params.storeData = data
       next()
     });
-  } else if (to.name === 'patanegra-cima' || to.name === 'patanegra' || to.name === 'patanegra-map') {
-    if (to.name === 'patanegra-map') {
-      to.params.center = {lat: 40.416775, lng: -3.703790}
-      to.params.zoom = 6
-    }
-    store.dispatch('cimas/patanegra').then(cimas => {
-      to.params.cimas = cimas
-      next()
-    })
-  } else if (to.name === 'extrema-cima' || to.name === 'extrema' || to.name === 'extrema-map') {
-    if (to.name === 'extrema-map') {
-      to.params.center = {lat: 40.416775, lng: -3.703790}
-      to.params.zoom = 6
-    }
-    store.dispatch('cimas/extrema').then(cimas => {
-      to.params.cimas = cimas
-      next()
-    })
-  } else if (to.name === 'provincia-cima' || to.name === 'provincia' || to.name === 'provincia-map') {
-    store.dispatch('cimas/provincias', Number(to.params.pid)).then(cimas => {
+  } else if (listRoutes.indexOf(to.name) !== -1) {
+    // List routes
+    let name = to.name.split("-")[0]
+    for (var key in lists[name]) to.params[key] = lists[name][key]
+    store.dispatch(to.params.dispatch, Number(to.params.pid)).then(cimas => {
       to.params.cimas = cimas
       next()
     })
@@ -296,7 +288,6 @@ router.beforeEach((to, from, next) => {
     //var promise4 = store.dispatch('provinciaLogros',to.params.pid)
 
     Promise.all([promise1,promise2,promise3/*,promise4*/]).then(data => {
-      console.log(data)
       to.params.logros = data[0]
       to.params.cimas = data[1]
       to.params.provincia = data[2]
