@@ -1,20 +1,9 @@
 <template>
 
+<div>
+  <PageTitle :text="title"></PageTitle>
 
   <v-card flat>
-      <v-card-title>
-        <p class="title my-0" color="primary">{{title}}</p> 
-          <v-spacer></v-spacer>
-          <v-text-field
-            append-icon="search"
-            label="Buscar"
-            single-line
-            hide-details
-            v-model="search"
-            class="hidden-sm-and-down"
-          ></v-text-field>
-      </v-card-title>
-
       <v-card-title class="hidden-md-and-up py-1">
           <v-text-field
             append-icon="search"
@@ -42,8 +31,13 @@
             <th
               class="stats-table-header"
               v-for="header in props.headers"
+              v-if="$vuetify.breakpoint.smAndDown && !header.mobile ? false : true"
               :key="header.text"
-              :class="['column sortable', pagination.descending ? 'desc' : 'asc', header.value === pagination.sortBy ? 'active' : '']"
+              :class="[
+                'column sortable', 
+                pagination.descending ? 'desc' : 'asc', 
+                header.value === pagination.sortBy ? 'active' : '',
+              ]"
               @click="changeSort(header)"
             >
               <v-icon small v-if="header.sortable">arrow_upward</v-icon>
@@ -54,7 +48,7 @@
 
         <template slot="items" slot-scope="props" >
         <tr v-bind:class="classCell(props.index)">
-          <td v-for="(col, i) in columns" @click="$emit('action',props.item.id)">
+          <td v-for="(col, i) in columns" @click="$emit('action',props.item.id)" v-if="$vuetify.breakpoint.smAndDown && !col.mobile ? false : true">
             <img v-if="col.type === 'image' && props.item[col.value]" :src="images[props.item[col.value]]" style="width:auto;height:100%;">
             <span v-if="col.type !== 'image'">{{ props.item[col.value]}}</span>
           </td>
@@ -69,6 +63,7 @@
       </v-data-table>
 
   </v-card>
+</div>
 
 </template>
 
@@ -168,9 +163,9 @@
 </script>
 
 <style  scoped>
-    .stats-table-header {border: 0.5px solid #333;}
+    .stats-table-header {border: 0.5px solid #666;}
     .stats-table-row:hover {cursor:pointer;}
-    .stats-table-row {border-left: 0.5px solid #333 !important; border-right: 0.5px solid #333 !important;}
-    .stats-table-row:last-of-type  {border-bottom: 0.5px solid #333 !important;}
+    .stats-table-row {border-left: 0.5px solid #666 !important; border-right: 0.5px solid #666 !important;}
+    .stats-table-row:last-of-type  {border-bottom: 0.5px solid #666 !important;}
     .stats-table-row td {height: 32px !important;}
 </style>
