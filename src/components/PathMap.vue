@@ -1,6 +1,6 @@
 <template> 
 <div id="wrapper">
-    <l-map :zoom="12" :center="getPathMapCenter()" :style="style" v-if="coords && mounted">
+    <l-map :zoom="zoom" :center="getPathMapCenter()" :style="style" v-if="coords && mounted">
         <l-marker v-if="path"  :lat-lng="coords[0]" :icon="startIcon"></l-marker>
         <l-marker  :lat-lng="coords[coords.length -1]" :icon="finishIcon"></l-marker>
         <l-polyline v-if="path"  :lat-lngs="coords" color="#0000FF"></l-polyline>
@@ -32,6 +32,7 @@
                 style: {},
                 mounted: false,
                 coords: null,
+                zoom: 12,
                 path: [],
                 alternatives: [],
                 url:'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
@@ -120,22 +121,25 @@
                 })
             },
 
-            putCenter (cima) {
-                this.coords = [{lat: parseFloat(cima.longitude), lng: parseFloat(cima.latitude)}];
+            putCenter (vert) {
+                this.coords = [{lat: parseFloat(vert.cima.longitude), lng: parseFloat(vert.cima.latitude)}];
             },
 
             getPathMapCenter(){
-                if (this.coords.length === 1) return L.latLng(this.coords[0].longitude, this.coords[0].latitude)
+                if (this.coords.length === 1) {
+                    return  {
+                        lat: this.coords[0].lat,
+                        lng: this.coords[0].lng,
+                    }
+                }
                 var lats = [], lngs = [];
                 this.coords.forEach(function(coord){
                     lats.push(coord.lat); lngs.push(coord.lng);
                 });
                 return {
                     lat: (Math.max.apply(null,lats) + Math.min.apply(null,lats)) / 2,
-                    lng: (Math.max.apply(null,lngs) + Math.min.apply(null,lngs) )/ 2,
+                    lng: (Math.max.apply(null,lngs) + Math.min.apply(null,lngs)) / 2,
                 }
-                var half = Math.round(this.coords.length / 2);
-                return this.coords[half];
             },
 
             putLine(){

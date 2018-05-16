@@ -119,6 +119,14 @@
                           </v-btn>
                         </v-flex>
                       </v-layout>
+
+                      <v-layout v-if="cima.vertientes[i].iframe">
+                        <v-flex xs12 class="text-xs-left body-1">
+                          <v-btn outline color="primary" v-for="(enlace,index) in cima.vertientes[i].enlaces" :key="index" @click="openExternalLink(cima.vertientes[i].iframe)">
+                            Ver En Google Maps
+                          </v-btn>
+                        </v-flex>
+                      </v-layout>
                    
                     </v-flex>
                     <v-flex xs12 md8>
