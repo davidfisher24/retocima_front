@@ -122,7 +122,7 @@
 
                       <v-layout v-if="cima.vertientes[i].iframe">
                         <v-flex xs12 class="text-xs-left body-1">
-                          <v-btn outline color="primary" v-for="(enlace,index) in cima.vertientes[i].enlaces" :key="index" @click="openExternalLink(cima.vertientes[i].iframe)">
+                          <v-btn outline color="primary" @click="openExternalLink(cima.vertientes[i].iframe)">
                             Ver En Google Maps
                           </v-btn>
                         </v-flex>
@@ -132,7 +132,7 @@
                     <v-flex xs12 md8>
                       <v-layout class="ma-2">
                         <v-flex>
-                          <PathMap :id="cima.vertientes[i].id" v-if="i == active"></PathMap>
+                          <PathMap v-if="i == active" :id="cima.vertientes[i].id" :iframe="cima.vertientes[i].iframe"></PathMap>
                         </v-flex>
                       </v-layout>
                     

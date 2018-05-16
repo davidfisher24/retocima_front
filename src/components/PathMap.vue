@@ -26,7 +26,7 @@
           LPolyline,
         },
 
-        props: ["id"],
+        props: ["id","iframe"],
         data() {
             return {
                 style: {},
@@ -126,6 +126,14 @@
             },
 
             getPathMapCenter(){
+                //ZOOM
+                if (this.iframe) {
+                    var sub = this.iframe.match("z=(.*)&")[0];
+                    var zoom = sub.replace("z=","").replace('&',"");
+                    this.zoom = Number(zoom)
+                }
+                // END ZOOM
+
                 if (this.coords.length === 1) {
                     return  {
                         lat: this.coords[0].lat,
