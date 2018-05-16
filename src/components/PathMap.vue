@@ -3,8 +3,8 @@
     <l-map :zoom="12" :center="getPathMapCenter()" :style="style" v-if="coords && mounted">
         <l-marker v-if="path"  :lat-lng="coords[0]" :icon="startIcon"></l-marker>
         <l-marker  :lat-lng="coords[coords.length -1]" :icon="finishIcon"></l-marker>
-        <l-polyline v-if="path"  :lat-lngs="coords" color="#0000FF">
-        </l-polyline>
+        <l-polyline v-if="path"  :lat-lngs="coords" color="#0000FF"></l-polyline>
+        <l-polyline v-for="alt in alternatives"  :lat-lngs="alt.coords" :color="alt.color"></l-polyline>
       <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
     </l-map>
 </div>
@@ -33,6 +33,7 @@
                 mounted: false,
                 coords: null,
                 path: [],
+                alternatives: [],
                 url:'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
                 attribution:'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
             };
@@ -52,15 +53,15 @@
           startIcon () {
             return L.icon({
               iconUrl: pin,
-              iconSize: [32, 32],
-              iconAnchor: [16, 32]
+              iconSize: [20, 32],
+              iconAnchor: [10, 32]
             })
           },
           finishIcon () {
             return L.icon({
               iconUrl: finish,
-              iconSize: [32, 32],
-              iconAnchor: [16, 32]
+              iconSize: [20, 32],
+              iconAnchor: [10, 32]
             })
           }
         },
@@ -80,15 +81,40 @@
 
             getMapLines(){
                 var self = this;
+
                 this.$store.dispatch("cimas/mapline",this.id).then(data => {
+
                     if (!data.data) {
                         self.putCenter(data);
                         return;
                     }
                     var coords = [];
-                    data.data.forEach(function(d) {
-                        coords.push({lat: d[0][0], lng: d[0][1]})
-                    });
+                    var map = data.data;
+
+                    map.forEach(function(el) {
+
+                        if (el[5][0][1][0].indexOf('L') === 0) {
+                            el[2][0][0].forEach(c => coords.push(
+                                {lat: c[0][0], lng: c[0][1]}
+                            ))
+                        }
+                        else if (el[5][0][1][0] === 'Final') {
+                            coords.push(
+                                {lat: el[1][0][0][0], lng: el[1][0][0][1]}
+                            );
+                        } else {
+                            var co = []
+                            el[2][0][0].forEach(c => co.push(
+                                {lat: c[0][0], lng: c[0][1]}
+                            ))
+                            self.alternatives.push({
+                                coords: co,
+                                color: el[6],
+                                name: el[5][0][1][0]
+                            })
+                        }
+                    })
+
                     self.coords = coords;
                     self.putLine(); 
                 })

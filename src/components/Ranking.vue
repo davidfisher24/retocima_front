@@ -28,11 +28,11 @@
         data: function() {
             return {
                 columns: [
-                    { value: 'rank', text: null, sortable:true,  },
-                    { value: 'image', text: null, type: 'image', sortable: false },
-                    { value: 'fullName', text: 'Nombre', sortable: true},
-                    { value: 'provinciaName', text: 'Provincia', sortable: true},
-                    { value: 'logros_count', text: 'Logros', sortable: true }
+                    { value: 'rank', text: null, sortable:true, mobile:true },
+                    { value: 'image', text: null, type: 'image', sortable: false,mobile:true },
+                    { value: 'fullName', text: 'Nombre', sortable: true ,mobile:true},
+                    { value: 'provinciaName', text: 'Provincia', sortable: true, mobile:false},
+                    { value: 'logros_count', text: 'Logros', sortable: true,mobile:true }
                 ],
                 title: "Ranking de cimeros",
                 defaultPagination: {
