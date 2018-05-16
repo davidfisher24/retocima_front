@@ -15,7 +15,7 @@
 		  	<v-flex><img src="@/assets/mapa-zonas.png" alt="iberias-map" style="max-width:100%;height:auto;"></v-flex>
 		  </v-flex>
 		</v-layout>
-		<ResponsablesCarousel :regions="regions"></ResponsablesCarousel>
+		<ResponsablesGallery :regions="regions"></ResponsablesGallery>
   </v-container>
 </template>
 
@@ -30,10 +30,10 @@
 </style>
 
 <script>
-    import ResponsablesCarousel from './ResponsablesCarousel'
+    import ResponsablesGallery from './ResponsablesGallery'
 	export default {
 		components: {
-			'ResponsablesCarousel' : ResponsablesCarousel,
+			'ResponsablesGallery' : ResponsablesGallery,
 		},
 		data () {
 			return {

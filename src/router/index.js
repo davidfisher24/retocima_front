@@ -50,12 +50,7 @@ const router = new Router({
     },
     // Static Pages
     {path: '/nosotros/:page', name: 'nosotros', component: Static},
-    {
-      path: '/',
-      name: 'home',
-      component: HomePage,
-      protected: true,
-    },
+    
     // Listado page
     {
       path: '/listado',
