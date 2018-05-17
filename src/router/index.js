@@ -210,8 +210,6 @@ router.beforeEach((to,from,next) => {
 
 /* Refreshes an expired token before continuing */
 router.beforeEach((to,from,next) => {
-  console.log(store.getters['user/loggedIn'])
-  console.log(store.getters['user/expiredToken'])
   if (store.getters['user/loggedIn'] && store.getters['user/expiredToken']) {
     store.dispatch('user/refresh').then(() => next())
     .catch(() => {
