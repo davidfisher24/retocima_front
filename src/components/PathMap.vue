@@ -93,7 +93,6 @@
                     var map = data.data;
 
                     map.forEach(function(el) {
-
                         if (el[5][0][1][0].indexOf('L') === 0) {
                             el[2][0][0].forEach(c => coords.push(
                                 {lat: c[0][0], lng: c[0][1]}
@@ -115,8 +114,8 @@
                             })
                         }
                     })
-
                     self.coords = coords;
+                    self.zoom = data.zoom;
                     self.putLine(); 
                 })
             },
@@ -126,14 +125,6 @@
             },
 
             getPathMapCenter(){
-                //ZOOM
-                if (this.iframe) {
-                    var sub = this.iframe.match("z=(.*)&")[0];
-                    var zoom = sub.replace("z=","").replace('&',"");
-                    this.zoom = Number(zoom)
-                }
-                // END ZOOM
-
                 if (this.coords.length === 1) {
                     return  {
                         lat: this.coords[0].lat,
