@@ -30,7 +30,7 @@ export const doLoginRequest = (store, { method, url, data, mutation, params }) =
 }
 
 /* Checks jwt */
-export const doAuthRequest = (store, { method, url, data, mutation, params, logout }) => {
+export const doAuthRequest = (store, { method, url, data, mutation, params, logout, callback }) => {
   return new Promise((resolve, reject) => {
     axios({
       method: method,
@@ -39,7 +39,8 @@ export const doAuthRequest = (store, { method, url, data, mutation, params, logo
       headers: {'Authorization': 'Bearer ' + localStorage.getItem('cimero-token') },
     }).then(response => {
       if(mutation) store.commit(mutation, {data: response.data, params: params})
-      resolve(response.data)
+      var data = callback ? callback(response.data) : response.data
+      resolve(data)
     }).catch(err => {
       // also need to redirect here in case of a 401
       // Although there are some form functions
@@ -63,6 +64,7 @@ export const doRefreshTokenRequest = (store) => {
       headers: {'Authorization': 'Bearer ' + localStorage.getItem('cimero-token')},
     }).then(response => {
       localStorage.setItem('cimero-token',response.data.token)
+      store.commit("refresh",response.data.token)
       resolve()
     }).catch(err => {
       localStorage.removeItem('cimero-token')

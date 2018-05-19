@@ -73,7 +73,8 @@
             calculateContainer () {
                 var w = document.getElementById('wrapper').parentElement.offsetWidth;
                 var h = document.getElementById('wrapper').parentElement.parentElement.parentElement.offsetHeight;
-                if (h<=30 || h > w) h = w;
+                //if (h<=30 || h > w) h = w;
+                h = w;
                 this.style = {
                     height: h + "px",
                     width: '100%'
