@@ -18,7 +18,8 @@
         <v-flex md6 xs12 sm12  v-for="(chunk,index) in chunkedCimas" :key="index" :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
           
           <v-list three-line class="primary--text py-0">
-            <CimaListData v-for="(cima, i) in chunk" :cima="cima" @route="route"></CimaListData>
+            <CimaListData v-if="!listType" v-for="(cima, i) in chunk" :cima="cima" @route="route"></CimaListData>
+            <CimaListDataB v-if="listType === 'B'" v-for="(cima, i) in chunk" :cima="cima" @route="route"></CimaListDataB>
           </v-list>
           <!-- Eliminadas o sustituidas block -->
             <div v-if="index === 1 && eliminatedCimas.length > 0">
@@ -28,7 +29,8 @@
                 </v-toolbar-title>
               </v-toolbar>
               <v-list three-line class="primary--text py-0" >
-                <CimaListData v-for="(cima, i) in eliminatedCimas" :cima="cima" @route="route"></CimaListData>
+                <CimaListData v-if="!listType" v-for="(cima, i) in eliminatedCimas" :cima="cima" @route="route"></CimaListData>
+                <CimaListDataB v-if="listType === 'B'" v-for="(cima, i) in eliminatedCimas" :cima="cima" @route="route"></CimaListDataB>
               </v-list>
             </div>
              <!-- Special cimas block -->
@@ -39,7 +41,8 @@
                 </v-toolbar-title>
               </v-toolbar>
               <v-list three-line class="primary--text py-0" >
-                <CimaListData v-for="(cima, i) in specialCimas" :cima="cima" @route="route"></CimaListData>
+                <CimaListData v-if="!listType" v-for="(cima, i) in specialCimas" :cima="cima" @route="route"></CimaListData>
+                <CimaListDataB v-if="listType === 'B'" v-for="(cima, i) in specialCimas" :cima="cima" @route="route"></CimaListDataB>
               </v-list>
             </div>
         </v-flex>
@@ -53,9 +56,10 @@
 
 import _ from 'lodash'
 import CimaListData from './CimaListData'
+import CimaListDataB from './CimaListDataB'
 export default {
 
-  props:['cimas','title', 'mapRoute'],
+  props:['cimas','title', 'mapRoute','listType'],
   data () {
     return {
       params: this.$route.params, 
@@ -64,6 +68,7 @@ export default {
 
   components: {
     'CimaListData' : CimaListData,
+    'CimaListDataB' : CimaListDataB
   },
 
   computed: {

@@ -75,7 +75,7 @@ Vue.use(Vuetify, {
     theme: '#44608c',
     primary: '#44608c',
     patanegra: '#000000',
-    extrema: '#FFA500',
+    extrema: '#f2791e',
     // Others //
     light: '#ADD8E6',
     secondary: '#666666',

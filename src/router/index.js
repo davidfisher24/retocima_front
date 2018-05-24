@@ -9,13 +9,11 @@ import HomePage from '@/components/HomePage'
 import Listado from '@/components/Listado'
 import Ranking from '@/components/Ranking'
 import Static from '@/components/Static/index'
-
 import PataNegra from '@/pages/PataNegra'
 import Extrema from '@/pages/Extrema'
 import Provincia from '@/pages/Provincia'
 
 // Components
-import CimaList from '@/components/CimaList'
 import Cima from '@/components/Cima'
 import CimaMap from '@/components/CimaMap'
 
