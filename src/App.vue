@@ -84,7 +84,7 @@
 
 
   
-    <v-toolbar class="primary" app style="z-index:1100;">
+    <v-toolbar class="theme" app style="z-index:1100;">
       <router-link :to="{ name: 'home'}">
         <img src="@/assets/icons/logowhite.png" height="38px" width="38px">
       </router-link>
@@ -130,7 +130,7 @@
       <router-view/>
     </v-content>
 
-    <v-footer color="primary" height="auto">
+    <v-footer color="theme" height="auto">
       <v-layout row class="white--text hidden-sm-and-down">
         <v-flex class="text-xs-center">
         Coordinadores <strong>Diego Agüero y Miguel Bernabe</strong> |

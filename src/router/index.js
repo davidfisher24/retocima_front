@@ -2,12 +2,17 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store'
 import scrollBehavior from './scrollBehavior'
+import applyTheming from './applyTheming'
 
 // Pages
 import HomePage from '@/components/HomePage'
 import Listado from '@/components/Listado'
 import Ranking from '@/components/Ranking'
 import Static from '@/components/Static/index'
+
+import PataNegra from '@/pages/PataNegra'
+import Extrema from '@/pages/Extrema'
+import Provincia from '@/pages/Provincia'
 
 // Components
 import CimaList from '@/components/CimaList'
@@ -67,17 +72,17 @@ const router = new Router({
     {
       path: '/provincia/:pid',
       name: 'provincia',
-      component: CimaList
+      component: Provincia
     },
     {
       path: '/patanegra',
       name: 'patanegra',
-      component: CimaList
+      component: PataNegra
     },
     {
       path: '/extrema',
       name: 'extrema',
-      component: CimaList
+      component: Extrema
     },
     // Provincia or pata negra with cima group page
     {
@@ -196,9 +201,17 @@ const router = new Router({
   ],
 })
 
+//THEMING
+
+
 /* Display the loading contain */
 router.beforeEach((to,from,next) => {
   store.commit('loading',true)
+  next()
+})
+
+router.beforeEach((to,from,next) => {
+  if (!from.name) applyTheming(to,this.a.app)
   next()
 })
 
@@ -291,8 +304,12 @@ router.beforeEach((to, from, next) => {
     })
   } else {
     next()
-
   }
+})
+
+router.beforeEach((to,from,next) => {
+  if (from.name) applyTheming(to,this.a.app)
+  next()
 })
 
 /* Turns off the loading container */

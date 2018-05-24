@@ -7,7 +7,7 @@
         <v-toolbar color="white" flat dense class="primary--text mb-3 ">
             <v-toolbar-title class="display-2">
                 <span><strong>Listado de cimas </strong> </span>
-                <span class="display-1">{{title}}</span>
+                <span class="display-1 theme--text">{{title}}</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items>
@@ -55,19 +55,9 @@ import _ from 'lodash'
 import CimaListData from './CimaListData'
 export default {
 
+  props:['cimas','title', 'mapRoute'],
   data () {
     return {
-      type: '',
-      cimas: null,
-      title: null,
-      map:false,
-      provinciaSectionHeaders: [
-        { value: 'codigo', text: 'Cdg',sortable: true },
-        { value: 'nombre', text: 'Nombre',sortable: true },
-        { value: 'logros_count', text: 'Logros',sortable: true },
-        { value: 'altitud', text: 'Altitud',sortable: true },
-        { text: 'Vertientes',sortable: false }
-      ],
       params: this.$route.params, 
     }
   },
@@ -90,26 +80,9 @@ export default {
      }
   },
 
-  watch: {
-    // REPEATED
-    '$route': function (route) {
-      this.$store.dispatch(route.params.dispatch,Number(route.params.pid)).then(cimas => {
-        this.cimas = cimas
-        this.title = route.params.title || this.cimas[0].provincia.nombre
-      });
-    }
-  },
-
-
-  mounted (){
-    // REPEATED
-    this.cimas = this.$route.params.cimas;
-    this.title = this.params.title || this.cimas[0].provincia.nombre
-  },
-
   methods: {
     changeMap() {
-      this.$router.push({name:this.params.map, params: {pid: this.$route.params.pid}});
+      this.$router.push(this.mapRoute)
     },
     route (cid) {
       // No idea why this doesn't work

@@ -71,15 +71,24 @@ Vue.use(Vuetify, {
     transitions
   },
   theme: {
+    // Principal Theming //
+    theme: '#44608c',
     primary: '#44608c',
+    patanegra: '#000000',
+    extrema: '#FFA500',
+    // Others //
     light: '#ADD8E6',
-    background: '#ebedf2',
     secondary: '#666666',
     accent: '#99560c',
     error: '#FF5252',
     info: '#F0E6DC',
     success: '#4CAF50',
-    warning: '#FFC107'
+    warning: '#FFC107',
+    // Background //
+    background: '#ebedf2',
+    primaryBackground: '#ebedf2',
+    patanegraBackground : '#d9d9d9',
+    extremaBackground: '#ffebcc',
   }
 })
 
