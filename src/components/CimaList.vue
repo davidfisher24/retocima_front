@@ -10,12 +10,14 @@
                 <span class="display-1 theme--text">{{title}}</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-toolbar-items>
+            <v-toolbar-items class="mr-0">
               <v-btn flat @click="changeMap()">MAPA</v-btn>
             </v-toolbar-items>
           </v-toolbar>
 
-        <v-flex md6 xs12 sm12  v-for="(chunk,index) in chunkedCimas" :key="index" :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
+        <v-flex xs12 sm12 v-for="(chunk,index) in chunkedCimas" :key="index" 
+        :class="[{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, },
+        {'md4': listType == 'B', 'md6' : listType != 'B' }]">
           
           <v-list three-line class="primary--text py-0">
             <CimaListData v-if="!listType" v-for="(cima, i) in chunk" :cima="cima" @route="route"></CimaListData>
@@ -73,7 +75,8 @@ export default {
 
   computed: {
      chunkedCimas () {
-        return _.chunk(this.cimas.filter(c => c.estado === 1),Math.ceil(this.cimas.length/2));
+        const divider = this.listType === 'B' ? Math.ceil(this.cimas.length/3) : Math.ceil(this.cimas.length/2)
+        return _.chunk(this.cimas.filter(c => c.estado === 1),divider);
      },
 
      eliminatedCimas () {

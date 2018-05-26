@@ -3,8 +3,8 @@
     <router-view></router-view><!-- remove for routing -->
     <l-map :zoom="getMapZoom()" :center="getMapCenter()" style="height:100%;width:100%;" v-if="mounted"> 
 
-     <v-marker-cluster v-if="addCimas">
-      <l-marker v-for="c in validcimas" :lat-lng="c.marker" :icon="icon" @click="route(c.id)">
+     <!--<v-marker-cluster v-if="addCimas">-->
+      <l-marker v-if="addCimas" v-for="c in validcimas" :lat-lng="c.marker" :icon="icon" @click="route(c.id)">
         <l-tooltip>
           <v-chip color="secondary" text-color="white" style="margin:0;padding:0;">
             <v-avatar class="accent">{{c.codigo}}</v-avatar>
@@ -12,7 +12,7 @@
           </v-chip>
         </l-tooltip>
       </l-marker>
-    </v-marker-cluster>
+    <!--</v-marker-cluster>-->
 
       <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
     </l-map>

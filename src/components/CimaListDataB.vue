@@ -2,23 +2,25 @@
 <div class="cima-list-b">
   <v-list-tile :key="cima.id" @click="$emit('route',cima.id)">
     <v-layout row>
-      <div class="mx-2 my-1">
+      <div class="mx-1 my-1">
         <Flag :id="cima.communidad_id"></Flag>
       </div>
       <v-flex>
-        <v-layout row class="ma-2">
+        <v-layout row class="mt-2">
           <p class="title">{{cima.communidad.nombre}}</p>
         </v-layout>
         <v-layout row>
-          <v-avatar color="primary" tile class="cima-avatar mx-2">
-            <span class="white--text">{{cima.codigo}}</span>
-          </v-avatar>
-          <p class="subheading">{{cima.nombre}}</p>
-        </v-layout>
-          <p class="subheading mx-2"><i>Ascensiones</i>&nbsp;&nbsp;
-            <span class="accent--text">{{cima.logros_count}}</span>
-          </p>
-        <v-layout row>
+          <div>
+            <v-avatar color="primary" tile class="cima-avatar mr-2">
+              <span class="white--text">{{cima.codigo}}</span>
+            </v-avatar>
+          </div>
+          <div>
+            <p class="subheading">{{cima.nombre}}</p>
+            <p class="subheading"><i>Ascensiones</i>&nbsp;&nbsp;
+              <span class="accent--text">{{cima.logros_count}}</span>
+            </p>
+          </div>
         </v-layout>
       </v-flex>
     </v-layout>
@@ -41,13 +43,5 @@ export default {
   components: {
     'Flag' : Flag,
   },
-  methods: {
-    vertientesList (cima) {
-      var text = ''
-      cima.vertientes.forEach(v => text += v.vertiente + ' - ')
-      return text.slice(0,-3)
-    },
-  },
-
 }
 </script>
