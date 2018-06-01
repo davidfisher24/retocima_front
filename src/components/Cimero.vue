@@ -69,7 +69,6 @@
             createMapData () {
                 var that = this;
                 var logros = _.groupBy(this.logros,"provincia_id")
-                console.log(logros)
                 this.provincias = this.provincias.map(x => {
                     x.total = x.active_cimas_count;
                     //x.completed = that.logros[x.id.toString()] ? that.logros[x.id.toString()].length : 0 ;
@@ -78,7 +77,6 @@
                     return x;
                 })
 
-                console.log(this.provincias)
 
                 this.communidads = this.communidads.map(x => {
                     x.total = x.active_cimas_count;

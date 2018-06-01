@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="dialog" scrollable max-width="500px">
     <a slot="activator" style="width:100%;display:block;">
-        <div v-for="provincia in provinciaGroup" v-if="provincia.completed > 0" :key="provincia.id"  @click="province = provincia.id">
+        <div v-for="provincia in provinciaGroup" v-if="provincia.completed > 0" :key="provincia.id"  @click="openProvince(provincia.id)">
             <v-layout>
                 <v-flex xs4 offset-xs1 class="primary--text">{{provincia.nombre}}</v-flex>
                 <v-flex xs7 class="primary--text">
@@ -12,7 +12,7 @@
         </div>
     </a>
 
-    <v-card v-if="province">
+    <v-card v-if="province" class="mt-4">
         <v-card-title class="title pb-0 primary--text">
             {{currentProvince.nombre}} {{currentProvince.completed}} / {{currentProvince.total}}
             <v-spacer></v-spacer>
@@ -62,7 +62,10 @@
 
     methods: {
         completed (cimaId) {
-            return this.logros[this.province.toString()].find(l => l.cima_id === cimaId)
+            return this.logros.find(l => l.cima_id == cimaId)
+        },
+        openProvince (provinciaId) {
+            this.province = provinciaId
         }
     }
     
