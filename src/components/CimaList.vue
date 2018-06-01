@@ -15,9 +15,9 @@
             </v-toolbar-items>
           </v-toolbar>
 
-        <v-flex xs12 sm12 v-for="(chunk,index) in chunkedCimas" :key="index" 
+        <v-flex xs12 v-for="(chunk,index) in chunkedCimas" :key="index" 
         :class="[{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, },
-        {'md4': listType == 'B', 'md6' : listType != 'B' }]">
+        {'sm4': listType == 'B', 'md6' : listType != 'B' }]">
           
           <v-list three-line class="primary--text py-0">
             <CimaListData v-if="!listType" v-for="(cima, i) in chunk" :cima="cima" @route="route"></CimaListData>

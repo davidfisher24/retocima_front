@@ -1,7 +1,7 @@
 <template>
   <v-layout row wrap>
     <v-flex xs12 md4 v-for="chunk,i in chunks">
-      <v-list dense class="py-0 mx-2 simple-table-block">
+      <v-list dense :class="['py-0', 'mx-2', 'simple-table-block', {'simple-table-end' : i + 1 === chunks.length}]">
         <div class="simple-table-header my-0" v-if="$vuetify.breakpoint.mdAndUp || $vuetify.breakpoint.smAndDown && i == 0">
           <v-layout class="primary--text title">
             <v-flex xs2 class="text-xs-left  simple-table-header-cell"></v-flex>
@@ -13,7 +13,9 @@
               <v-list-tile-title>
                 <v-layout class="simple-table-row primary--text body-1 py-1 px-2">
                   <v-flex xs2 class="text-xs-left pl-1">{{(j + 1 + (i * Math.ceil(data.length/3)))}}</v-flex>
-                  <v-flex xs9><p style="text-transform:uppercase;text-overflow: hidden;" class="pr-2">{{d.fullName}}</p></v-flex>
+                  <v-flex xs9 style="overflow: hidden;">
+                  <img :src="icon" v-if="d.logros_count == challengeLength" style="width:100%;max-width:25px;height:auto;float:left">
+                  <p style="text-transform:uppercase;" class="pr-2">{{d.fullName}}</p></v-flex>
                   <v-flex xs1 class="text-xs-center pr-1">{{d.logros_count}}</v-flex>
                 </v-layout>
                 </v-list-tile-title>
@@ -30,7 +32,7 @@
     import _ from 'lodash'
 
     export default {
-      props: ["data","icon"],
+      props: ["data","icon","challengeLength"],
         data: function() {
             return {
       
@@ -60,10 +62,8 @@
 </script>
 
 <style  scoped>
-
-    /*.simple-table-row {border-left: 0.5px solid #666 !important; border-right: 0.5px solid #666 !important;}*/
-    .simple-table-block {border-right: 1px solid #666 !important;border-left: 1px solid #666 !important;}
-    /*.simple-table-block:last-of-type {border-bottom: 1px solid #666 !important;}*/
+    .simple-table-block {border-right: 1px solid #666 !important;border-left: 1px solid #666 !important; }
+    .simple-table-end {border-bottom:1px solid #666;}
     .simple-table-header {border-bottom: 1px solid #666 !important;border-top: 1px solid #666 !important;}
     .simple-table-header-cell:not(:first-of-type) {border-left: 1px solid #666 !important;}
 </style>
