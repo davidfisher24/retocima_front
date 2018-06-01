@@ -209,7 +209,7 @@ router.beforeEach((to,from,next) => {
 })
 
 router.beforeEach((to,from,next) => {
-  if (!from.name) applyTheming(to,this.a.app)
+  if (!from.name && this.a) applyTheming(to,this.a.app)
   next()
 })
 
@@ -306,7 +306,7 @@ router.beforeEach((to, from, next) => {
 })
 
 router.beforeEach((to,from,next) => {
-  if (from.name) applyTheming(to,this.a.app)
+  if (from.name && this.a) applyTheming(to,this.a.app)
   next()
 })
 

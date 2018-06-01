@@ -62,7 +62,8 @@
 
         computed: {
           validcimas () {
-            return this.cimas.filter(c => c.latitude != 0 && c.longitude != 0);
+            this.cimas.forEach(c => console.log(c.latitude + " " + c.longitude))
+            return this.cimas.filter(c => c.latitude && c.latitude != 0 && c.longitude && c.longitude != 0);
           },
           icon () {
             return L.icon({
