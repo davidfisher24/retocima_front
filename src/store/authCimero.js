@@ -1,4 +1,4 @@
-import { doAuthRequest, doLoginRequest, doRefreshTokenRequest } from './requests'
+import { doAuthRequest, doLoginRequest, doRefreshTokenRequest, doRequest } from './requests'
 import jwt_decode from 'jwt-decode'
 
 export default {
@@ -141,6 +141,7 @@ export default {
       });
     },
 
+
     login (store, creds) {
       return doLoginRequest(store, {
           method: 'post',
@@ -156,6 +157,14 @@ export default {
           url: 'auth/register',
           data: creds,
           mutation: 'loggedIn',
+      });
+    },
+
+    forgotPassword (store, creds) {
+      return doRequest(store, {
+          method: 'post',
+          url: 'forgot-password',
+          data: creds,
       });
     },
 

@@ -124,10 +124,23 @@
       </span>
     </v-toolbar>
 
+    <!-- Pop up dialogs -->
     <v-content class="background">
-    <v-dialog :value='showLogin' persistant><login @close="showLogin = false"></login></v-dialog>
+      <v-dialog :value='showLogin'>
+      <login 
+        v-click-outside="hideModals"
+        @close="hideModals"
+        @forgotPassword="showLogin = false, showForgotPassword = true"
+      ></login>
+      </v-dialog>
+      <v-dialog :value='showForgotPassword'>
+      <forgotPassword 
+        v-click-outside="hideModals"
+        @closeForgotPassword="showForgotPassword = false, showLogin = true"
+      ></forgotPassword>
+      </v-dialog>
       <v-progress-circular v-if="loading" indeterminate color="primary" :size="70"  style="position:fixed;bottom:3%;right:3%;z-index:1000;"></v-progress-circular>
-      <router-view/>
+        <router-view/>
     </v-content>
 
     <v-footer color="theme" height="auto">
@@ -153,19 +166,23 @@
 <script>
 
 import login from './components/Forms/Login'
+import forgotPassword from './components/Forms/ForgotPassword'
 import Button from './components/Button'
 import { mapGetters } from 'vuex';
 
 export default {
   components: {
     'login': login,
+    'forgotPassword' : forgotPassword,
     'Button': Button
   },
   data () {
     return {
       drawer: false,
-      preventDrawerClose: false,
+      drawerTracker: false,
       showLogin: false,
+      showForgotPassword: false,
+      preventDrawerClose: false,
       menu: false,
       routes: [
         {text: "nosotros", menu: [
@@ -212,6 +229,58 @@ export default {
       if (page === 'logout') return this.logout();
       this.$router.push({name: page, params: params});
     },
+    hideModals () {
+      this.showLogin = false;
+      this.showForgotPassword = false;
+    },
+    temporarilyHideDrawer (val) {
+      if (val && this.drawer) {
+        this.drawerTracker = true;
+        this.drawer = false;
+      }
+      if (!val && this.drawerTracker) {
+        this.drawerTracker = false
+        this.drawer = true;
+      }
+    }
+  },
+
+  watch: {
+    showLogin (val) {
+      this.temporarilyHideDrawer(val)
+    },
+    showForgotPassword (val) {
+      this.temporarilyHideDrawer(val)
+    }
+  },
+
+  directives: {
+    'click-outside': {
+      bind: function(el, binding, vNode) {
+        if (typeof binding.value !== 'function') {
+          const compName = vNode.context.name
+          let warn = `[Vue-click-outside:] provided expression '${binding.expression}' is not a function, but has to be`
+          if (compName) { warn += `Found in component '${compName}'` }
+          
+          console.warn(warn)
+        }
+        const bubble = binding.modifiers.bubble
+        const handler = (e) => {
+          if (bubble || (!el.contains(e.target) && el !== e.target)) {
+            binding.value(e)
+          }
+        }
+        el.__vueClickOutside__ = handler
+
+        document.addEventListener('click', handler)
+      },
+      
+      unbind: function(el, binding) {
+        document.removeEventListener('click', el.__vueClickOutside__)
+        el.__vueClickOutside__ = null
+
+      }
+    }
   }
 }
 </script>

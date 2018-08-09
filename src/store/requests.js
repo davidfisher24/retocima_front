@@ -1,14 +1,24 @@
 import axios from 'axios';
 
 
-export const doRequest = (store, { url, mutation, params, resolveMutation, callback }) => {
+export const doRequest = (store, { url, method, mutation, params, data, resolveMutation, callback }) => {
   return new Promise((resolve, reject) => {
-    axios.get(process.env.API_URL + url).then(function (response) {
+    /*axios.get(process.env.API_URL + url).then(function (response) {
       if (mutation) store.commit(mutation, {data: response.data, params: params})
       var data = callback ? callback(response.data) : response.data
       resolve(data)
     }).catch(err => {
-      // Change page depending where we are
+      reject(err.response.data)
+    })*/
+    axios({
+      method: method ? method : 'get',
+      url: process.env.API_URL + url,
+      data: data ? data : null
+    }).then(response => {
+      if (mutation) store.commit(mutation, {data: response.data, params: params})
+      var data = callback ? callback(response.data) : response.data
+      resolve(data)
+    }).catch(err => {
       reject(err.response.data)
     })
   })

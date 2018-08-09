@@ -39,6 +39,7 @@
             </v-alert>
             <v-card-actions>
               <v-btn flat @click="submit" :disabled="!valid">Entrar</v-btn>
+              <v-btn flat @click="forgotPassword">He Olvidado mi contraseña</v-btn>
             </v-card-actions>
           </v-card-text>
         </v-flex>
@@ -78,6 +79,9 @@ export default {
         });
       }
     },
+    forgotPassword(){
+      this.$emit('forgotPassword',null)
+    }
   },
 }
 </script>
