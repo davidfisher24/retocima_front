@@ -5,26 +5,44 @@
         <v-flex>
           <v-card hover>
             <v-flex>
-              <v-card-title>He olvidado mi contraseña
-                <v-spacer></v-spacer>
-                <v-btn small icon @click="$emit('closeForgotPassword',null)">
-                  <v-icon>close</v-icon>
-                </v-btn>
-              </v-card-title>
+              <v-card-title>Escoger nueva contraseña</v-card-title>
             </v-flex>
             <v-flex>
+              
               <v-card-text>
                 <v-progress-linear :indeterminate="true" color="primary" v-if="disabled"></v-progress-linear>
                 <v-form v-model="valid" ref="form" lazy-validation>
                   <v-layout>
                     <v-flex xs12 class="px-1">
                       <v-text-field
-                        label="Correo Electronico"
+                        label="Confirmar Correo Electronico"
                         v-model="model.email"
                         :rules="rules.email"
                         required
                         @change="alert = false"
                         :disabled="disabled"
+                      ></v-text-field>
+                      <v-text-field
+                        label="Contrasena Nueva"
+                        v-model="model.password"
+                        :rules="rules.password"
+                        required
+                        @change="alert = false"
+                        :disabled="disabled"
+                        :type="newIcon ? 'password' : 'text'"
+                        :append-icon="newIcon ? 'visibility' : 'visibility_off'"
+                        :append-icon-cb="() => (newIcon = !newIcon)"
+                      ></v-text-field>
+                      <v-text-field
+                        label="Confirmar Contrasena Nueva"
+                        v-model="model.password_confirmation"
+                        :rules="rules.password_confirmation"
+                        required
+                        @change="alert = false"
+                        :disabled="disabled"
+                        :type="confirmIcon ? 'password' : 'text'"
+                        :append-icon="confirmIcon ? 'visibility' : 'visibility_off'"
+                        :append-icon-cb="() => (confirmIcon = !confirmIcon)"
                       ></v-text-field>
                       </v-flex>
                   </v-layout>
@@ -52,12 +70,18 @@ export default {
     return {
       model: {
         email: '',
+        password: '',
+        password_confirmation: '',
+        token: this.$route.params.token,
       },
       rules: rules,
       valid: true,
       disabled:false,
       alert: false,
       alertMessage: [],
+      oldIcon: true,
+      newIcon: true,
+      confirmIcon: true,
     }
   },
 
@@ -66,9 +90,9 @@ export default {
       var self = this;
       if (this.$refs.form.validate()) {
         self.disabled = true;
-        this.$store.dispatch("user/forgotPassword",this.model).then(() =>{
-          this.$store.dispatch('showGlobalAlert',{type: 'success', message: 'Has recibido un correo electronico para resetear tu contraseña.'})
-          this.$emit('closeAll',null)
+        this.$store.dispatch("user/resetPassword",this.model).then(() =>{
+          this.$router.push({name: 'home'});
+          this.$store.dispatch('showGlobalAlert',{type: 'success', message: 'Contraseña ha sido reseteado con éxito.'})
         }).catch(err => {
           self.alertMessage = [];
           for (var key in err.errors) self.alertMessage.push(err.errors[key]);

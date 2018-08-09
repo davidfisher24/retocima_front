@@ -168,6 +168,14 @@ export default {
       });
     },
 
+    resetPassword (store, creds) {
+      return doRequest(store, {
+          method: 'post',
+          url: 'reset-password',
+          data: creds,
+      });
+    },
+
     logout (store) {
       store.commit('loggedOut');
       return true

@@ -72,6 +72,7 @@ export default {
       if (this.$refs.form.validate()) {
         this.$store.dispatch("user/login", this.model).then(data => {
           this.disabled = false
+          this.$store.dispatch('showGlobalAlert',{type: 'success', message: 'Sesion iniciado'})
           this.$emit('close',null)
         }).catch(err => {
           this.alert = true

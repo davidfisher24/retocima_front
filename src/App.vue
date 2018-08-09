@@ -82,6 +82,15 @@
     </v-list>
     </v-navigation-drawer>
 
+    <!-- Global Alert -->
+    <v-alert
+      :value="globalAlert.show"
+      :type="globalAlert.type"
+      transition="scale-transition"
+      dismissible
+      style="position:fixed;left:10px;bottom:50px;z-index:2000;"
+    > {{globalAlert.message}}
+    </v-alert>
 
   
     <v-toolbar class="theme" app style="z-index:1100;">
@@ -137,6 +146,7 @@
       <forgotPassword 
         v-click-outside="hideModals"
         @closeForgotPassword="showForgotPassword = false, showLogin = true"
+        @closeAll="showForgotPassword = false, showLogin = false"
       ></forgotPassword>
       </v-dialog>
       <v-progress-circular v-if="loading" indeterminate color="primary" :size="70"  style="position:fixed;bottom:3%;right:3%;z-index:1000;"></v-progress-circular>
@@ -184,6 +194,7 @@ export default {
       showForgotPassword: false,
       preventDrawerClose: false,
       menu: false,
+
       routes: [
         {text: "nosotros", menu: [
           {text:"Bases", route:"nosotros", params:{"page": "bases"}},
@@ -216,6 +227,7 @@ export default {
       loggedIn: 'user/loggedIn',
       loggedInUser: 'user/loggedInUser',
       loading: 'loading',
+      globalAlert: 'globalAlert'
     }),
   },
 
@@ -251,6 +263,9 @@ export default {
     },
     showForgotPassword (val) {
       this.temporarilyHideDrawer(val)
+    },
+    globalAlert (alert) {
+      if (alert.show) setTimeout(() => this.$store.dispatch('closeGlobalAlert',null),4000)
     }
   },
 

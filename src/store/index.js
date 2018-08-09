@@ -22,6 +22,11 @@ const store = new Vuex.Store({
 
   state: {
     loading: false,
+    globalAlert:{
+      show:false,
+      message: '',
+      type: 'success'
+    },
     discover: null,
     listado: null,
     cimeros: [],
@@ -32,11 +37,28 @@ const store = new Vuex.Store({
     loading: state => {
       return state.loading
     },
+    globalAlert: state => {
+      return state.globalAlert
+    },
   },
 
   mutations: {
     loading (state, status) {
       state.loading = status;
+    },
+    showGlobalAlert (state, {type, message}) {
+      state.globalAlert = {
+        show: true,
+        message: message,
+        type: type,
+      }
+    },
+    closeGlobalAlert (state) {
+      state.globalAlert = {
+        show: false,
+        message: '',
+        type: 'success',
+      }
     },
     discover (state, {data, params}) {
       state.discover = data
@@ -53,6 +75,17 @@ const store = new Vuex.Store({
   },
 
   actions: {
+    showGlobalAlert (context, {type, message}) {
+      this.commit('showGlobalAlert',{
+        type: type,
+        message: message,
+      })
+    },
+    
+    closeGlobalAlert (context) {
+      this.commit('closeGlobalAlert',{})
+    },
+
     discover(context) {
       if (this.state.discover) return this.state.discover
       return doRequest(store, {

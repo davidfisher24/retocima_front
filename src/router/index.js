@@ -26,6 +26,7 @@ import EditAccount from '@/components/Forms/EditAccount'
 import UpdatePassword from '@/components/Forms/UpdatePassword'
 
 import Register from '@/components/Forms/Register'
+import ResetPassword from '@/components/Forms/ResetPassword'
 
 const protectedRoutes = [
   'user-logros', 'user-charts', 'user-provincia', 'user-edit', 'user-update-password'
@@ -164,7 +165,12 @@ const router = new Router({
       name: 'register',
       component: Register
     },
-
+    // Reset password form
+    {
+      path: '/reset-password/:token',
+      name: 'reset-password',
+      component: ResetPassword
+    },
 
     // CUENTA //
     {
