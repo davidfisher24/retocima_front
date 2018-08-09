@@ -35,7 +35,7 @@
               ></v-text-field>
             </v-form>
             <v-alert outline color="error" icon="warning" :value="alert">
-              Estos credenciales no son correctos
+              Correo electronico o contraseña no son correctos
             </v-alert>
             <v-card-actions>
               <v-btn flat @click="submit" :disabled="!valid">Entrar</v-btn>

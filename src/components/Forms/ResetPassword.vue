@@ -93,9 +93,9 @@ export default {
         this.$store.dispatch("user/resetPassword",this.model).then(() =>{
           this.$router.push({name: 'home'});
           this.$store.dispatch('showGlobalAlert',{type: 'success', message: 'Contraseña ha sido reseteado con éxito.'})
+          this.disabled = false;
         }).catch(err => {
-          self.alertMessage = [];
-          for (var key in err.errors) self.alertMessage.push(err.errors[key]);
+          self.alertMessage = err.message;
           self.alert = true;
           self.disabled = false;
         })

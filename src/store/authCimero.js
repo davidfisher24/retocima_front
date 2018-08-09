@@ -178,6 +178,7 @@ export default {
 
     logout (store) {
       store.commit('loggedOut');
+      store.dispatch('showGlobalAlert',{type: 'success', message: 'Sesion cerrado'}, { root: true })
       return true
     },
 

@@ -68,10 +68,10 @@ export default {
         self.disabled = true;
         this.$store.dispatch("user/forgotPassword",this.model).then(() =>{
           this.$store.dispatch('showGlobalAlert',{type: 'success', message: 'Has recibido un correo electronico para resetear tu contraseña.'})
+          self.disabled = false;
           this.$emit('closeAll',null)
         }).catch(err => {
-          self.alertMessage = [];
-          for (var key in err.errors) self.alertMessage.push(err.errors[key]);
+          self.alertMessage = err.message;
           self.alert = true;
           self.disabled = false;
         })
