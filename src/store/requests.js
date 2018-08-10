@@ -3,13 +3,6 @@ import axios from 'axios';
 
 export const doRequest = (store, { url, method, mutation, params, data, resolveMutation, callback }) => {
   return new Promise((resolve, reject) => {
-    /*axios.get(process.env.API_URL + url).then(function (response) {
-      if (mutation) store.commit(mutation, {data: response.data, params: params})
-      var data = callback ? callback(response.data) : response.data
-      resolve(data)
-    }).catch(err => {
-      reject(err.response.data)
-    })*/
     axios({
       method: method ? method : 'get',
       url: process.env.API_URL + url,
@@ -52,12 +45,8 @@ export const doAuthRequest = (store, { method, url, data, mutation, params, logo
       var data = callback ? callback(response.data) : response.data
       resolve(data)
     }).catch(err => {
-      // also need to redirect here in case of a 401
-      // Although there are some form functions
       if (logout) {
-        // This won't work
         store.commit("loggedOut")
-        // redirect
       } else {
         reject(err.response.data)
       }
@@ -78,6 +67,7 @@ export const doRefreshTokenRequest = (store) => {
       resolve()
     }).catch(err => {
       localStorage.removeItem('cimero-token')
+      store.commit("loggedOut")
       reject()
     })
   })
