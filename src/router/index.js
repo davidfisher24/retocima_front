@@ -12,6 +12,7 @@ import Static from '@/components/Static/index'
 import PataNegra from '@/pages/PataNegra'
 import Extrema from '@/pages/Extrema'
 import Provincia from '@/pages/Provincia'
+import NotFound404 from '@/pages/NotFound404'
 
 // Components
 import Cima from '@/components/Cima'
@@ -54,7 +55,7 @@ const router = new Router({
     },
     // Static Pages
     {path: '/nosotros/:page', name: 'nosotros', component: Static},
-    
+
     // Listado page
     {
       path: '/listado',
@@ -201,7 +202,10 @@ const router = new Router({
       path: '/cuenta/update-password',
       name: 'user-update-password',
       component: UpdatePassword
-    }
+    },
+
+    // Clean up 404
+    {path: '*', name: '404', component: NotFound404},
   ],
 })
 
