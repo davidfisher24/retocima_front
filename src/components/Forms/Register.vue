@@ -192,6 +192,7 @@ export default {
       if (this.$refs.form.validate()) {
         self.disabled = true;
         this.$store.dispatch("user/register", this.model).then(() => {
+          this.$store.dispatch('showGlobalAlert',{type: 'success', message: 'Cuenta creado con exito.'})
           self.$router.push({name:"home"});
         }).catch(err => {
           self.alertMessage = [];
