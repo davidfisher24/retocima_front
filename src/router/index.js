@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from '../store'
 import scrollBehavior from './scrollBehavior'
-import applyTheming from './applyTheming'
 
 // Pages
 import HomePage from '@/components/HomePage'
@@ -218,10 +217,6 @@ router.beforeEach((to,from,next) => {
   next()
 })
 
-router.beforeEach((to,from,next) => {
-  if (!from.name && this.a) applyTheming(to,this.a.app)
-  next()
-})
 
 /* Checks to protect pages if no logged in user */
 router.beforeEach((to,from,next) => {
@@ -315,10 +310,6 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-router.beforeEach((to,from,next) => {
-  if (from.name && this.a) applyTheming(to,this.a.app)
-  next()
-})
 
 /* Turns off the loading container */
 router.afterEach((to, from) => {

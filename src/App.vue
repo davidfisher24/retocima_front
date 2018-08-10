@@ -179,6 +179,7 @@ import login from './components/Forms/Login'
 import forgotPassword from './components/Forms/ForgotPassword'
 import Button from './components/Button'
 import { mapGetters } from 'vuex';
+import applyTheming from './applyTheming'
 
 export default {
   components: {
@@ -266,6 +267,9 @@ export default {
     },
     globalAlert (alert) {
       if (alert.show) setTimeout(() => this.$store.dispatch('closeGlobalAlert',null),4000)
+    },
+    '$route.name' (name) {
+      applyTheming(name,this.$vuetify)
     }
   },
 
