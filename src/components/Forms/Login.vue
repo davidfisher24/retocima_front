@@ -38,8 +38,8 @@
               Correo electronico o contraseña no son correctos
             </v-alert>
             <v-card-actions>
-              <v-btn flat @click="submit" :disabled="!valid">Entrar</v-btn>
-              <v-btn flat @click="forgotPassword">He Olvidado mi contraseña</v-btn>
+              <v-btn flat @click="submit" :disabled="!valid || disabled">Entrar</v-btn>
+              <v-btn flat @click="forgotPassword" :disabled="disabled">He Olvidado mi contraseña</v-btn>
             </v-card-actions>
           </v-card-text>
         </v-flex>

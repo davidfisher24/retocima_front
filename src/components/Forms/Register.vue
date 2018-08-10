@@ -10,6 +10,7 @@
             <v-flex>
               
               <v-card-text>
+                <v-progress-linear :indeterminate="true" color="primary" v-if="disabled"></v-progress-linear>
                 <v-form v-model="valid" ref="form" lazy-validation>
                   <v-layout>
                     <v-flex xs6 md12 class="px-1">
@@ -116,7 +117,7 @@
                   <span v-for="message in alertMessage">{{message}}</span>
                 </v-alert>
                 <v-card-actions>
-                  <v-btn flat @click="submit" :disabled="!valid">Dar Se Alta</v-btn>
+                  <v-btn flat @click="submit" :disabled="!valid || disabled">Dar Se Alta</v-btn>
                 </v-card-actions>
               </v-card-text>
             </v-flex>

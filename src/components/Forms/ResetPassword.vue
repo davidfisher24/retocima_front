@@ -51,7 +51,7 @@
                   <span v-for="message in alertMessage">{{message}}</span>
                 </v-alert>
                 <v-card-actions>
-                  <v-btn flat @click="submit" :disabled="!valid">Enviar</v-btn>
+                  <v-btn flat @click="submit" :disabled="!valid || disabled">Enviar</v-btn>
                 </v-card-actions>
               </v-card-text>
             </v-flex>
