@@ -75,28 +75,44 @@
           }
         },
 
-        async mounted () {
+        mounted () {
+          this.mountOrRemount();  
+        },
 
-            this.cimas = this.$route.params.cimas;
-            this.cimas.forEach(c => {c.marker = L.latLng(c.longitude, c.latitude)});
-
-            let position = await this.$store.dispatch('mapPositions/checkPosition',this.getRouteLogName())
-            if (position) {
-              this.zoom = position.zoom
-              this.center = position.center
-            } else {
-              this.center = this.getMapCenter()
-              this.zoom = this.getMapZoom()
+        watch:{
+            $route (to, from){
+                this.mountOrRemount();  
+            },
+            "center.lat"(val){
+              this.logCurrentMapPosition()
+            },
+            zoom(){
+              this.logCurrentMapPosition()
             }
-          
-            
-            this.mounted = true
-
-            var that = this;
-            window.setTimeout(function() {that.addCimas = true}, 50) 
         },
 
         methods: {
+
+            async mountOrRemount() {
+              this.cimas = this.$route.params.cimas;
+              this.cimas.forEach(c => {c.marker = L.latLng(c.longitude, c.latitude)});
+
+              let position = await this.$store.dispatch('mapPositions/checkPosition',this.getRouteLogName())
+              if (position) {
+                this.zoom = position.zoom
+                this.center = position.center
+              } else {
+                this.center = this.getMapCenter()
+                this.zoom = this.getMapZoom()
+              }
+            
+              
+              this.mounted = true
+
+              var that = this;
+              window.setTimeout(function() {that.addCimas = true}, 50) 
+            },
+
             getMapCenter(){
                 if (this.center) return this.center;
                 var lats = this.getLats();
@@ -126,8 +142,6 @@
 
 
             route (id) {
-              this.logCurrentMapPosition()
-              
               if (this.$route.name === 'cima-map') this.$router.push({name: 'map-cima', params: {id: id}});
               else if (this.$route.name === 'provincia-map') this.$router.push({name: 'provincia-cima', params: {pid: this.$route.params.pid, cid: id}});
               else if (this.$route.name === 'patanegra-map') this.$router.push({name: 'patanegra-cima', params: {cid: id}});
