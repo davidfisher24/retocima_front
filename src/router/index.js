@@ -33,8 +33,8 @@ const protectedRoutes = [
 ]
 
 const lists = {
-  patanegra: {dispatch: "cimas/patanegra", title: "Pata Negra", center: {lat: 40.416775, lng: -3.703790}, zoom: 6, map: "patanegra-map", cima: "patanegra-cima"},
-  extrema: {dispatch: "cimas/extrema", title: "Escalador Extrema", center: {lat: 40.416775, lng: -3.703790}, zoom: 6, map: "extrema-map", cima: "extrema-cima"},
+  patanegra: {dispatch: "cimas/patanegra", title: "Pata Negra",  map: "patanegra-map", cima: "patanegra-cima"},
+  extrema: {dispatch: "cimas/extrema", title: "Escalador Extrema", map: "extrema-map", cima: "extrema-cima"},
   provincia: {dispatch: "cimas/provincias", map: "provincia-map", cima: "provincia-cima"},
 }
 
@@ -104,49 +104,28 @@ const router = new Router({
       path: '/mapa',
       name: 'cima-map',
       component: CimaMap,
-      children: [
-        {
-          path: '/cima/:cid',
-          name: 'map-cima',
-          component: Cima
-        }
-      ]
     },
+    {
+      path: '/mapa/cima',
+      name: 'map-cima',
+      component: Cima,
+    },
+
+
     {
       path: '/provincia-mapa/:pid',
       name: 'provincia-map',
       component: CimaMap,
-      children: [
-        {
-          path: '/provincia/:pid/:cid',
-          name: 'provincia-cima',
-          component: Cima
-        }
-      ]
     },
     {
       path: '/patanegra-mapa',
       name: 'patanegra-map',
       component: CimaMap,
-      children: [
-        {
-          path: '/patanegra/cima/:cid',
-          name: 'patanegra-cima',
-          component: Cima
-        }
-      ]
     },
     {
       path: '/extrema-mapa',
       name: 'extrema-map',
       component: CimaMap,
-      children: [
-        {
-          path: '/extrema/cima/:cid',
-          name: 'extrema-cima',
-          component: Cima
-        }
-      ]
     },
     // Ranking table with cimero child
     {
@@ -271,8 +250,6 @@ router.beforeEach((to, from, next) => {
   } else if (to.name === 'cima-map') {
     store.dispatch('cimas/markers').then(cimas => {
       to.params.cimas = cimas
-      to.params.center = {lat: 40.416775, lng: -3.703790}
-      to.params.zoom = 6
       next()
     })
   } else if (to.name === "cimero") {

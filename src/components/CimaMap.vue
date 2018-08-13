@@ -1,7 +1,7 @@
 <template> 
 <div style="width:100%;height:100%">
-    <router-view></router-view><!-- remove for routing -->
-    <l-map :zoom="getMapZoom()" :center="getMapCenter()" style="height:100%;width:100%;" v-if="mounted"> 
+    <!--<router-view></router-view>--><!-- remove for routing -->
+    <l-map :zoom.sync="zoom" :center.sync="center" style="height:100%;width:100%;" v-if="mounted"> 
 
      <!--<v-marker-cluster v-if="addCimas">-->
       <l-marker v-if="addCimas" v-for="c in validcimas" :lat-lng="c.marker" :icon="icon" @click="route(c.id)">
@@ -57,6 +57,8 @@
                 attribution:'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
                 mounted: false,
                 addCimas: false,
+                center: null,
+                zoom: null,
             };
         },
 
@@ -73,11 +75,21 @@
           }
         },
 
-        mounted () {
-            if (this.$route.params.center) this.center = this.$route.params.center; 
-            if (this.$route.params.zoom) this.zoom = this.$route.params.zoom;
+        async mounted () {
+
             this.cimas = this.$route.params.cimas;
-            this.cimas.forEach(c => {c.marker = L.latLng(c.longitude, c.latitude)}),
+            this.cimas.forEach(c => {c.marker = L.latLng(c.longitude, c.latitude)});
+
+            let position = await this.$store.dispatch('mapPositions/checkPosition',this.getRouteLogName())
+            if (position) {
+              this.zoom = position.zoom
+              this.center = position.center
+            } else {
+              this.center = this.getMapCenter()
+              this.zoom = this.getMapZoom()
+            }
+          
+            
             this.mounted = true
 
             var that = this;
@@ -114,12 +126,26 @@
 
 
             route (id) {
-              // Same as province. Can we do anything?
+              this.logCurrentMapPosition()
+              
               if (this.$route.name === 'cima-map') this.$router.push({name: 'map-cima', params: {id: id}});
               else if (this.$route.name === 'provincia-map') this.$router.push({name: 'provincia-cima', params: {pid: this.$route.params.pid, cid: id}});
               else if (this.$route.name === 'patanegra-map') this.$router.push({name: 'patanegra-cima', params: {cid: id}});
               else if (this.$route.name === 'extrema-map') this.$router.push({name: 'extrema-cima', params: {cid: id}});
             },
+
+            getRouteLogName () {
+              const name = this.$route.name ==='provincia-map' ? 
+              this.$route.name + "-" + this.$route.params.pid : 
+              this.$route.name
+              return name
+            },
+
+            logCurrentMapPosition () {
+              this.$store.dispatch('mapPositions/updatePosition',{
+                name:this.getRouteLogName(),center:this.center,zoom:this.zoom
+              })
+            }
         },
     }
 
