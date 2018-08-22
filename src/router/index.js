@@ -273,7 +273,7 @@ router.beforeEach((to, from, next) => {
     var promise1 = store.dispatch('user/provinceLogros',to.params.pid)
     var promise2 = store.dispatch('cimas/provinciaNames',to.params.pid)
     var promise3 = store.dispatch('provincias/one',to.params.pid)
-    //var promise4 = store.dispatch('provinciaLogros',to.params.pid)
+    var promise4 = store.dispatch('logros/provincia',to.params.pid)
 
     Promise.all([promise1,promise2,promise3/*,promise4*/]).then(data => {
       to.params.logros = data[0]

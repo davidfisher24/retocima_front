@@ -8,6 +8,7 @@ import authCimero from './authCimero'
 import provincias from './provincias'
 import paises from './paises'
 import rankings from './rankings'
+import logros from './logros'
 import mapPositions from './mapPositions'
 
 Vue.use(Vuex)
@@ -19,6 +20,7 @@ const store = new Vuex.Store({
     'provincias' : provincias,
     'paises' : paises,
     'rankings' : rankings,
+    'logros' : logros,
     'mapPositions' : mapPositions,
   },
 

@@ -1,7 +1,8 @@
 import { doRequest } from './requests'
 
 export default {
-
+  namespaced: true,
+  
   state: {
   },
 
@@ -13,7 +14,7 @@ export default {
   },
 
   actions: {
-    provinciaLogros (store,id) {
+    provincia (store,id) {
       return doRequest(store, {
           url: 'logros/province/' + id,
       });
