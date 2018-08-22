@@ -21,12 +21,14 @@
                         </v-flex>
                         <v-flex xs12 md6>
                           <v-list-tile-title class="headline primary--text text-xs-right">
-                            {{logros.length}} completas | {{activeCimas.length}} total
+                            <span v-html="completedTtl(logros,activeCimas)"></span> completas | {{activeCimas.length}} total
                           </v-list-tile-title>
                         </v-flex>
                       </v-layout>
                     </v-list-tile-title>
                     </v-list-tile>
+
+                    <!-- Main tiles for active cimas -->
                    <v-list-tile avatar v-for="item in activeCimas" :class="['ma-1', completed(item.id) ? 'info' : '']">
                     <v-list-tile-avatar color="primary" tile class="cima-avatar">
                         <span class="white--text">{{item.codigo}}</span>
@@ -47,6 +49,27 @@
                     ><v-icon>remove</v-icon></v-btn>
                     </v-list-tile-action>
                   </v-list-tile>
+
+                  <!-- Eliminated cimas or subsitutded cimas -->
+                  <v-list-tile avatar v-for="item in inactiveCimas" :class="['ma-1', completed(item.id) ? 'info' : '']">
+                    <v-list-tile-avatar color="primary" tile class="cima-avatar">
+                        <span class="white--text">{{item.codigo}}</span>
+                    </v-list-tile-avatar>
+                    <v-list-tile-content>
+                      <v-list-tile-title class="subheading primary--text">
+                        <strong>{{ item.nombre }}</strong>
+                      </v-list-tile-title>
+                      <v-list-tile-sub-title>
+                        <span v-if="item.estado === 2 || item.estado === 3">
+                          Este cima fue eliminado o sustuida por otra
+                        </span>
+                      </v-list-tile-sub-title>
+                    </v-list-tile-content>
+                    <v-list-tile-action>
+                      <v-icon v-if="logroIds.indexOf(item.id) !== -1" color="blue">star</v-icon>
+                    </v-list-tile-action>
+                  </v-list-tile>
+
                 </v-list>  
               </v-card>
             </v-flex>
@@ -62,12 +85,29 @@
                     </v-list-tile>
                     <v-divider inset></v-divider>
                   <v-divider inset></v-divider>
+
+                    <!-- Tile 1 (Offifical total completed) -->
                    <v-list-tile content>
-                      <v-list-tile-title class="subheading primary--text"><strong>{{logros.length}}</strong> Completadas</v-list-tile-title>
+                    <v-list-tile-content>
+                      <v-list-tile-title class="subheading primary--text"><strong v-html="completedTtl(logros,activeCimas)"></strong> Completadas</v-list-tile-title>
+                      <v-list-tile-sub-title>
+                        Tienes <span v-html="completedTtl(logros,null,true)"></span> 
+                        de las cimas actualmente activas de la provincia
+                      </v-list-tile-sub-title>
+                    </v-list-tile-content>
                     </v-list-tile>
-                     <v-list-tile content>
-                      <v-list-tile-title class="subheading primary--text"><strong>{{activeCimas.length - logros.length}} </strong>Por Ascender</v-list-tile-title>
+                    <!-- Tile 2 (Offifical total to complete) -->
+                     <v-list-tile>
+                      <v-list-tile-content>
+                        <v-list-tile-title class="subheading primary--text">
+                        <strong v-html="toComplete(logros,activeCimas)"></strong> Por Ascender</v-list-tile-title>
+                        <v-list-tile-sub-title>
+                          Faltas <span v-html="toComplete(logros,activeCimas,true)"></span> 
+                          de las cimas actualmente activas de la provincia
+                        </v-list-tile-sub-title>
+                      </v-list-tile-content>
                     </v-list-tile>
+                    <!-- Tile 3 (Current number of active cimas) -->
                      <v-list-tile content>
                       <v-list-tile-title class="subheading primary--text"><strong>{{activeCimas.length}}</strong> Total de cimas de provincia</v-list-tile-title>
                     </v-list-tile>
@@ -82,6 +122,7 @@
 
 <script>
 
+import {textBar, isComplete, completedTtl, toComplete} from '../util/completionCalculations'
 import _ from 'lodash'
 export default {
 
@@ -99,12 +140,21 @@ export default {
     activeCimas () {
       return this.cimas.filter(c => c.estado === 1)
     },
+    inactiveCimas () {
+      return this.cimas.filter(c => c.estado === 2 || c.estado === 3)
+    },
     logroIds () {
       return _.map(this.logros, 'cima_id');
     },
   },
 
   methods: {
+
+    textBar: textBar,
+    isComplete: isComplete,
+    completedTtl: completedTtl,
+    toComplete: toComplete,
+
     completed (cimaId) {
         return this.logros.find(l => l.cima_id === cimaId)
     },

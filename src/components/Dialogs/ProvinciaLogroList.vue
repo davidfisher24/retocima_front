@@ -5,16 +5,15 @@
             <v-layout>
                 <v-flex xs4 offset-xs1 class="primary--text">{{provincia.nombre}}</v-flex>
                 <v-flex xs7 class="primary--text">
-                    <v-icon v-if="provincia.completed === provincia.total" color="yellow">star</v-icon>
-                    {{provincia.completed}} / {{provincia.total}}
+                    <v-icon v-if="isComplete(provincia)" color="yellow">star</v-icon>
+                    <span v-html="textBar(provincia,false)"></span>
                 </v-flex>
             </v-layout>
         </div>
     </a>
 
     <v-card v-if="province" class="mt-4">
-        <v-card-title class="title pb-0 primary--text">
-            {{currentProvince.nombre}} {{currentProvince.completed}} / {{currentProvince.total}}
+        <v-card-title class="title pb-0 primary--text" v-html="textBar(currentProvince)">
             <v-spacer></v-spacer>
             <v-btn icon small flat @click.native="dialog = false"><v-icon>close</v-icon></v-btn>
         </v-card-title>
@@ -30,7 +29,9 @@
                       {{cima.nombre}}
                       <v-icon v-if="completed(cima.id)">check</v-icon>
                   </v-list-tile-title>
-                  
+                  <v-list-tile-sub-title v-if="cima.estado !== 1">
+                      Esta cima está actualmente eliminada de la lista de cimas activas
+                  </v-list-tile-sub-title>  
                 </v-list-tile-content>
               </v-list-tile> 
         </v-list>
@@ -40,6 +41,8 @@
 
 
 <script>
+
+  import {textBar,isComplete} from '../../util/completionCalculations'
   
   export default {
     props: ["provinciaGroup","communidad","cimas","logros"],
@@ -61,6 +64,9 @@
     },
 
     methods: {
+        textBar: textBar, 
+        isComplete: isComplete,
+
         completed (cimaId) {
             return this.logros.find(l => l.cima_id == cimaId)
         },

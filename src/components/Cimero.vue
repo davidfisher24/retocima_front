@@ -7,7 +7,9 @@
             <v-flex xs12 md4 order-md1 order-xs2 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
                 <v-expansion-panel class="dense-expansion">
                     <v-expansion-panel-content  v-for="communidad in communidads" :key="communidad.id" v-if="communidad.completed > 0">
-                        <div slot="header" class="subheading primary--text py-0">{{communidad.nombre}} {{communidad.completed}} / {{communidad.total}}</div>
+                        <div slot="header" class="subheading primary--text py-0" 
+                        v-html="textBar(communidad)"
+                        ></div>
                         <ProvinciaLogroList :provinciaGroup="provinceGroup(communidad.id)" :communidad="communidad" :cimas="cimas" :logros="logros"></ProvinciaLogroList>
                     </v-expansion-panel-content>
                 </v-expansion-panel>
@@ -24,6 +26,7 @@
     import ProvinciaLogroList from './Dialogs/ProvinciaLogroList'
     import SpainSVG from './SVG/SpainSVG'
     import provinceMap from './SVG/provinceMap'
+    import {textBar} from '../util/completionCalculations'
     import _ from 'lodash'
 
     export default {
@@ -52,6 +55,8 @@
         },
 
         methods: {
+
+            textBar: textBar,
 
             provinceGroup (commId) {
                 return this.provincias.filter(x => x.communidad_id === commId)

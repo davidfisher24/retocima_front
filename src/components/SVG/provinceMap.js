@@ -1,3 +1,5 @@
+import {textBar} from '../../util/completionCalculations'
+
 const provinceMap = {}
 
 provinceMap.map =  {
@@ -438,7 +440,8 @@ provinceMap.plotOptions = {
                     this.update({
                         dataLabels:{
                            formatter: function(){
-                                if (this.point.id === e.target.id) return this.point.nombre + " / " + this.point.completed + " / " + this.point.total
+                                let myReturn = '';
+                                if (this.point.id === e.target.id) return textBar(this.point)
                                 return ''
 
                             } 
@@ -457,6 +460,7 @@ provinceMap.plotOptions = {
             }
         },
         dataLabels: {
+            allowOverlap: true,
             enabled: true,
             color: 'rgb(0,0,0)',
             backgroundColor: 'rgb(255,255,255)',

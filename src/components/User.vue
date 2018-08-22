@@ -2,7 +2,6 @@
     <v-container fluid class="pa-0 my-2">
         <v-layout row wrap>
             <PageTitle text="Mis Logros"></PageTitle>
-
             <v-flex xs12 md4 order-md1 order-xs2 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
                 <v-expansion-panel class="dense-expansion">
                     <v-expansion-panel-content  v-for="communidad in communidads" :key="communidad.id">
@@ -10,11 +9,10 @@
                             <div v-for="provincia in provinceGroup(communidad.id)":key="provincia.id">
                                 <v-layout class="mb-1">
                                     <v-flex xs4 offset-xs1 class="primary--text">{{provincia.nombre}}</v-flex>
-                                    <v-flex xs3 class="primary--text">
-                                        <strong>{{provincia.completed}} | {{provincia.total}}</strong>
-                                    </v-flex>
-                                    <v-flex xs2 class="primary--text" v-if="provincia.completed === provincia.total" >
-                                        <v-icon color="yellow">star</v-icon>
+                                    <v-flex xs4 class="primary--text">
+                                        <strong v-html="textBar(provincia,false)">
+                                        </strong>
+                                        <v-icon v-if="isComplete(provincia)" color="yellow">star</v-icon>
                                     </v-flex>
                                     <v-flex xs2 class="primary--text">
                                         <v-btn fab dark small color="primary" class="xxxs-icon"
@@ -39,6 +37,7 @@
 
     import SpainSVG from './SVG/SpainSVG'
     import provinceMap from './SVG/provinceMap'
+    import {textBar, isComplete} from '../util/completionCalculations'
     import _ from 'lodash'
 
     export default {
@@ -66,6 +65,9 @@
         },
 
         methods: {
+
+            textBar: textBar,
+            isComplete: isComplete,
 
             provinceGroup (commId) {
                 return this.provincias.filter(x => x.communidad_id === commId)
