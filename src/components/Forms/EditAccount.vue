@@ -127,7 +127,7 @@ export default {
         apellido2: this.$route.params.cimero.cimero.apellido2,
         fechanacimiento: this.$route.params.cimero.cimero.fechanacimiento,
         pais: this.$route.params.cimero.cimero.pais.id,
-        provincia: this.$route.params.cimero.cimero.provincia.id,
+        provincia: this.$route.params.cimero.cimero.provincia ? this.$route.params.cimero.cimero.provincia.id : null,
       },
       rules: rules,
       provinces: [],
@@ -166,7 +166,7 @@ export default {
   methods: {
     findSpain () {
         this.spainId = this.countries.find(c => c.nombre === "España").id;
-        this.model.pais = this.spainId;
+        //this.model.pais = this.spainId;
     },
 
     submit(){
