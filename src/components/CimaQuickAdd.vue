@@ -45,7 +45,8 @@ export default {
 
   methods: {
     check () {
-      this.$store.dispatch("user/checkLogro",this.cima).then(response =>{
+      if (this.cima.estado !== 1) return;
+      this.$store.dispatch("user/checkLogro",this.cima.id).then(response =>{
         if (response === false) return // No user
         this.user = true
         if (typeof(response) === 'object') this.done = true 
@@ -55,7 +56,7 @@ export default {
 
     add () {
       this.loading = true
-      this.$store.dispatch("user/addLogro",this.cima).then(() => {
+      this.$store.dispatch("user/addLogro",this.cima.id).then(() => {
         this.done = true
         this.loading = false
       })

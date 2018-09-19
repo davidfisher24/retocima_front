@@ -19,7 +19,7 @@
           <v-layout row wrap class="white primary--text" >
             <v-flex xs12 class="py-2">
               <span class="display-2 ml-2">{{cima.codigo}} {{cima.nombre.toUpperCase()}}</span>
-              <div :style="{float: $vuetify.breakpoint.smAndDown ? 'none' : 'right' }"><CimaQuickAdd :cima="cima.id"></CimaQuickAdd></div>
+              <div :style="{float: $vuetify.breakpoint.smAndDown ? 'none' : 'right' }"><CimaQuickAdd :cima="cima"></CimaQuickAdd></div>
             </v-flex>
   
             <v-flex class="d-inline-block ml-2">Ascensiones: 
