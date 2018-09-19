@@ -89,7 +89,7 @@
   },
   "jest": {
     "testMatch": [
-        "<rootDir>/(tests/components/*.spec.(js|jsx|ts|tsx|vue)|**/__tests__/*.(js|jsx|ts|tsx|vue))"
+      "<rootDir>/(tests/components/*.spec.(js|jsx|ts|tsx|vue)|**/__tests__/*.(js|jsx|ts|tsx|vue))"
     ],
     "moduleFileExtensions": [
       "js",
@@ -101,7 +101,10 @@
       "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
     },
     "setupTestFrameworkScriptFile": "<rootDir>/tests/jest-setup.js",
-    "moduleNameMapper": { "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tests/assetsTransformer.js", "\\.(css|less)$": "<rootDir>/tests/assetsTransformer.js" } 
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/tests/assetsTransformer.js",
+      "\\.(css|less)$": "<rootDir>/tests/assetsTransformer.js"
+    }
   },
   "engines": {
     "node": ">= 6.0.0",
