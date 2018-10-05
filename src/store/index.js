@@ -6,6 +6,7 @@ import { doRequest } from './requests'
 import cimas from './cimas'
 import authCimero from './authCimero'
 import provincias from './provincias'
+import communidads from './communidads'
 import paises from './paises'
 import rankings from './rankings'
 import logros from './logros'
@@ -18,6 +19,7 @@ const store = new Vuex.Store({
     'cimas' : cimas,
     'user' : authCimero,
     'provincias' : provincias,
+    'communidads' : communidads,
     'paises' : paises,
     'rankings' : rankings,
     'logros' : logros,
