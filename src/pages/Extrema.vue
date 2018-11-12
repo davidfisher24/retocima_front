@@ -26,7 +26,7 @@
       </v-layout>
       <v-layout row class="ma-2">  
         <v-flex>
-          <CimaList :cimas="cimas" :title="listTitle" :mapRoute="mapRoute" listType="B"></CimaList>
+          <CimaList :cimas="cimas" :validCimas="validCimas" :title="listTitle" :mapRoute="mapRoute" listType="B"></CimaList>
         </v-flex>
       </v-layout>
       <v-layout row>
@@ -55,6 +55,7 @@ export default {
       listTitle: "Escalador Extremo",
       icon: extrema,
       cimas: this.$route.params.cimas,
+      validCimas: this.$route.params.cimas,
       mapRoute: {name:'extrema-map'},
       bgImageStyle: {
           backgroundImage: 'url(\'' + image + '\' )',

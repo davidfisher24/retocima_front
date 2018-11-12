@@ -11,14 +11,6 @@
         <div>
 
           <SearchBox
-          title="Communidad"
-          :items="communidads"
-          itemText="nombre"
-          itemValue="id"
-          ref="communidad"
-          ></SearchBox>
-
-          <SearchBox
           title="Provincia"
           :items="provincias"
           itemText="nombre"
@@ -36,7 +28,15 @@
             maximum="40"
             title="Longitud"
             units="km"
-            ref="km"
+            ref="longitud"
+          ></DoubleSlider>
+
+          <DoubleSlider
+            minimum="0"
+            maximum="2500"
+            title="Desnivel"
+            units="m"
+            ref="desnivel"
           ></DoubleSlider>
 
           <DoubleSlider
@@ -62,7 +62,6 @@ import SearchBox from './SearchBox'
 export default {
   data () {
     return {
-      communidads: [],
       provincias: [],
     }
   },
@@ -73,7 +72,6 @@ export default {
   
   mounted () {
     Promise.all([
-      this.$store.dispatch("communidads/all").then(data => this.communidads = data),
       this.$store.dispatch("provincias/all").then(data => this.provincias = data)
     ])
   },
@@ -85,10 +83,18 @@ export default {
   methods: {
 
     search() {
-      alert("Kilometres btw " + this.$refs.km.value[0] + " & " + this.$refs.km.value[1])
-      alert("APM btw " + this.$refs.apm.value[0] + " & " + this.$refs.apm.value[1])
-      alert("Communidad: " + this.provincias.find(p => p.id == this.$refs.provincia.value).nombre)
-      alert("Provincia " + this.communidads.find(c => c.id == this.$refs.communidad.value).nombre)
+
+      const input = {
+        desnivel: [this.$refs.desnivel.value[0],this.$refs.desnivel.value[1]],
+        apm: [this.$refs.apm.value[0],this.$refs.apm.value[1]],
+        longitud: [this.$refs.longitud.value[0],this.$refs.longitud.value[1]],
+        provincia: this.$refs.provincia.value
+      }
+      console.log(input)
+      this.$store.dispatch("cimas/advancedSearch", JSON.stringify(input)).then(data => {
+        console.log(data)
+      })
+      
     }
 
   }

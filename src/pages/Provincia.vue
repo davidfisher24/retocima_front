@@ -1,6 +1,6 @@
 <template>
   <v-container fluid class="pa-0 mt-2">
-      <CimaList :cimas="cimas" :title="listTitle" :mapRoute="mapRoute"></CimaList>
+      <CimaList :cimas="cimas" :validCimas="validCimas" :title="listTitle" :mapRoute="mapRoute"></CimaList>
   </v-container>
 </template>
 
@@ -12,6 +12,7 @@ export default {
   data () {
     return {
       cimas: this.$route.params.cimas,
+      validCimas: this.$route.params.cimas.filter(c => c.estado === 1),
       listTitle: this.$route.params.cimas[0].provincia.nombre,
       mapRoute: {name:'provincia-map', params: {pid: this.$route.params.pid}}
     }
@@ -19,6 +20,7 @@ export default {
   watch: {
     '$route': function (route) {
       this.cimas = this.$route.params.cimas;
+      this.validCimas = this.$route.params.cimas.filter(c => c.estado === 1);
       this.listTitle = this.$route.params.cimas[0].provincia.nombre;
       this.mapRoute = {name:'provincia-map', params: {pid: this.$route.params.pid}};
     }

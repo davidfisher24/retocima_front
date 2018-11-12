@@ -11,6 +11,7 @@ import Static from '@/components/Static/index'
 import PataNegra from '@/pages/PataNegra'
 import Extrema from '@/pages/Extrema'
 import Provincia from '@/pages/Provincia'
+import Eliminated from '@/pages/Eliminated'
 import NotFound404 from '@/pages/NotFound404'
 
 // Components
@@ -36,9 +37,10 @@ const lists = {
   patanegra: {dispatch: "cimas/patanegra", title: "Pata Negra",  map: "patanegra-map", cima: "patanegra-cima"},
   extrema: {dispatch: "cimas/extrema", title: "Escalador Extrema", map: "extrema-map", cima: "extrema-cima"},
   provincia: {dispatch: "cimas/provincias", map: "provincia-map", cima: "provincia-cima"},
+  eliminada: {dispatch: "cimas/eliminated", cima: "eliminada-cima"},
 }
 
-const listRoutes = ["provincia","provincia-map","provincia-cima","patanegra","patanegra-map","patanegra-cima","extrema","extrema-map","extrema-cima"]
+const listRoutes = ["provincia","provincia-map","provincia-cima","patanegra","patanegra-map","patanegra-cima","extrema","extrema-map","extrema-cima","eliminada","eliminada-cima"]
 
 Vue.use(Router)
 
@@ -83,6 +85,11 @@ const router = new Router({
       name: 'extrema',
       component: Extrema
     },
+    {
+      path: '/eliminada',
+      name: 'eliminada',
+      component: Eliminated
+    },
     // Provincia or pata negra with cima group page
     {
       path: '/provincia/:pid/:cid',
@@ -97,6 +104,11 @@ const router = new Router({
     {
       path: '/extrema/cima/:cid',
       name: 'extrema-cima',
+      component: Cima
+    },
+    {
+      path: '/eliminada/cima/:cid',
+      name: 'eliminada-cima',
       component: Cima
     },
     // Map with cima child

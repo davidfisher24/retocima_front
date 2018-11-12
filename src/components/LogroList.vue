@@ -49,33 +49,12 @@
                     ><v-icon>remove</v-icon></v-btn>
                     </v-list-tile-action>
                   </v-list-tile>
-
-                  <!-- Eliminated cimas or subsitutded cimas -->
-                  <v-list-tile avatar v-for="item in inactiveCimas" :class="['ma-1', completed(item.id) ? 'info' : '']">
-                    <v-list-tile-avatar color="primary" tile class="cima-avatar">
-                        <span class="white--text">{{item.codigo}}</span>
-                    </v-list-tile-avatar>
-                    <v-list-tile-content>
-                      <v-list-tile-title class="subheading primary--text">
-                        <strong>{{ item.nombre }}</strong>
-                      </v-list-tile-title>
-                      <v-list-tile-sub-title>
-                        <span v-if="item.estado === 2 || item.estado === 3">
-                          Este cima fue eliminado o sustuida por otra
-                        </span>
-                      </v-list-tile-sub-title>
-                    </v-list-tile-content>
-                    <v-list-tile-action>
-                      <v-icon v-if="logroIds.indexOf(item.id) !== -1" color="blue">star</v-icon>
-                    </v-list-tile-action>
-                  </v-list-tile>
-
                 </v-list>  
               </v-card>
             </v-flex>
 
-          <v-flex md6 class="px-3 hidden-sm-and-down">
-              <v-card>
+          <v-flex xs12 md6 class="px-3">
+              <v-card :class="{'mt-2': $vuetify.breakpoint.smAndDown }">
                 <v-list>
                   <v-list-tile>
                       <v-list-tile-title class="headline primary--text">

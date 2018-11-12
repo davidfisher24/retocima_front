@@ -10,7 +10,7 @@
                 <span class="display-1 theme--text">{{title}}</span>
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-toolbar-items class="mr-0">
+            <v-toolbar-items class="mr-0" v-if="mapRoute">
               <v-btn flat @click="changeMap()">MAPA</v-btn>
             </v-toolbar-items>
           </v-toolbar>
@@ -24,7 +24,7 @@
             <CimaListDataB v-if="listType === 'B'" v-for="(cima, i) in chunk" :cima="cima" @route="route"></CimaListDataB>
           </v-list>
           <!-- Eliminadas o sustituidas block -->
-            <div v-if="index === 1 && eliminatedCimas.length > 0">
+            <!--<div v-if="index === chunkedCimas.length - 1 && eliminatedCimas.length > 0">
               <v-toolbar color="white" flat dense class="accent--text">
                 <v-toolbar-title>
                    <span>Cimas que fueron eliminadas</span>
@@ -34,9 +34,9 @@
                 <CimaListData v-if="!listType" v-for="(cima, i) in eliminatedCimas" :cima="cima" @route="route"></CimaListData>
                 <CimaListDataB v-if="listType === 'B'" v-for="(cima, i) in eliminatedCimas" :cima="cima" @route="route"></CimaListDataB>
               </v-list>
-            </div>
+            </div>-->
              <!-- Special cimas block -->
-            <div v-if="index === 1 && specialCimas.length > 0">
+            <!--<div v-if="index === 1 && specialCimas.length > 0">
               <v-toolbar color="white" flat dense class="primary--text">
                 <v-toolbar-title>
                    <span>Otras acensiones interesantes que no puntuan</span>
@@ -46,7 +46,7 @@
                 <CimaListData v-if="!listType" v-for="(cima, i) in specialCimas" :cima="cima" @route="route"></CimaListData>
                 <CimaListDataB v-if="listType === 'B'" v-for="(cima, i) in specialCimas" :cima="cima" @route="route"></CimaListDataB>
               </v-list>
-            </div>
+            </div>-->
         </v-flex>
       </v-layout> 
     </v-slide-y-transition>
@@ -61,7 +61,7 @@ import CimaListData from './CimaListData'
 import CimaListDataB from './CimaListDataB'
 export default {
 
-  props:['cimas','title', 'mapRoute','listType'],
+  props:['cimas','validCimas', 'title', 'mapRoute','listType'],
   data () {
     return {
       params: this.$route.params, 
@@ -75,8 +75,8 @@ export default {
 
   computed: {
      chunkedCimas () {
-        const divider = this.listType === 'B' ? Math.ceil(this.cimas.length/3) : Math.ceil(this.cimas.length/2)
-        return _.chunk(this.cimas.filter(c => c.estado === 1),divider);
+        const divider = this.listType === 'B' ? Math.ceil(this.validCimas.length/3) : Math.ceil(this.validCimas.length/2)
+        return _.chunk(this.validCimas,divider);
      },
 
      eliminatedCimas () {

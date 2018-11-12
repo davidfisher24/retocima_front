@@ -6,6 +6,7 @@ export default {
   state: {
   	provincias: {},
   	cimas: [],
+    eliminated: null,
     patanegra: null,
     extrema: null,
     markers: null,
@@ -22,6 +23,9 @@ export default {
     },
     one (state, {data, params}) {
       if (!state.cimas.find(x => x.id === data.id)) state.cimas.push(data)
+    },
+    eliminated (state, {data, params}) {
+      state.eliminated = data
     },
     patanegra (state, {data, params}) {
       state.patanegra = data
@@ -52,6 +56,14 @@ export default {
           url: 'cimas/' + id,
           mutation: 'provincias',
           params: {id: id}
+      });
+    },
+
+   eliminated (store) {
+      if (store.state.eliminated) return store.state.eliminated
+      return doRequest(store, {
+        url: 'cimas/group/eliminated',
+        mutation: 'eliminated'
       });
     },
 
@@ -109,5 +121,13 @@ export default {
         url: 'cimas/search/' + input,
       });
     },
+
+    advancedSearch (store,input) {
+      return doRequest(store, {
+        url: 'cimas/search',
+        method: 'POST',
+        data: input,
+      });
+    }
   },
 }

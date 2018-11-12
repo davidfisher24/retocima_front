@@ -18,8 +18,14 @@
           <!---->
           <v-layout row wrap class="white primary--text" >
             <v-flex xs12 class="py-2">
-              <span class="display-2 ml-2">{{cima.codigo}} {{cima.nombre.toUpperCase()}}</span>
-              <div :style="{float: $vuetify.breakpoint.smAndDown ? 'none' : 'right' }"><CimaQuickAdd :cima="cima"></CimaQuickAdd></div>
+              <span class="display-2 ml-2" 
+              :style="{'text-decoration': cima.estado === 2 || cima.estado === 3 ? 'line-through' : 'none' }"
+              >{{cima.codigo}} {{cima.nombre.toUpperCase()}}</span>
+              <div v-if="cima.estado === 3" class="ml-2">Esta cima fue eliminada del reto</div>
+              <div v-if="cima.estado === 2" class="ml-2">Esta cima fue sustituida por otra cima</div>
+              <div v-if="cima.estado !== 1 && cima.vertientes.length > 0" class="ml-2"><strong>Razon: </strong>{{cima.vertientes[0].razon}}</div>
+              <div v-if="cima.estado === 1"
+              :style="{float: $vuetify.breakpoint.smAndDown ? 'none' : 'right' }"><CimaQuickAdd :cima="cima"></CimaQuickAdd></div>
             </v-flex>
   
             <v-flex class="d-inline-block ml-2">Ascensiones: 
@@ -30,6 +36,18 @@
             </v-flex>
             <v-flex :class="['d-inline-block',$vuetify.breakpoint.smAndDown ? 'ml-2' : '']">
               <strong>GPS: {{Number(cima.latitude).toFixed(5)}} {{Number(cima.longitude).toFixed(5)}}</strong>
+            </v-flex>
+          </v-layout>
+
+          <v-layout row wrap class="white primary--text mt-1" v-if="substitute">
+            <v-flex xs12 class="py-2">
+              <span class="subheading ml-2">
+                Este cima sustituyó la cima anterior: <strong>{{substitute.nombre}}</strong>
+              </span>
+              <div class="subheading ml-2" 
+              @click="$router.push({name: 'cima', params: {id: substitute.id}})">
+                Haz clic aquí para ver el anterior
+              </div>
             </v-flex>
           </v-layout>
 
@@ -160,7 +178,6 @@ export default {
       active:"0",
       id:1,
       cima: null,
-      cimas:null,
     }
   },
 
@@ -169,12 +186,17 @@ export default {
     'CimaQuickAdd' : CimaQuickAdd,
   },
 
+
   watch: {
-    '$route.params.id': function (id) {
-      this.$store.dispatch('cimas/one',id).then(cima => {
-        this.cima = cima
-        this.resetTabs()
-      })
+    $route (to,from){
+      if (from.name === 'cima' && to.name === 'cima' && !to.params.cima) {
+        this.$store.dispatch('cimas/one',to.params.id).then(cima => {
+          this.cima = cima
+          this.mountOrRemount();
+        })
+      } else {
+        this.mountOrRemount();
+      }
     },
     cima (newOne) {
       this.resetTabs()
@@ -184,6 +206,13 @@ export default {
   computed: {
       vertienteId () {
         return this.cima.vertientes[this.active].id
+      },
+
+      substitute () {
+        if (!this.cima.has_substitute) return null;
+        if (this._cimas) return this._cimas.find(c => 
+          c.codigo == this.cima.codigo && c.estado === 2
+        )
       },
 
       properties (){
@@ -199,12 +228,17 @@ export default {
   },
   
   mounted (){
-    this.cimas = this.$route.params.cimas || null;
-    this.cima = this.cimas ? this.cimas.find(x => x.id === Number(this.$route.params.cid)) : this.$route.params.cima;
-    this.resetTabs()
+    this.mountOrRemount()
   },
 
   methods: {
+    mountOrRemount () {
+      this._cimas = this.$route.params.cimas || null;
+      this.cimas = this._cimas ? this._cimas.filter(c => c.estado == 1) : null;
+      this.cima = this._cimas ? this._cimas.find(x => x.id === Number(this.$route.params.cid)) : this.$route.params.cima;
+      this.resetTabs()
+    },
+
     resetTabs (){
       this.active = null
       this.active = "0";

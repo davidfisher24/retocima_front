@@ -64,7 +64,7 @@
 
         computed: {
           validcimas () {
-            return this.cimas.filter(c => c.latitude && c.latitude != 0 && c.longitude && c.longitude != 0);
+            return this.cimas.filter(c => c.estado === 1 && c.latitude && c.latitude != 0 && c.longitude && c.longitude != 0);
           },
           icon () {
             return L.icon({
