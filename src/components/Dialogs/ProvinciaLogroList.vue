@@ -20,7 +20,7 @@
           
         <v-list>
             <v-list-tile avatar v-for="cima in cimaList" 
-            :class="['ma-1', completed(cima.id) ? 'info' : '']">
+            :class="['ma-1', completed(cima) ? 'info' : '']">
                 <v-list-tile-avatar color="primary" tile class="cima-avatar">
                     <span class="white--text">{{cima.codigo}}</span>
                 </v-list-tile-avatar>
@@ -67,8 +67,15 @@
         textBar: textBar, 
         isComplete: isComplete,
 
-        completed (cimaId) {
-            return this.logros.find(l => l.cima_id == cimaId)
+        completed (cima) {
+          if (this.logros.find(l => l.cima_id == cima.id))
+            return true
+          if (cima.has_substitute) {
+            let substitute = this.findSubtitute(cima.codigo)
+            if (this.logros.find(l => l.cima_id == substitute.id))
+              return true;
+          }
+          return false;
         },
         openProvince (provinciaId) {
             this.province = provinciaId

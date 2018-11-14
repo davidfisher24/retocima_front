@@ -29,7 +29,7 @@
                     </v-list-tile>
 
                     <!-- Main tiles for active cimas -->
-                   <v-list-tile avatar v-for="item in activeCimas" :class="['ma-1', completed(item.id) ? 'info' : '']">
+                   <v-list-tile avatar v-for="item in activeCimas" :class="['ma-1', completed(item) ? 'info' : '']">
                     <v-list-tile-avatar color="primary" tile class="cima-avatar">
                         <span class="white--text">{{item.codigo}}</span>
                     </v-list-tile-avatar>
@@ -133,10 +133,16 @@ export default {
     completedTtl: completedTtl,
     toComplete: toComplete,
 
-    completed (cimaId) {
-        return this.logros.find(l => l.cima_id === cimaId)
+    completed (cima) {
+      if (this.logros.find(l => l.cima_id == cima.id))
+        return true
+      if (cima.has_substitute) {
+        let substitute = this.findSubtitute(cima.codigo)
+        if (this.logros.find(l => l.cima_id == substitute.id))
+          return true;
+      }
+      return false;
     },
-
     completedPrevious (item) {
       return this.logros.find(x => x.cima_codigo === item.codigo)
     },
