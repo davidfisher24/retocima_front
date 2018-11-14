@@ -35,6 +35,13 @@
                     </v-list-tile-avatar>
                     <v-list-tile-content>
                       <v-list-tile-title class="subheading primary--text"><strong>{{ item.nombre }}</strong></v-list-tile-title>
+                      <v-list-tile-sub-title 
+                      v-if="item.has_substitute && logroIds.indexOf(item.id) === -1 && completedPrevious(item)"
+                      >
+                        <strong>
+                          Completaste la cima anterior {{findSubtitute(item.codigo).nombre}}
+                        </strong>
+                      </v-list-tile-sub-title> 
                     </v-list-tile-content>
                     <v-list-tile-action>
                       <v-btn fab dark small color="primary" class="xs-icon"
@@ -128,6 +135,14 @@ export default {
 
     completed (cimaId) {
         return this.logros.find(l => l.cima_id === cimaId)
+    },
+
+    completedPrevious (item) {
+      return this.logros.find(x => x.cima_codigo === item.codigo)
+    },
+
+    findSubtitute (cimaCodigo) {
+      return this.cimas.find(c => c.codigo == cimaCodigo && c.estado === 2)
     },
 
     add (id) {
