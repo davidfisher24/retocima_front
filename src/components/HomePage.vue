@@ -19,14 +19,14 @@
       </v-flex>
     </v-layout>
 
-    <v-layout wrap grid>
+    <!--<v-layout wrap grid>
       <v-flex xs4 class="text-xs-center primary--text">
         <Blurb></Blurb>
       </v-flex>
       <v-flex xs8>
         <AdvancedSearch></AdvancedSearch>
       </v-flex>
-    </v-layout>
+    </v-layout>-->
 
   </v-container>
 </div>

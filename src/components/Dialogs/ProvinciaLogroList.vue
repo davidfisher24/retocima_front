@@ -26,11 +26,11 @@
                 </v-list-tile-avatar>
                 <v-list-tile-content>
                   <v-list-tile-title class="title primary--text">
-                      {{cima.nombre}}
+                      {{cima.nombre}} 
                       <v-icon v-if="completed(cima.id)">check</v-icon>
                   </v-list-tile-title>
-                  <v-list-tile-sub-title v-if="cima.estado !== 1">
-                      Esta cima está actualmente eliminada de la lista de cimas activas
+                  <v-list-tile-sub-title v-if="cima.has_substitute">
+                      <strong>También valido la cima antigua {{findSubtitute(cima.codigo).nombre}}</strong>
                   </v-list-tile-sub-title>  
                 </v-list-tile-content>
               </v-list-tile> 
@@ -55,7 +55,7 @@
 
     computed: {
         cimaList () {
-            return this.cimas.filter(c => c.provincia_id === this.province)
+            return this.cimas.filter(c => c.provincia_id === this.province && c.estado == 1)
         },
         currentProvince () {
             return this.provinciaGroup.find(p => p.id === this.province)
@@ -72,6 +72,9 @@
         },
         openProvince (provinciaId) {
             this.province = provinciaId
+        },
+        findSubtitute (cimaCodigo) {
+          return this.cimas.find(c => c.codigo == cimaCodigo && c.estado === 2)
         }
     }
     

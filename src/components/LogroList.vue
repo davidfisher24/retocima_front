@@ -69,10 +69,6 @@
                    <v-list-tile content>
                     <v-list-tile-content>
                       <v-list-tile-title class="subheading primary--text"><strong v-html="completedTtl(logros,activeCimas)"></strong> Completadas</v-list-tile-title>
-                      <v-list-tile-sub-title>
-                        Tienes <span v-html="completedTtl(logros,null,true)"></span> 
-                        de las cimas actualmente activas de la provincia
-                      </v-list-tile-sub-title>
                     </v-list-tile-content>
                     </v-list-tile>
                     <!-- Tile 2 (Offifical total to complete) -->
@@ -80,10 +76,6 @@
                       <v-list-tile-content>
                         <v-list-tile-title class="subheading primary--text">
                         <strong v-html="toComplete(logros,activeCimas)"></strong> Por Ascender</v-list-tile-title>
-                        <v-list-tile-sub-title>
-                          Faltas <span v-html="toComplete(logros,activeCimas,true)"></span> 
-                          de las cimas actualmente activas de la provincia
-                        </v-list-tile-sub-title>
                       </v-list-tile-content>
                     </v-list-tile>
                     <!-- Tile 3 (Current number of active cimas) -->
