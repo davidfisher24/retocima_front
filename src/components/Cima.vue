@@ -40,15 +40,20 @@
           </v-layout>
 
           <v-layout row wrap class="white primary--text mt-1" v-if="substitute">
-            <v-flex xs12 class="py-2">
+            <v-flex xs12  class="py-2">
               <span class="subheading ml-2">
                 Este cima sustituyó la cima anterior: <strong>{{substitute.nombre}}</strong>
               </span>
-              <div class="subheading ml-2" 
-              @click="$router.push({name: 'cima', params: {id: substitute.id}})">
-                Haz clic aquí para ver el anterior
+              <div>
+                <Button 
+                  class="ma-0 pa-0"
+                  text="Ver el anterior" 
+                  lowercase="true" 
+                  route="cima" :params="substituteLinkParams">
+                </Button>
               </div>
             </v-flex>
+            
           </v-layout>
 
         </v-flex>
@@ -171,6 +176,7 @@
 
 import PathMap from './PathMap'
 import CimaQuickAdd from './CimaQuickAdd'
+import Button from './Button'
 
 export default {
   data () {
@@ -184,6 +190,7 @@ export default {
   components: {
     'PathMap' : PathMap,
     'CimaQuickAdd' : CimaQuickAdd,
+    'Button' : Button,
   },
 
 
@@ -213,6 +220,10 @@ export default {
         if (this._cimas) return this._cimas.find(c => 
           c.codigo == this.cima.codigo && c.estado === 2
         )
+      },
+
+      substituteLinkParams () {
+        return {id: this.substitute.id}
       },
 
       properties (){
