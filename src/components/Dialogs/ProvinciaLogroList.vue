@@ -29,8 +29,8 @@
                       {{cima.nombre}} 
                       <v-icon v-if="completed(cima.id)">check</v-icon>
                   </v-list-tile-title>
-                  <v-list-tile-sub-title v-if="cima.has_substitute">
-                      <strong>También valido la cima antigua {{findSubtitute(cima.codigo).nombre}}</strong>
+                  <v-list-tile-sub-title v-if="cima.substitute">
+                      <strong>También valido la cima antigua {{cima.substitute.nombre}}</strong>
                   </v-list-tile-sub-title>  
                 </v-list-tile-content>
               </v-list-tile> 
@@ -70,9 +70,8 @@
         completed (cima) {
           if (this.logros.find(l => l.cima_id == cima.id))
             return true
-          if (cima.has_substitute) {
-            let substitute = this.findSubtitute(cima.codigo)
-            if (this.logros.find(l => l.cima_id == substitute.id))
+          if (cima.substitute) {
+            if (this.logros.find(l => l.cima_id == cima.substitute.id))
               return true;
           }
           return false;
@@ -80,9 +79,6 @@
         openProvince (provinciaId) {
             this.province = provinciaId
         },
-        findSubtitute (cimaCodigo) {
-          return this.cimas.find(c => c.codigo == cimaCodigo && c.estado === 2)
-        }
     }
     
   }

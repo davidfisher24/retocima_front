@@ -39,10 +39,10 @@
             </v-flex>
           </v-layout>
 
-          <v-layout row wrap class="white primary--text mt-1" v-if="substitute">
+          <v-layout row wrap class="white primary--text mt-1" v-if="cima.substitute">
             <v-flex xs12  class="py-2">
               <span class="subheading ml-2">
-                Este cima sustituyó la cima anterior: <strong>{{substitute.nombre}}</strong>
+                Este cima sustituyó la cima anterior: <strong>{{cima.substitute.nombre}}</strong>
               </span>
               <div>
                 <Button 
@@ -215,15 +215,8 @@ export default {
         return this.cima.vertientes[this.active].id
       },
 
-      substitute () {
-        if (!this.cima.has_substitute) return null;
-        if (this._cimas) return this._cimas.find(c => 
-          c.codigo == this.cima.codigo && c.estado === 2
-        )
-      },
-
       substituteLinkParams () {
-        return {id: this.substitute.id}
+        return {id: this.cima.substitute.id}
       },
 
       properties (){
