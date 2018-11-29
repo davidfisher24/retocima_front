@@ -21,7 +21,7 @@
                         </v-flex>
                         <v-flex xs12 md6>
                           <v-list-tile-title class="headline primary--text text-xs-right">
-                            <span v-html="completedTtl(logros,activeCimas)"></span> completas | {{activeCimas.length}} total
+                            <span v-html="getCompletedTtl()"></span> completas | {{activeCimas.length}} total
                           </v-list-tile-title>
                         </v-flex>
                       </v-layout>
@@ -36,7 +36,7 @@
                     <v-list-tile-content>
                       <v-list-tile-title class="subheading primary--text"><strong>{{ item.nombre }}</strong></v-list-tile-title>
                       <v-list-tile-sub-title 
-                      v-if="item.substitute && logroIds.indexOf(item.id) === -1 && completedPrevious(item)"
+                      v-if="item.substitute && logroIds.indexOf(item.id) === -1 && completedPrevious(item.substitute)"
                       >
                         <strong>
                           Completaste la cima anterior {{item.substitute.nombre}}
@@ -75,14 +75,14 @@
                     <!-- Tile 1 (Offifical total completed) -->
                    <v-list-tile content>
                     <v-list-tile-content>
-                      <v-list-tile-title class="subheading primary--text"><strong v-html="completedTtl(logros,activeCimas)"></strong> Completadas</v-list-tile-title>
+                      <v-list-tile-title class="subheading primary--text"><strong v-html="getCompletedTtl()"></strong> Completadas</v-list-tile-title>
                     </v-list-tile-content>
                     </v-list-tile>
                     <!-- Tile 2 (Offifical total to complete) -->
                      <v-list-tile>
                       <v-list-tile-content>
                         <v-list-tile-title class="subheading primary--text">
-                        <strong v-html="toComplete(logros,activeCimas)"></strong> Por Ascender</v-list-tile-title>
+                        <strong v-html="getToCompleteTtl()"></strong> Por Ascender</v-list-tile-title>
                       </v-list-tile-content>
                     </v-list-tile>
                     <!-- Tile 3 (Current number of active cimas) -->
@@ -100,7 +100,6 @@
 
 <script>
 
-import {textBar, isComplete, completedTtl, toComplete} from '../util/completionCalculations'
 import _ from 'lodash'
 export default {
 
@@ -128,11 +127,6 @@ export default {
 
   methods: {
 
-    textBar: textBar,
-    isComplete: isComplete,
-    completedTtl: completedTtl,
-    toComplete: toComplete,
-
     completed (cima) {
       if (this.logros.find(l => l.cima_id == cima.id))
         return true
@@ -145,7 +139,15 @@ export default {
       return false;
     },
     completedPrevious (item) {
-      return this.logros.find(x => x.cima_codigo === item.codigo)
+      return this.logros.find(x => x.cima_codigo == item.codigo)
+    },
+
+    getCompletedTtl() {
+      return this.activeCimas.filter(c => this.completed(c)).length
+    },
+
+    getToCompleteTtl () {
+      return this.activeCimas.length - this.getCompletedTtl();
     },
 
     add (id) {

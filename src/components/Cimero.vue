@@ -7,9 +7,9 @@
             <v-flex xs12 md4 order-md1 order-xs2 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
                 <v-expansion-panel class="dense-expansion">
                     <v-expansion-panel-content  v-for="communidad in communidads" :key="communidad.id" v-if="communidad.completed > 0">
-                        <div slot="header" class="subheading primary--text py-0" 
-                        v-html="textBar(communidad)"
-                        ></div>
+                        <div slot="header" class="subheading primary--text py-0">
+                            {{communidad.nombre}} {{communidad.completed}} / {{communidad.active_cimas_count}}
+                        </div>
                         <ProvinciaLogroList :provinciaGroup="provinceGroup(communidad.id)" :communidad="communidad" :cimas="cimas" :logros="logros"></ProvinciaLogroList>
                     </v-expansion-panel-content>
                 </v-expansion-panel>
@@ -26,7 +26,6 @@
     import ProvinciaLogroList from './Dialogs/ProvinciaLogroList'
     import SpainSVG from './SVG/SpainSVG'
     import provinceMap from './SVG/provinceMap'
-    import {textBar} from '../util/completionCalculations'
     import _ from 'lodash'
 
     export default {
@@ -56,8 +55,6 @@
 
         methods: {
 
-            textBar: textBar,
-
             provinceGroup (commId) {
                 return this.provincias.filter(x => x.communidad_id === commId)
             },
@@ -67,28 +64,42 @@
                 this.logros = this.$route.params.cimero.logros
                 this.provincias = this.$route.params.cimero.provincias
                 this.communidads = this.$route.params.cimero.communidads
-                this.cimas = this.$route.params.cimas
+                this.cimas = this.$route.params.cimas;
+                this.provincias = this.provincias.map(x => {
+                    let cimas = this.cimas.filter(c => c.provincia_id == x.id)
+                    x.total = cimas.length;
+                    x.completed = this.getCompletedTtl(cimas)
+                    x.value = x.completed / x.total;
+                    return x;
+                })
+                this.communidads = this.communidads.map(x => {
+                    let cimas = this.cimas.filter(c => c.communidad_id == x.id)
+                    x.total = cimas.length;
+                    x.completed = this.getCompletedTtl(cimas)
+                    x.value = x.completed / x.total;
+                    return x;
+                })
+            },
+
+            getCompletedTtl(cimas) {
+              return cimas.filter(c => this.completed(c)).length
+            },
+
+            completed (cima) {
+              if (this.logros.find(l => l.cima_id == cima.id))
+                return true
+              if (cima.substitute) {
+                if (cima.substitute) {
+                    if (this.logros.find(l => l.cima_id == cima.substitute.id))
+                      return true;
+                  }
+              }
+              return false;
             },
 
         
             createMapData () {
                 var that = this;
-                var logros = _.groupBy(this.logros,"provincia_id")
-                this.provincias = this.provincias.map(x => {
-                    x.total = x.active_cimas_count;
-                    //x.completed = that.logros[x.id.toString()] ? that.logros[x.id.toString()].length : 0 ;
-                    x.completed = logros[x.id.toString()] ? logros[x.id.toString()].length : 0 ;
-                    x.value = x.completed / x.total;
-                    return x;
-                })
-
-
-                this.communidads = this.communidads.map(x => {
-                    x.total = x.active_cimas_count;
-                    x.completed = this.provincias.filter(p => p.communidad_id == x.id).reduce((prev, cur) => prev + cur.completed, 0)
-                    return x;
-                })
-
                 this.options = {
                     plotOptions: provinceMap.plotOptions,
                     tooltip: {

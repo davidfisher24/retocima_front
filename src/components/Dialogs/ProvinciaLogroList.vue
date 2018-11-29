@@ -42,7 +42,6 @@
 
 <script>
 
-  import {textBar,isComplete} from '../../util/completionCalculations'
   
   export default {
     props: ["provinciaGroup","communidad","cimas","logros"],
@@ -55,7 +54,7 @@
 
     computed: {
         cimaList () {
-            return this.cimas.filter(c => c.provincia_id === this.province && c.estado == 1)
+            return this.cimas.filter(c => c.provincia_id === this.province)
         },
         currentProvince () {
             return this.provinciaGroup.find(p => p.id === this.province)
@@ -64,8 +63,6 @@
     },
 
     methods: {
-        textBar: textBar, 
-        isComplete: isComplete,
 
         completed (cima) {
           if (this.logros.find(l => l.cima_id == cima.id))

@@ -10,9 +10,10 @@
                                 <v-layout class="mb-1">
                                     <v-flex xs4 offset-xs1 class="primary--text">{{provincia.nombre}}</v-flex>
                                     <v-flex xs4 class="primary--text">
-                                        <strong v-html="textBar(provincia,false)">
+                                        <strong>
+                                            {{provincia.completed}} / {{provincia.active_cimas_count}}
                                         </strong>
-                                        <v-icon v-if="isComplete(provincia)" color="yellow">star</v-icon>
+                                        <v-icon v-if="provincia.completed == provincia.active_cimas_count" color="yellow">star</v-icon>
                                     </v-flex>
                                     <v-flex xs2 class="primary--text">
                                         <v-btn fab dark small color="primary" class="xxxs-icon"
@@ -37,7 +38,6 @@
 
     import SpainSVG from './SVG/SpainSVG'
     import provinceMap from './SVG/provinceMap'
-    import {textBar, isComplete} from '../util/completionCalculations'
     import _ from 'lodash'
 
     export default {
@@ -66,9 +66,6 @@
 
         methods: {
 
-            textBar: textBar,
-            isComplete: isComplete,
-
             provinceGroup (commId) {
                 return this.provincias.filter(x => x.communidad_id === commId)
             },
@@ -78,21 +75,35 @@
                 this.logros = this.$route.params.cimero.logros
                 this.provincias = this.$route.params.cimero.provincias
                 this.communidads = this.$route.params.cimero.communidads
-                this.cimas = this.$route.params.cimas
-            },
-
-        
-            createMapData () {
-                var that = this;
-                var logros = _.groupBy(this.logros,"provincia_id")
+                this.cimas = this.$route.params.cimas;
                 this.provincias = this.provincias.map(x => {
-                    x.total = x.active_cimas_count;
-                    //x.completed = that.logros[x.id.toString()] ? that.logros[x.id.toString()].length : 0 ;
-                    x.completed = logros[x.id.toString()] ? logros[x.id.toString()].length : 0 ;
+                    let cimas = this.cimas.filter(c => c.provincia_id == x.id)
+                    x.total = cimas.length;
+                    x.completed = this.getCompletedTtl(cimas)
                     x.value = x.completed / x.total;
                     return x;
                 })
+            },
 
+            getCompletedTtl(cimas) {
+              return cimas.filter(c => this.completed(c)).length
+            },
+
+            completed (cima) {
+              if (this.logros.find(l => l.cima_id == cima.id))
+                return true
+              if (cima.substitute) {
+                if (cima.substitute) {
+                    if (this.logros.find(l => l.cima_id == cima.substitute.id))
+                      return true;
+                  }
+              }
+              return false;
+            },
+        
+            createMapData () {
+                var that = this;
+                
                 this.options = {
                     plotOptions: provinceMap.plotOptions,
                     tooltip: {

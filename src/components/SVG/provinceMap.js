@@ -1,5 +1,3 @@
-import {textBar} from '../../util/completionCalculations'
-
 const provinceMap = {}
 
 provinceMap.map =  {
@@ -441,7 +439,8 @@ provinceMap.plotOptions = {
                         dataLabels:{
                            formatter: function(){
                                 let myReturn = '';
-                                if (this.point.id === e.target.id) return textBar(this.point)
+                                if (this.point.id === e.target.id) 
+                                    return this.point.nombre + " " + this.point.completed + " / " + this.point.active_cimas_count
                                 return ''
 
                             } 

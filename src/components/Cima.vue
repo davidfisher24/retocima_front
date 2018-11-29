@@ -47,13 +47,28 @@
               <div>
                 <Button 
                   class="ma-0 pa-0"
-                  text="Ver el anterior" 
+                  text="Ver la anterior" 
                   lowercase="true" 
                   route="cima" :params="substituteLinkParams">
                 </Button>
               </div>
             </v-flex>
-            
+          </v-layout>
+
+          <v-layout row wrap class="white primary--text mt-1" v-if="cima.substituted">
+            <v-flex xs12  class="py-2">
+              <span class="subheading ml-2">
+                Este cima fue sustituido por la cima actual: <strong>{{cima.substituted.nombre}}</strong>
+              </span>
+              <div>
+                <Button 
+                  class="ma-0 pa-0"
+                  text="Ver la actual" 
+                  lowercase="true" 
+                  route="cima" :params="substitutedLinkParams">
+                </Button>
+              </div>
+            </v-flex>
           </v-layout>
 
         </v-flex>
@@ -217,6 +232,10 @@ export default {
 
       substituteLinkParams () {
         return {id: this.cima.substitute.id}
+      },
+
+      substitutedLinkParams () {
+        return {id: this.cima.substituted.id}
       },
 
       properties (){

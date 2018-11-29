@@ -277,8 +277,10 @@ router.beforeEach((to, from, next) => {
   // CUENTA
   else if (to.name === 'user-logros' || to.name === 'user-charts' || to.name === 'user-edit') {
     var promise1 = store.dispatch("user/account",to.params.uid)
-    Promise.all([promise1]).then(data => {
-      to.params.cimero = data[0]
+    var promise2 = store.dispatch('cimas/names')
+    Promise.all([promise1,promise2]).then(data => {
+      to.params.cimero = data[0],
+      to.params.cimas = data[1]
       next();
     })
   } else if (to.name === 'user-provincia') {
