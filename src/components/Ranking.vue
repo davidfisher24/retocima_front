@@ -6,7 +6,7 @@
                 :storeData="storeData"
                 :columns="columns"
                 :filterOptions="{Provincia:'provinciaName'}"
-                :searchOptions="['fullName']"
+                :searchOptions="['fullname']"
                 :defaultPagination='defaultPagination'
                 :title="title"
                 @action="action"
@@ -30,9 +30,9 @@
                 columns: [
                     { value: 'rank', text: null, sortable:true, mobile:true },
                     { value: 'image', text: null, type: 'image', sortable: false,mobile:true },
-                    { value: 'fullName', text: 'Nombre', sortable: true ,mobile:true},
+                    { value: 'fullname', text: 'Nombre', sortable: true ,mobile:true},
                     { value: 'provinciaName', text: 'Provincia', sortable: true, mobile:false},
-                    { value: 'logros_count', text: 'Logros', sortable: true,mobile:true }
+                    { value: 'logro_count', text: 'Logros', sortable: true,mobile:true }
                 ],
                 title: "Ranking de cimeros",
                 defaultPagination: {
