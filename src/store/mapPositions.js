@@ -1,20 +1,17 @@
 export default {
   namespaced: true,
   state: {
-    "cima-map": {
-      center: {lat: 40.416775, lng: -3.703790},
-      zoom: 6
-    },
-    "extrema-map": {
-      center: {lat: 40.416775, lng: -3.703790},
-      zoom: 6
-    },
-    "patanegra-map": {
+    "default": {
       center: {lat: 40.416775, lng: -3.703790},
       zoom: 6
     }
   },
 
+  getters: {
+    getPosition: (state) => (route) => {
+      return route in state ? state[route] : null
+    }
+  },
 
   mutations: {
     updatePosition (state, {name, center, zoom}) {
@@ -25,12 +22,6 @@ export default {
   },
 
   actions: {
-    checkPosition (store,name) {
-      return new Promise((resolve, reject) => {
-        resolve(store.state[name])
-      })
-    },
-
     updatePosition (store,{name,center,zoom}) {
       store.commit("updatePosition", {name: name, center: center, zoom: zoom})
     }

@@ -51,8 +51,9 @@ export default {
     },
     loggedIn (state,{data, params}) {
       localStorage.setItem('cimero-token',data.token)
+      localStorage.setItem('cimero-refresh-token',data.refresh_token)
       state.isLoggedIn = data.token
-      state.loggedInUser = data.cimero.username
+      state.loggedInUser = data.username
     },
     verify (state,{data}) {
       state.loggedInUser = data.cimero.username
@@ -101,7 +102,7 @@ export default {
 
     checkLogro (store,id) {
       if (!store.getters.loggedIn) return false
-      if (!store.state.account)   
+      if (!store.state.account)
         return doAuthRequest(store, {
             method: 'get',
             url: 'cimero',
@@ -111,7 +112,7 @@ export default {
               return data.logros.find(x => x.cima_id === id)
             },
         });
-      return store.state.account.logros.find(x => x.cima_id === id) 
+      return store.state.account.logros.find(x => x.cima_id === id)
     },
 
     provinceLogros (store,pid) {
@@ -163,7 +164,7 @@ export default {
     forgotPassword (store, creds) {
       return doRequest(store, {
           method: 'post',
-          url: 'forgot-password',
+          url: 'auth/forgot-password',
           data: creds,
       });
     },
@@ -171,7 +172,7 @@ export default {
     resetPassword (store, creds) {
       return doRequest(store, {
           method: 'post',
-          url: 'reset-password',
+          url: 'auth/reset-password?id=' + cred.user_id + '&token=' + token,
           data: creds,
       });
     },

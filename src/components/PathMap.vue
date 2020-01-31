@@ -1,10 +1,9 @@
 <template> 
-<div id="wrapper">
-    <l-map :zoom="zoom" :center="getPathMapCenter()" :style="style" v-if="coords && mounted">
-        <l-marker v-if="path"  :lat-lng="coords[0]" :icon="startIcon"></l-marker>
-        <l-marker  :lat-lng="coords[coords.length -1]" :icon="finishIcon"></l-marker>
-        <l-polyline v-if="path"  :lat-lngs="coords" color="#0000FF"></l-polyline>
-        <l-polyline v-for="alt in alternatives"  :lat-lngs="alt.coords" :color="alt.color"></l-polyline>
+<div id="wrapper" style="width:100%;height:100%">
+    <l-map :zoom="zoom" :style="style" ref="map">
+        <l-marker :lat-lng="start" :icon="startIcon"></l-marker>
+        <l-marker :lat-lng="end" :icon="finishIcon"></l-marker>
+        <l-polyline :lat-lngs="coords" color="#0000FF"></l-polyline>
       <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
     </l-map>
 </div>
@@ -17,7 +16,6 @@
     import finish from '../assets/icons/finish.png';
 
     export default {
-        name: 'example',
         components: {
           LMap,
           LTileLayer,
@@ -26,31 +24,59 @@
           LPolyline,
         },
 
-        props: ["id","iframe"],
         data() {
             return {
-                style: {},
-                mounted: false,
-                coords: null,
+                style: {
+                    height: "600px",
+                    width: '800px'
+                },
+                climb: this.$store.getters['cimas/oneById'](this.$route.params.id),
                 zoom: 12,
-                path: [],
-                alternatives: [],
                 url:'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
                 attribution:'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
             };
         },
 
         mounted() {
-            var that = this
-            setTimeout(function(){ 
-                that.calculateContainer()
-                that.mounted = true
-                that.getMapLines()
-            }, 50);
+            
+            this.$refs.map.fitBounds(this.bounds)
+            this.calculateContainer()
             
         },
 
+        updated() {
+            this.$refs.map.mapObject.invalidateSize()
+        },
+
         computed: {
+
+          start () {
+            const coordZero = this.climb.geometry.coordinates[0]
+            return L.latLng(
+              coordZero[1], coordZero[0]
+            )
+          },
+
+          end () {
+            const coordLast = this.climb.geometry.coordinates.pop()
+            return L.latLng(
+              coordLast[1], coordLast[0]
+            )
+          },
+
+          bounds () {
+            const bbox = this.climb.properties.extent
+            return [[bbox[1], bbox[0]], [bbox[3], bbox[2]]]
+          },
+
+          coords () {
+            return this.climb.geometry.coordinates.map(c => {
+                return L.latLng(
+                  c[1], c[0]
+                )
+            })
+          },
+
           startIcon () {
             return L.icon({
               iconUrl: pin,
@@ -69,92 +95,16 @@
 
 
         methods: {
-
             calculateContainer () {
                 var w = document.getElementById('wrapper').parentElement.offsetWidth;
                 var h = document.getElementById('wrapper').parentElement.parentElement.parentElement.offsetHeight;
-                //if (h<=30 || h > w) h = w;
-                h = w;
+
                 this.style = {
                     height: h + "px",
-                    width: '100%'
+                    width: w + 'px'
                 }
-            },
-
-            getMapLines(){
-                var self = this;
-
-                this.$store.dispatch("cimas/mapline",this.id).then(data => {
-
-                    if (!data.data) {
-                        self.putCenter(data);
-                        return;
-                    }
-                    var coords = [];
-                    var map = data.data;
-
-                    map.forEach(function(el) {
-                        if (el[5][0][1][0].indexOf('L') === 0) {
-                            el[2][0][0].forEach(c => coords.push(
-                                {lat: c[0][0], lng: c[0][1]}
-                            ))
-                        }
-                        else if (el[5][0][1][0] === 'Final') {
-                            coords.push(
-                                {lat: el[1][0][0][0], lng: el[1][0][0][1]}
-                            );
-                        } else {
-                            var co = []
-                            el[2][0][0].forEach(c => co.push(
-                                {lat: c[0][0], lng: c[0][1]}
-                            ))
-                            self.alternatives.push({
-                                coords: co,
-                                color: el[6],
-                                name: el[5][0][1][0]
-                            })
-                        }
-                    })
-                    self.coords = coords;
-                    self.zoom = data.zoom;
-                    self.putLine(); 
-                })
-            },
-
-            putCenter (vert) {
-                this.coords = [{lat: parseFloat(vert.cima.longitude), lng: parseFloat(vert.cima.latitude)}];
-            },
-
-            getPathMapCenter(){
-                if (this.coords.length === 1) {
-                    return  {
-                        lat: this.coords[0].lat,
-                        lng: this.coords[0].lng,
-                    }
-                }
-                var lats = [], lngs = [];
-                this.coords.forEach(function(coord){
-                    lats.push(coord.lat); lngs.push(coord.lng);
-                });
-                return {
-                    lat: (Math.max.apply(null,lats) + Math.min.apply(null,lats)) / 2,
-                    lng: (Math.max.apply(null,lngs) + Math.min.apply(null,lngs)) / 2,
-                }
-            },
-
-            putLine(){
-                this.path = this.coords;
             },
         },
-
-        watch: { 
-            id(newVal, oldVal) { 
-                this.coords = null
-                this.path = []
-                this.calculateContainer()
-                this.getMapLines()
-            }
-        }
     }
 
 </script>

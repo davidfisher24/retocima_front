@@ -1,4 +1,4 @@
-<template>  
+<template>
   <div>
     <v-container fluid>
       <v-layout>
@@ -8,7 +8,7 @@
               <v-card-title>Darse Alta</v-card-title>
             </v-flex>
             <v-flex>
-              
+
               <v-card-text>
                 <v-progress-linear :indeterminate="true" color="primary" v-if="disabled"></v-progress-linear>
                 <v-form v-model="valid" ref="form" lazy-validation>
@@ -52,64 +52,6 @@
                         :append-icon="confirmIcon ? 'visibility' : 'visibility_off'"
                         :append-icon-cb="() => (confirmIcon = !confirmIcon)"
                       ></v-text-field>
-                      <v-text-field
-                        label="Nombre"
-                        v-model="model.nombre"
-                        :rules="rules.nombre"
-                        required
-                        @change="alert = false"
-                        :disabled="disabled"
-                      ></v-text-field>
-                      </v-flex>
-                      <v-flex xs6 md12 class="px-1">
-                         <v-text-field
-                            label="Apellido 1"
-                            v-model="model.apellido1"
-                            :rules="rules.apellido1"
-                            required
-                            @change="alert = false"
-                            :disabled="disabled"
-                          ></v-text-field>
-                          <v-text-field
-                            label="Apellido 2"
-                            v-model="model.apellido2"
-                            :rules="rules.apellido2"
-                            required
-                            @change="alert = false"
-                            :disabled="disabled"
-                          ></v-text-field>
-                          <v-select
-                            :items="countries"
-                            item-text="nombre"
-                            item-value="id"
-                            v-model="model.pais"
-                            label="Pais"
-                            auto
-                            autocomplete
-                            @change="alert = false"
-                            :disabled="disabled"
-                          ></v-select>
-                          <v-select
-                            :items="provinces"
-                            item-text="nombre"
-                            item-value="id"
-                            v-model="model.provincia"
-                            label="Provincia"
-                            :rules="rules.provincia"
-                            :disabled="model.pais !== spainId || disabled"
-                            auto
-                            autocomplete
-                            @change="alert = false"
-                          ></v-select>
-                          <v-text-field 
-                            type="date" 
-                            label="Fecha Nacimiento"
-                            name="fechanacimiento" 
-                            v-model="model.fechanacimiento" 
-                            :rules="rules.dob" 
-                            @change="alert = false"
-                            :disabled="disabled"
-                          ></v-text-field>
                       </v-flex>
                   </v-layout>
                 </v-form>
@@ -125,7 +67,7 @@
         </v-flex>
       </v-layout>
     </v-container>
-  </div>      
+  </div>
 </template>
 
 

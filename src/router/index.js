@@ -236,7 +236,19 @@ router.beforeEach((to,from,next) => {
 
 /* Brings the data back from the server */
 router.beforeEach((to, from, next) => {
-  if (to.name === 'cima' || to.name === 'discover' || to.name === 'map-cima') {
+  if (to.name === 'cima-map') {
+    store.dispatch('cimas/all').then(cimas => {
+      next()
+    })
+  } else if (to.name === 'cima') {
+    store.dispatch('cimas/one', to.params.id).then(cima => {
+      next()
+    })
+  } else {
+    next()
+  }
+
+  /*if (to.name === 'cima' || to.name === 'discover' || to.name === 'map-cima') {
     store.dispatch('cimas/one', to.params.id).then(cima => {
       to.params.cima = cima
       next()
@@ -260,8 +272,7 @@ router.beforeEach((to, from, next) => {
       next()
     })
   } else if (to.name === 'cima-map') {
-    store.dispatch('cimas/markers').then(cimas => {
-      to.params.cimas = cimas
+    store.dispatch('cimas/all').then(cimas => {
       next()
     })
   } else if (to.name === "cimero") {
@@ -274,7 +285,6 @@ router.beforeEach((to, from, next) => {
       next();
     })
   } 
-  // CUENTA
   else if (to.name === 'user-logros' || to.name === 'user-charts' || to.name === 'user-edit') {
     var promise1 = store.dispatch("user/account",to.params.uid)
     var promise2 = store.dispatch('cimas/names')
@@ -289,16 +299,15 @@ router.beforeEach((to, from, next) => {
     var promise3 = store.dispatch('provincias/one',to.params.pid)
     var promise4 = store.dispatch('logros/provincia',to.params.pid)
 
-    Promise.all([promise1,promise2,promise3/*,promise4*/]).then(data => {
+    Promise.all([promise1,promise2,promise3]).then(data => {
       to.params.logros = data[0]
       to.params.cimas = data[1]
       to.params.provincia = data[2]
-      //to.params.provinciaLogros = data[3]
       next();
     })
   } else {
     next()
-  }
+  }*/
 })
 
 

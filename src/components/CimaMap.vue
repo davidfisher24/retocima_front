@@ -1,19 +1,14 @@
 <template> 
 <div style="width:100%;height:100%">
-    <!--<router-view></router-view>--><!-- remove for routing -->
-    <l-map :zoom.sync="zoom" :center.sync="center" style="height:100%;width:100%;" v-if="mounted"> 
-
-     <!--<v-marker-cluster v-if="addCimas">-->
-      <l-marker v-if="addCimas" v-for="c in validcimas" :lat-lng="c.marker" :icon="icon" @click="route(c.id)">
+    <l-map :zoom.sync="zoom" :center.sync="center" style="height:100%;width:100%;"> 
+      <l-marker v-for="c in cimas" :lat-lng="c.marker" :icon="icon" @click="route(c.id)">
         <l-tooltip>
           <v-chip color="secondary" text-color="white" style="margin:0;padding:0;">
-            <v-avatar class="accent">{{c.codigo}}</v-avatar>
-            {{c.nombre}}
+            <v-avatar class="accent">**</v-avatar>
+            {{c.properties.name}}
           </v-chip>
         </l-tooltip>
       </l-marker>
-    <!--</v-marker-cluster>-->
-
       <l-tile-layer :url="url" :attribution="attribution"></l-tile-layer>
     </l-map>
 </div> 
@@ -51,21 +46,18 @@
         },
 
         data: function() {
-            return {
-                cimas: [],
-                url:'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-                attribution:'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-                mounted: false,
-                addCimas: false,
-                center: null,
-                zoom: null,
-            };
+          return {
+            cimas: this.$store.getters['cimas/markers'],
+            url:'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+            attribution:'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+            mounted: false,
+            position: this.$store.getters['mapPositions/getPosition'](this.$route.name),
+            center: null,
+            zoom: null
+          };
         },
 
         computed: {
-          validcimas () {
-            return this.cimas.filter(c => c.estado === 1 && c.latitude && c.latitude != 0 && c.longitude && c.longitude != 0);
-          },
           icon () {
             return L.icon({
               iconUrl: Icon,
@@ -75,91 +67,62 @@
           }
         },
 
-        mounted () {
-          this.mountOrRemount();  
+        beforeMount () {
+          this.zoom = this.position ? this.position.zoom : this.getMapZoom()
+          this.center = this.position ? this.position.center : this.getMapCenter()
         },
 
         watch:{
-            $route (to, from){
-                this.mountOrRemount();  
-            },
-            "center.lat"(val){
-              this.logCurrentMapPosition()
-            },
-            zoom(){
-              this.logCurrentMapPosition()
-            }
+          "center.lng"(val){
+            this.logCurrentMapPosition()
+          },
+          "center.lat"(val){
+            this.logCurrentMapPosition()
+          },
+          zoom(){
+            this.logCurrentMapPosition()
+          }
         },
 
         methods: {
 
-            async mountOrRemount() {
-              this.cimas = this.$route.params.cimas;
-              this.cimas.forEach(c => {c.marker = L.latLng(c.longitude, c.latitude)});
+          getMapCenter(){
+              if (this.center) return this.center;
+              var lats = this.getLats();
+              var lngs = this.getLngs();
+              var latSum = lats.reduce(function(a, b) { return a + b; });
+              var lngSum = lngs.reduce(function(a, b) { return a + b; });
+              return {lat: lngSum / lngs.length, lng: latSum / lats.length};
+          },
 
-              let position = await this.$store.dispatch('mapPositions/checkPosition',this.getRouteLogName())
-              if (position) {
-                this.zoom = position.zoom
-                this.center = position.center
-              } else {
-                this.center = this.getMapCenter()
-                this.zoom = this.getMapZoom()
-              }
-            
-              
-              this.mounted = true
+          getMapZoom(){
+              if (this.zoom) return this.zoom;
+              var lats = this.getLats();
+              var lngs = this.getLngs();
+              var latDiff = Math.abs(Math.max.apply(null,lats) - Math.min.apply(null,lats));
+              var lngDiff = Math.abs(Math.max.apply(null,lngs) - Math.min.apply(null,lngs));
+              var maxDiff = Math.max(latDiff,lngDiff);
+              return parseInt(maxDiff / 4);
+          },
 
-              var that = this;
-              window.setTimeout(function() {that.addCimas = true}, 50) 
-            },
+          getLats(){
+            return this.cimas.map(c => c.geometry.coordinates[0])
+          },
 
-            getMapCenter(){
-                if (this.center) return this.center;
-                var lats = this.getLats();
-                var lngs = this.getLngs();
-                var latSum = lats.reduce(function(a, b) { return a + b; });
-                var lngSum = lngs.reduce(function(a, b) { return a + b; });
-                return {lat: lngSum / lngs.length, lng: latSum / lats.length};
-            },
-
-            getMapZoom(){
-                if (this.zoom) return this.zoom;
-                var lats = this.getLats();
-                var lngs = this.getLngs();
-                var latDiff = Math.abs(Math.max.apply(null,lats) - Math.min.apply(null,lats));
-                var lngDiff = Math.abs(Math.max.apply(null,lngs) - Math.min.apply(null,lngs));
-                var maxDiff = Math.max(latDiff,lngDiff);
-                return parseInt(11 - maxDiff);
-            },
-
-            getLats(){
-                return this.cimas.map(function(a){ return parseFloat(a.latitude) }).filter(function(b) { return b !== 0});
-            },
-
-            getLngs(){
-                return this.cimas.map(function(a){ return parseFloat(a.longitude) }).filter(function(b) { return b !== 0});
-            },
+          getLngs(){
+            return this.cimas.map(c => c.geometry.coordinates[1])
+          },
 
 
-            route (id) {
-              if (this.$route.name === 'cima-map') this.$router.push({name: 'map-cima', params: {id: id}});
-              else if (this.$route.name === 'provincia-map') this.$router.push({name: 'provincia-cima', params: {pid: this.$route.params.pid, cid: id}});
-              else if (this.$route.name === 'patanegra-map') this.$router.push({name: 'patanegra-cima', params: {cid: id}});
-              else if (this.$route.name === 'extrema-map') this.$router.push({name: 'extrema-cima', params: {cid: id}});
-            },
+          route (id) {
+            this.$router.push({name: 'cima', params: {id: id}});
+          },
 
-            getRouteLogName () {
-              const name = this.$route.name ==='provincia-map' ? 
-              this.$route.name + "-" + this.$route.params.pid : 
-              this.$route.name
-              return name
-            },
-
-            logCurrentMapPosition () {
-              this.$store.dispatch('mapPositions/updatePosition',{
-                name:this.getRouteLogName(),center:this.center,zoom:this.zoom
-              })
-            }
+          logCurrentMapPosition () {
+            this.$store.dispatch('mapPositions/updatePosition',{
+              name:this.$route.name,center:this.center,zoom:this.zoom
+            })
+          }
         },
     }
 

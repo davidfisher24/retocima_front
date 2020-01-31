@@ -1,32 +1,27 @@
 <template>
   <v-container fluid class="pa-0 mt-2">
     <v-slide-y-transition mode="out-in">
-      <v-layout row wrap v-if="cima">
+      <v-layout row wrap>
         <v-flex xs12>
-
-          <v-system-bar status color="background" v-if="cimas && cimas.length > 1">
-            <v-layout row>
-              <v-flex xs4 md2 offset-md4 offset-xs2>
-                <v-btn flat left @click="previous" style="text-transform: capitalize;" color="primary"><strong>< Anterior</strong></v-btn>
-              </v-flex>
-              <v-flex xs4 md2 offset-xs-2>
-                <v-btn flat right @click="next" style="text-transform: capitalize;" color="primary"><strong>Siguiente ></strong></v-btn>
-              </v-flex>
-            </v-layout>
-          </v-system-bar>
-
-          <!---->
           <v-layout row wrap class="white primary--text" >
             <v-flex xs12 class="py-2">
-              <span class="display-2 ml-2" 
-              :style="{'text-decoration': cima.estado === 2 || cima.estado === 3 ? 'line-through' : 'none' }"
-              >{{cima.codigo}} {{cima.nombre.toUpperCase()}}</span>
-              <div v-if="cima.estado === 3" class="ml-2">Esta cima fue eliminada del reto</div>
-              <div v-if="cima.estado === 2" class="ml-2">Esta cima fue sustituida por otra cima</div>
-              <div v-if="cima.estado !== 1 && cima.vertientes.length > 0" class="ml-2"><strong>Razon: </strong>{{cima.vertientes[0].razon}}</div>
-              <div v-if="cima.estado === 1"
-              :style="{float: $vuetify.breakpoint.smAndDown ? 'none' : 'right' }"><CimaQuickAdd :cima="cima"></CimaQuickAdd></div>
+              <span class="display-2 ml-2">
+                {{cima.properties.name.toUpperCase()}}
+              </span>
+              <div  :style="{float: $vuetify.breakpoint.smAndDown ? 'none' : 'right' }"><CimaQuickAdd :cima="cima"></CimaQuickAdd></div>
             </v-flex>
+
+            <v-flex>
+              <PathMap :key="cima.id"></PathMap>
+            </v-flex>
+
+          </v-layout>
+        </v-flex>
+      
+        <!--<v-flex xs12>
+
+          <v-layout row wrap class="white primary--text" >
+            
   
             <v-flex class="d-inline-block ml-2">Ascensiones: 
               <span class="accent--text">&nbsp;{{cima.logros_count}}</span>
@@ -36,22 +31,6 @@
             </v-flex>
             <v-flex :class="['d-inline-block',$vuetify.breakpoint.smAndDown ? 'ml-2' : '']">
               <strong>GPS: {{Number(cima.latitude).toFixed(5)}} {{Number(cima.longitude).toFixed(5)}}</strong>
-            </v-flex>
-          </v-layout>
-
-          <v-layout row wrap class="white primary--text mt-1" v-if="cima.substitute">
-            <v-flex xs12  class="py-2">
-              <span class="subheading ml-2">
-                Este cima sustituyó la cima anterior: <strong>{{cima.substitute.nombre}}</strong>
-              </span>
-              <div>
-                <Button 
-                  class="ma-0 pa-0"
-                  text="Ver la anterior" 
-                  lowercase="true" 
-                  route="cima" :params="substituteLinkParams">
-                </Button>
-              </div>
             </v-flex>
           </v-layout>
 
@@ -179,7 +158,8 @@
               </v-card>
             </v-tab-item>
           </v-tabs>
-        </v-flex>
+        </v-flex>-->
+        
       </v-layout>
     </v-slide-y-transition>
   </v-container>
@@ -196,9 +176,7 @@ import Button from './Button'
 export default {
   data () {
     return {
-      active:"0",
-      id:1,
-      cima: null,
+      cima: this.$store.getters['cimas/oneById'](this.$route.params.id),
     }
   },
 
@@ -214,10 +192,8 @@ export default {
       if (from.name === 'cima' && to.name === 'cima' && !to.params.cima) {
         this.$store.dispatch('cimas/one',to.params.id).then(cima => {
           this.cima = cima
-          this.mountOrRemount();
         })
       } else {
-        this.mountOrRemount();
       }
     },
     cima (newOne) {
@@ -226,6 +202,7 @@ export default {
   },
 
   computed: {
+
       vertienteId () {
         return this.cima.vertientes[this.active].id
       },
@@ -250,32 +227,13 @@ export default {
       }
   },
   
-  mounted (){
-    this.mountOrRemount()
-  },
 
   methods: {
-    mountOrRemount () {
-      this._cimas = this.$route.params.cimas || null;
-      this.cimas = this._cimas ? this._cimas.filter(c => c.estado == 1) : null;
-      this.cima = this._cimas ? this._cimas.find(x => x.id === Number(this.$route.params.cid)) : this.$route.params.cima;
-      this.resetTabs()
-    },
-
     resetTabs (){
       this.active = null
       this.active = "0";
     },
-    next() {
-      var index = this.cimas.findIndex(x => x.id === this.cima.id) + 1;
-      if (index === this.cimas.length) index = 0;
-      this.cima = this.cimas[index];
-    },
-    previous () {
-      var index = this.cimas.findIndex(x => x.id === this.cima.id) - 1;
-      if (index === -1) index = this.cimas.length - 1;
-      this.cima = this.cimas[index];
-    },
+
     openExternalLink (url) {
       window.open(url, '_blank')
     },

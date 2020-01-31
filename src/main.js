@@ -92,12 +92,6 @@ Vue.use(Vuetify, {
   }
 })
 
-Vue.use(require('vue2-google-maps'), {
-  load: {
-    key: 'AIzaSyAtqWsq5Ai3GYv6dSa6311tZiYKlbYT4mw'
-  }
-})
-
 import VueHighcharts from 'vue-highcharts'
 import Highcharts from 'highcharts'
 Vue.use(VueHighcharts, { Highcharts })
@@ -110,11 +104,13 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  components: { 
+    App,
+  },
   template: '<App/>',
   store
 })
 
-import PageTitle from './components/layout/PageTitle'
+import PageTitle from './components/Layout/PageTitle'
 
 Vue.component('PageTitle', PageTitle)
