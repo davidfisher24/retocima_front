@@ -12,6 +12,7 @@ import PataNegra from '@/pages/PataNegra'
 import Extrema from '@/pages/Extrema'
 import Provincia from '@/pages/Provincia'
 import Eliminated from '@/pages/Eliminated'
+import CimaList from '@/components/CimaList'
 import NotFound404 from '@/pages/NotFound404'
 
 // Components
@@ -61,7 +62,15 @@ const router = new Router({
     {
       path: '/listado',
       name: 'listado',
-      component: Listado
+      component: Listado,
+    },
+
+    // province list page
+    {
+      name: 'province',
+      key: ':id',
+      path: '/province/:id',
+      component: CimaList
     },
     // Single cima page
     {
@@ -70,11 +79,11 @@ const router = new Router({
       component: Cima
     },
     // Provincia page & pata negra page (cima list)
-    {
+    /*{
       path: '/provincia/:pid',
       name: 'provincia',
       component: Provincia
-    },
+    },*/
     {
       path: '/patanegra',
       name: 'patanegra',
@@ -107,22 +116,10 @@ const router = new Router({
       component: Cima
     },
     {
-      path: '/eliminada/cima/:cid',
-      name: 'eliminada-cima',
-      component: Cima
-    },
-    // Map with cima child
-    {
       path: '/mapa',
       name: 'cima-map',
       component: CimaMap,
     },
-    {
-      path: '/mapa/cima',
-      name: 'map-cima',
-      component: Cima,
-    },
-
 
     {
       path: '/provincia-mapa/:pid',
@@ -237,13 +234,15 @@ router.beforeEach((to,from,next) => {
 /* Brings the data back from the server */
 router.beforeEach((to, from, next) => {
   if (to.name === 'cima-map') {
-    store.dispatch('cimas/all').then(cimas => {
-      next()
-    })
+    store.dispatch('cimas/all').then(() => next())
   } else if (to.name === 'cima') {
-    store.dispatch('cimas/one', to.params.id).then(cima => {
-      next()
-    })
+    store.dispatch('cimas/one', to.params.id).then(() => next())
+  } else if (to.name === 'listado' ) {
+    store.dispatch('provincias/all').then(() => next())
+  } else if (to.name === 'province') {
+    var promise1 = store.dispatch('cimas/byProvince', to.params.id)
+    var promise2 = store.dispatch('provincias/all')
+    Promise.all([promise1,promise2]).then(() => next())
   } else {
     next()
   }

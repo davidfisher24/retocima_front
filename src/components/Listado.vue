@@ -4,17 +4,6 @@
       <v-layout row wrap>
             <Search @select="chooseCima" @results="showList"></Search>
             <CCAAList :comms="comms" @chooseProvincia="chooseProvincia" v-if="displayList"></CCAAList>
-              <v-flex xs12 md6 offset-md3
-              :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, 'mt-3' : true}"
-              >
-               <v-expansion-panel>
-                  <v-expansion-panel-content expand-icon="" class="primary--text">
-                    <div slot="header" @click="$router.push('eliminada')">
-                        <span class="subheading"><strong>Ver lista de cimas eliminadas</strong></span>
-                  </div>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-              </v-flex>
       </v-layout>
       
     </v-slide-y-transition>
@@ -29,13 +18,10 @@ import Search from './Search/QuickSearch'
 export default {
   data () {
     return {
-      comms:null,
+      comms: this.$store.getters['provincias/regions'],
       parent: null,
       displayList: true,
     }
-  },
-  mounted() {
-    this.comms = this.$route.params.listado;
   },
   components: {
     'CCAAList' : CCAAList,

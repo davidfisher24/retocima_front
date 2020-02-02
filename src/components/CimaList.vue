@@ -1,9 +1,8 @@
-<template>
+<template >
   <v-container fluid class="pa-0 mt-2">
     <v-slide-y-transition mode="out-in">
-      <v-layout row wrap v-if="cimas">
+      <v-layout row wrap>
 
-        <!-- Title -->
         <v-toolbar color="white" flat dense class="primary--text mb-3 ">
             <v-toolbar-title class="display-2">
                 <span><strong>Listado de cimas </strong> </span>
@@ -16,37 +15,31 @@
           </v-toolbar>
 
         <v-flex xs12 v-for="(chunk,index) in chunkedCimas" :key="index" 
-        :class="[{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, },
-        {'sm4': listType == 'B', 'md6' : listType != 'B' }]">
+        :class="[{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }, 'md6']">
           
-          <v-list three-line class="primary--text py-0">
-            <CimaListData v-if="!listType" v-for="(cima, i) in chunk" :cima="cima" @route="route"></CimaListData>
-            <CimaListDataB v-if="listType === 'B'" v-for="(cima, i) in chunk" :cima="cima" @route="route"></CimaListDataB>
+          <v-list three-line class="primary--text py-0" v-for="(cima, i) in chunk">
+            <v-list-tile avatar :key="cima.id" @click="route(cima.id)">
+              <v-list-tile-avatar color="primary" tile>
+                  <span class="white--text">{{cima.id}}</span>
+              </v-list-tile-avatar>
+              <v-list-tile-content>
+                <v-list-tile-title v-html="cima.properties.name" class="title primary--text"></v-list-tile-title>
+
+                <v-list-tile-sub-title class="subheading primary--text">
+                  <i>Altitud:</i>&nbsp;&nbsp;<span>{{cima.properties.altitude}}</span>
+                  <i>Distancia:</i>&nbsp;&nbsp;<span>{{cima.properties.distance.toFixed(2) + 'km'}}</span>
+                </v-list-tile-sub-title>
+
+                <v-list-tile-sub-title class="subheading primary--text">
+                  <i>Gradient:</i>&nbsp;&nbsp;<span>{{cima.properties.gradient.toFixed(2) + '%'}}</span>
+                  <i>Desnivel:</i>&nbsp;&nbsp;<span>{{cima.properties.gain + 'm'}}</span>
+                </v-list-tile-sub-title>
+
+              </v-list-tile-content>
+            </v-list-tile>  
           </v-list>
-          <!-- Eliminadas o sustituidas block -->
-            <!--<div v-if="index === chunkedCimas.length - 1 && eliminatedCimas.length > 0">
-              <v-toolbar color="white" flat dense class="accent--text">
-                <v-toolbar-title>
-                   <span>Cimas que fueron eliminadas</span>
-                </v-toolbar-title>
-              </v-toolbar>
-              <v-list three-line class="primary--text py-0" >
-                <CimaListData v-if="!listType" v-for="(cima, i) in eliminatedCimas" :cima="cima" @route="route"></CimaListData>
-                <CimaListDataB v-if="listType === 'B'" v-for="(cima, i) in eliminatedCimas" :cima="cima" @route="route"></CimaListDataB>
-              </v-list>
-            </div>-->
-             <!-- Special cimas block -->
-            <!--<div v-if="index === 1 && specialCimas.length > 0">
-              <v-toolbar color="white" flat dense class="primary--text">
-                <v-toolbar-title>
-                   <span>Otras acensiones interesantes que no puntuan</span>
-                </v-toolbar-title>
-              </v-toolbar>
-              <v-list three-line class="primary--text py-0" >
-                <CimaListData v-if="!listType" v-for="(cima, i) in specialCimas" :cima="cima" @route="route"></CimaListData>
-                <CimaListDataB v-if="listType === 'B'" v-for="(cima, i) in specialCimas" :cima="cima" @route="route"></CimaListDataB>
-              </v-list>
-            </div>-->
+
+
         </v-flex>
       </v-layout> 
     </v-slide-y-transition>
@@ -57,47 +50,34 @@
 <script>
 
 import _ from 'lodash'
-import CimaListData from './CimaListData'
-import CimaListDataB from './CimaListDataB'
 export default {
 
-  props:['cimas','validCimas', 'title', 'mapRoute','listType'],
   data () {
     return {
-      params: this.$route.params, 
+      cimas: this.$store.getters['cimas/byProvince'],
+      province: this.$store.getters['provincias/byId'](this.$route.params.id),
+      mapRoute: null,
     }
   },
 
-  components: {
-    'CimaListData' : CimaListData,
-    'CimaListDataB' : CimaListDataB
-  },
 
   computed: {
+     title () {
+      return this.province.name
+     },
+
      chunkedCimas () {
-        const divider = this.listType === 'B' ? Math.ceil(this.validCimas.length/3) : Math.ceil(this.validCimas.length/2)
-        return _.chunk(this.validCimas,divider);
+        const divider = Math.ceil(this.cimas.length/2)
+        return _.chunk(this.cimas,divider);
      },
-
-     eliminatedCimas () {
-      return this.cimas.filter(c => c.estado === 2 || c.estado === 3)
-     },
-
-     specialCimas () {
-      return this.cimas.filter(c => c.estado !== 1 && c.estado !== 2 && c.estado !== 3)
-     }
   },
 
   methods: {
     changeMap() {
       this.$router.push(this.mapRoute)
     },
-    route (cid) {
-      // No idea why this doesn't work
-      var obj = {};
-      obj.name = this.$route.name + "-cima"
-      obj.params = this.$route.name=='provincia' ? {pid: this.$route.params.pid, cid: cid} : {cid: cid};
-      this.$router.push(obj);
+    route (id) {
+      this.$router.push({name: 'cima', params: {id: id}});
     },
   }
 }

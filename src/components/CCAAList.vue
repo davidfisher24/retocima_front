@@ -5,12 +5,11 @@
               <v-expansion-panel-content v-for="(communidad,index) in chunk" :key="communidad.id" class="primary--text">
                 <div slot="header" >
                       <Flag :id="communidad.id"></Flag>
-                      <span class="headline"><strong>{{communidad.nombre}}</strong></span>&nbsp;&nbsp;&nbsp;
-                      <span class="subheading"><i>{{communidad.cimas_count}} cimas</i></span>
+                      <span class="headline"><strong>{{communidad.name}}</strong></span>&nbsp;&nbsp;&nbsp;
                 </div>
                 <v-list dense>
-                  <v-list-tile v-for="provincia in communidad.provincias" :key="provincia.id" @click="$emit('chooseProvincia',provincia.id)">
-                    <v-list-tile-title class="primary--text text-xs-center subheading">{{provincia.nombre}}</v-list-tile-title>
+                  <v-list-tile v-for="provincia in getProvincesByRegion(communidad.id)" :key="provincia.id" @click="route(provincia.id)">
+                    <v-list-tile-title class="primary--text text-xs-center subheading">{{provincia.name}}</v-list-tile-title>
                   </v-list-tile>
                 </v-list>
               </v-expansion-panel-content>
@@ -29,14 +28,18 @@ export default {
     'Flag' : Flag,
   },
   computed: {
-     chunkedCommunidads () {
-          return _.chunk(this.comms,Math.ceil(this.comms.length/2));
-     },
+   chunkedCommunidads () {
+        return _.chunk(this.comms,Math.ceil(this.comms.length/2));
+   },
   },
   methods: {
+    // This has to change
     route (id) {
-      this.$router.push({name: 'provincia', params: {id: id}})
+      this.$router.push({name: 'province', params: {id: id}})
     },
+    getProvincesByRegion (regionId) {
+      return this.$store.getters['provincias/byRegion'](regionId);
+    }
   }
 }
 </script>

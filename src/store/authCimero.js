@@ -186,7 +186,7 @@ export default {
     verify (store) {
       return doAuthRequest(store, {
           method: 'get',
-          url: 'verify',
+          url: 'auth/verify',
           mutation: 'verify',
       });
     },

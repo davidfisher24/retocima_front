@@ -5,7 +5,8 @@ export default {
 
   state: {
   	climbs: [],
-    all: []
+    all: null,
+    province: null
   },
 
   getters: {
@@ -20,6 +21,9 @@ export default {
     oneById: (state) => (id) => {
       return state.climbs.find(c => c.id == id)
     },
+    byProvince: (state) => {
+      return state.province.features
+    }
   },
 
   mutations: {
@@ -28,6 +32,9 @@ export default {
     },
     all (state, {data, params}) {
       state.all = data
+    },
+    byProvince (state, {data, params}) {
+      state.province = data
     },
   },
 
@@ -41,11 +48,17 @@ export default {
     },
 
     all (store) {
-    	if (store.state.all.length > 0) return store.state.all
+    	if (store.state.all) return store.state.all
       return doRequest(store, {
   	      	url: 'climb/',
   	      	mutation: 'all'
   	    });
     },
+    byProvince (store, id) {
+      return doRequest(store, {
+            url: 'climb/province?id=' + id ,
+            mutation: 'byProvince'
+        });
+    }
   },
 }

@@ -11,10 +11,18 @@
               <div  :style="{float: $vuetify.breakpoint.smAndDown ? 'none' : 'right' }"><CimaQuickAdd :cima="cima"></CimaQuickAdd></div>
             </v-flex>
 
+
             <v-flex>
               <PathMap :key="cima.id"></PathMap>
+              
             </v-flex>
 
+
+   
+
+          </v-layout>
+          <v-layout>
+            <Altimeter :key="cima.id"></Altimeter>
           </v-layout>
         </v-flex>
       
@@ -170,6 +178,7 @@
 <script>
 
 import PathMap from './PathMap'
+import Altimeter from './Altimeter'
 import CimaQuickAdd from './CimaQuickAdd'
 import Button from './Button'
 
@@ -184,6 +193,7 @@ export default {
     'PathMap' : PathMap,
     'CimaQuickAdd' : CimaQuickAdd,
     'Button' : Button,
+    'Altimeter': Altimeter
   },
 
 
