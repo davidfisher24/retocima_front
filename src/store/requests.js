@@ -41,6 +41,7 @@ export const doAuthRequest = (store, { method, url, data, mutation, params, logo
       data: data,
       headers: {'Authorization': 'Bearer ' + localStorage.getItem('cimero-token') },
     }).then(response => {
+      alert(mutation)
       if(mutation) store.commit(mutation, {data: response.data, params: params})
       var data = callback ? callback(response.data) : response.data
       resolve(data)

@@ -155,7 +155,7 @@ const router = new Router({
     },
     // Reset password form
     {
-      path: '/reset-password/:token',
+      path: '/reset-password/:id/:token',
       name: 'reset-password',
       component: ResetPassword
     },

@@ -56,7 +56,8 @@ export default {
       state.loggedInUser = data.username
     },
     verify (state,{data}) {
-      state.loggedInUser = data.cimero.username
+      alert(JSON.stringify(data))
+      state.loggedInUser = data.username
     },
     refresh (state,token) {
       state.isLoggedIn = token
