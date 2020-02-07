@@ -4,6 +4,7 @@ import jwt_decode from 'jwt-decode'
 export default {
   namespaced: true,
   state: {
+    id: null,
   	account: null,
     loggedInUser: null,
     isLoggedIn: localStorage.getItem('cimero-token'),
@@ -24,27 +25,9 @@ export default {
       if (decodedToken.exp - 60 < (new Date().getTime() / 1000)) return true;
       return false;
     },
-    /* Returns current account for mapping of data outside */
-    account: state => {
-      if (!state.account) return null
-      return state.account.cimero
-    },
   },
 
   mutations: {
-  	account (state, {data}) {
-      state.account = data
-    },
-    addLogro (state, {data}) {
-      if (state.account) {
-        state.account.logros.push(data)
-      }
-    },
-    removeLogro (state, {data}) {
-      if (state.account) {
-        state.account.logros.splice(state.account.logros.findIndex(l => l.id === data.id),1)
-      }
-    },
     updateCimero (state, {data}) {
       state.account.cimero = data
       state.loggedInUser = data.username
@@ -54,75 +37,26 @@ export default {
       localStorage.setItem('cimero-refresh-token',data.refresh_token)
       state.isLoggedIn = data.token
       state.loggedInUser = data.username
+      state.id = data.id
     },
     verify (state,{data}) {
-      alert(JSON.stringify(data))
       state.loggedInUser = data.username
+      state.id = data.id
     },
     refresh (state,token) {
       state.isLoggedIn = token
+      state.loggedInUser = data.username
+      state.id = data.id
     },
     loggedOut (state) {
       localStorage.removeItem('cimero-token')
       state.isLoggedIn = null
       state.loggedInUser = null
+      state.id = null
     },
   },
 
   actions: {
-
-    account (store) {
-      if (store.state.account) return store.state.account
-      return doAuthRequest(store, {
-          method: 'get',
-          url: 'cimero',
-          mutation: 'account',
-          logout: true,
-      });
-    },
-
-    addLogro (store,id) {
-      return doAuthRequest(store, {
-          method: 'post',
-          url: 'update-logro',
-          data: {action: 'add', cima: id},
-          mutation: 'addLogro',
-          logout: false,
-      });
-    },
-
-    removeLogro (store,logro) {
-      return doAuthRequest(store, {
-          method: 'post',
-          url: 'update-logro',
-          data: {action: 'remove', logro: JSON.stringify(logro)},
-          mutation: 'removeLogro',
-          logout: false,
-      });
-    },
-
-    checkLogro (store,id) {
-      if (!store.getters.loggedIn) return false
-      if (!store.state.account)
-        return doAuthRequest(store, {
-            method: 'get',
-            url: 'cimero',
-            mutation: 'account',
-            logout: true,
-            callback: function(data){
-              return data.logros.find(x => x.cima_id === id)
-            },
-        });
-      return store.state.account.logros.find(x => x.cima_id === id)
-    },
-
-    provinceLogros (store,pid) {
-      return doAuthRequest(store, {
-          method: 'get',
-          url: 'cimero-logros/' + pid,
-          logout: true,
-      });
-    },
 
     updateAccount (store, model) {
       return doAuthRequest(store, {
@@ -195,5 +129,33 @@ export default {
     refresh (store) {
       return doRefreshTokenRequest(store);
     },
+
+
+    checkBookmark (store,climbId) {
+      return doRequest(store, {
+          method: 'get',
+          url: 'bookmark?climb=' + climbId + '&user=' + store.state.id,
+      });
+    },
+    bookmarks (store) {
+      return doAuthRequest(store, {
+          method: 'get',
+          url: 'bookmark/me',
+          mutation: 'bookmarks',
+      });
+    },
+    addBookmark (store,climbId) {
+      return doAuthRequest(store, {
+          method: 'post',
+          data: { climb: climbId },
+          url: 'bookmark/',
+      });
+    },
+    removeBookmark (store,bookmarkId) {
+      return doAuthRequest(store, {
+          method: 'delete',
+          url: 'bookmark/' + bookmarkId,
+      });
+    }
   },
 }

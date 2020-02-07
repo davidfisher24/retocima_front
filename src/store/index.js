@@ -11,6 +11,8 @@ import paises from './paises'
 import rankings from './rankings'
 import logros from './logros'
 import mapPositions from './mapPositions'
+import comments from './comments'
+import photos from './photos'
 
 Vue.use(Vuex)
 
@@ -24,6 +26,8 @@ const store = new Vuex.Store({
     'rankings' : rankings,
     'logros' : logros,
     'mapPositions' : mapPositions,
+    'comments' : comments,
+    'photos' : photos
   },
 
   state: {

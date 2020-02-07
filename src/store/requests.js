@@ -41,7 +41,35 @@ export const doAuthRequest = (store, { method, url, data, mutation, params, logo
       data: data,
       headers: {'Authorization': 'Bearer ' + localStorage.getItem('cimero-token') },
     }).then(response => {
-      alert(mutation)
+      if(mutation) store.commit(mutation, {data: response.data, params: params})
+      var data = callback ? callback(response.data) : response.data
+      resolve(data)
+    }).catch(err => {
+      if (logout) {
+        store.commit("loggedOut")
+      } else {
+        reject(err.response.data)
+      }
+    })
+  })
+}
+
+export const doUploadRequest = (store, { url, data, files, mutation, params, logout, callback }) => {
+  return new Promise((resolve, reject) => {
+    let formData = new FormData();
+    files.forEach(file => {
+      formData.append(file.key, file.file);
+    });
+    
+    axios({
+      method: 'POST',
+      url: process.env.API_URL + url,
+      formData,
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
+        'Content-Type': 'multipart/form-data'
+      },
+    }).then(response => {
       if(mutation) store.commit(mutation, {data: response.data, params: params})
       var data = callback ? callback(response.data) : response.data
       resolve(data)

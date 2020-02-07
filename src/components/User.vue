@@ -27,7 +27,6 @@
                 </v-expansion-panel>
             </v-flex>
             <v-flex xs12 md8 order-md2 order-xs1 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
-                <SpainSVG :options="options"></SpainSVG>
             </v-flex>
         </v-layout>
     </v-container>
@@ -36,8 +35,6 @@
 
 <script>
 
-    import SpainSVG from './SVG/SpainSVG'
-    import provinceMap from './SVG/provinceMap'
     import _ from 'lodash'
 
     export default {
@@ -46,10 +43,6 @@
             return {
                 options: null,
             };
-        },
-
-        components: {
-            'SpainSVG' : SpainSVG
         },
 
         watch: {

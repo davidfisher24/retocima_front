@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import store from './store'
 import router from './router'
+import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import {
   Vuetify,
   VApp,
@@ -40,6 +41,7 @@ import {
 import './stylus/main.styl'
 
 Vue.use(Vuetify, {
+  iconfont: 'md',
   components: {
     VApp,
     VNavigationDrawer,
@@ -92,9 +94,6 @@ Vue.use(Vuetify, {
   }
 })
 
-import VueHighcharts from 'vue-highcharts'
-import Highcharts from 'highcharts'
-Vue.use(VueHighcharts, { Highcharts })
 
 Vue.config.productionTip = false
 

@@ -10,12 +10,11 @@
                         <div slot="header" class="subheading primary--text py-0">
                             {{communidad.nombre}} {{communidad.completed}} / {{communidad.active_cimas_count}}
                         </div>
-                        <ProvinciaLogroList :provinciaGroup="provinceGroup(communidad.id)" :communidad="communidad" :cimas="cimas" :logros="logros"></ProvinciaLogroList>
+    
                     </v-expansion-panel-content>
                 </v-expansion-panel>
             </v-flex>
             <v-flex xs12 md8 order-md2 order-xs1 :class="{'px-1': $vuetify.breakpoint.smAndDown, 'px-4' : $vuetify.breakpoint.mdAndUp, }">
-                <SpainSVG :options="options"></SpainSVG>
             </v-flex>
         </v-layout>
     </v-container>
@@ -24,8 +23,6 @@
 
 <script>
     import ProvinciaLogroList from './Dialogs/ProvinciaLogroList'
-    import SpainSVG from './SVG/SpainSVG'
-    import provinceMap from './SVG/provinceMap'
     import _ from 'lodash'
 
     export default {
@@ -38,7 +35,6 @@
 
         components: {
             'ProvinciaLogroList' : ProvinciaLogroList,
-            'SpainSVG' : SpainSVG
         },
 
         watch: {

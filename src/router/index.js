@@ -22,16 +22,16 @@ import CimaMap from '@/components/CimaMap'
 import Cimero from '@/components/Cimero'
 import User from '@/components/User'
 
-import Charts from '@/components/Charts/Container'
 import LogroList from '@/components/LogroList'
 import EditAccount from '@/components/Forms/EditAccount'
 import UpdatePassword from '@/components/Forms/UpdatePassword'
+import UserBookmarks from '@/components/UserBookmarks'
 
 import Register from '@/components/Forms/Register'
 import ResetPassword from '@/components/Forms/ResetPassword'
 
 const protectedRoutes = [
-  'user-logros', 'user-charts', 'user-provincia', 'user-edit', 'user-update-password'
+  'user-bookmarks', 'user-edit', 'user-update-password'
 ]
 
 const lists = {
@@ -166,30 +166,19 @@ const router = new Router({
       name: 'user-edit',
       component: EditAccount,
     },
-    // Cuenta logros
-    {
-      path: '/cuenta/logros',
-      name: 'user-logros',
-      component: User,
-    },
-    // Logros in a provincia add
-    {
-      path: '/cuenta/logros/provincia/:pid',
-      name: 'user-provincia',
-      component: LogroList
-    },
-    // Cuenta graphics
-    {
-      path: '/cuenta/graficos',
-      name: 'user-charts',
-      component: Charts
-    },
     // Change Password
     {
       path: '/cuenta/update-password',
       name: 'user-update-password',
       component: UpdatePassword
     },
+    {
+      path: '/bookmarks',
+      name: 'user-bookmarks',
+      component: UserBookmarks
+    },
+
+
 
     // Clean up 404
     {path: '*', name: '404', component: NotFound404},
