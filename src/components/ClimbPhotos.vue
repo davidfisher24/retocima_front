@@ -1,6 +1,10 @@
 <template>  
   <v-card md6>
     <v-container>
+       <div class="dropbox">
+        <input type="file" @change="attachFiles($event.target.files);"
+          accept="image/*" class="input-file">
+      </div>
       <v-text-field
         label="Texto"
         rows="10"
@@ -20,6 +24,13 @@
         @click=""
       >
         <v-list-item-content>
+          <v-img
+            :src="photo.url"
+            height="300px"
+            width="300px"
+            dark
+            aspect-ratio="1"
+          ></v-img>
           <v-list-item-title v-text="photo.id"></v-list-item-title>
           <v-list-item-subtitle class="text--primary" v-text="photo.text"></v-list-item-subtitle>
         </v-list-item-content>
@@ -39,7 +50,7 @@ export default {
   data () {
     return {
       user: this.$store.getters['user/loggedIn'],
-      file: '',
+      photo: null,
       text: '',
       showAdd: false,
       photos : [],
@@ -55,23 +66,31 @@ export default {
 
     fetch () {
       this.$store.dispatch("photos/getPhotos",this.climb).then(response => {
-
         this.photos = response.results
       })
     },
 
     add () {
       this.loading = true
-      let files = {
-        file: this.file,
-        text: this.text,
-        climb: this.climb
-      }
+      const files = [
+        { key: 'photo', file: this.photo },
+        { key: 'text', file: this.text },
+        { key: 'climb', file: this.climb }
+      ]
 
       this.$store.dispatch("photos/createPhoto",files).then(response => {
         this.showAdd = false
       })
     },
+
+    attachFiles (files) {
+      this.photo = files[0]
+    },
+
+    formPhotoUrl(photo) {
+      alert(photo.path)
+      return process.env.API_URL + photo.path
+    }
   }
 }
 </script>

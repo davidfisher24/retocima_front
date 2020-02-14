@@ -64,7 +64,7 @@ export const doUploadRequest = (store, { url, data, files, mutation, params, log
     axios({
       method: 'POST',
       url: process.env.API_URL + url,
-      formData,
+      data: formData,
       headers: {
         'Authorization': 'Bearer ' + localStorage.getItem('cimero-token'),
         'Content-Type': 'multipart/form-data'

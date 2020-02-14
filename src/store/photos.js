@@ -17,7 +17,7 @@ export default {
     getPhotos (store, climbId, page) {
       return doRequest(store, {
           url: 'photo?climb=' + climbId + '&page=' + (page ? page : 1),
-          method:'get'
+          method:'get',
       });
     },
 
